@@ -10,14 +10,14 @@ class JSONSettingsConan(ConanFile):
     license = "MIT"
     generators = "cmake_find_package"
     settings = "os", "compiler", "build_type", "arch"
-    options = {"gtest": ["1.7.0", "1.8.1"], "OpenSSL": ["1.0.2n"]}
-    default_options = {"gtest":"1.8.1", "OpenSSL":"1.0.2n"}
+    options = {"boost": ["1.66.0", "1.67.0"], "gtest": ["1.7.0", "1.8.1"]}
+    default_options = {"boost":"1.67.0", "gtest":"1.8.1"}
 
     def configure(self):
-        self.options["RapidJSONAdapter"].gtest = self.options.gtest
+        self.options["boost"].shared = True
 
     def requirements(self):
-        self.requires("RapidJSONAdapter/1.0.3@systelab/stable")
+        self.requires(("boost/%s@conan/stable") % self.options.boost)
 
     def build_requirements(self):
         if self.options.gtest == "1.7.0":
