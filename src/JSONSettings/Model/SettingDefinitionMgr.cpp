@@ -4,18 +4,18 @@
 
 namespace systelab { namespace setting {
 
-	SettingDefinitionMgr::SettingDefinitionMgr() = default;
+	SettingDefinitionMgr::SettingDefinitionMgr()
+		:m_settings()
+		,m_settingsFolderPath("")
+	{
+	}
+
 	SettingDefinitionMgr::~SettingDefinitionMgr() = default;
 
 	SettingDefinitionMgr& SettingDefinitionMgr::get()
 	{
 		static SettingDefinitionMgr instance;
 		return instance;
-	}
-
-	const SettingDefinitionMgr::SettingsContainer& SettingDefinitionMgr::getSettingsMap() const
-	{
-		return m_settings;
 	}
 
 	bool SettingDefinitionMgr::hasFile(const SettingsFile& file) const
@@ -46,6 +46,16 @@ namespace systelab { namespace setting {
 										  const SettingDefinition& definition)
 	{
 		m_settings[file][sectionPath] = definition;
+	}
+
+	std::string SettingDefinitionMgr::getSettingsFolderPath() const
+	{
+		return m_settingsFolderPath;
+	}
+
+	void SettingDefinitionMgr::setSettingsFolderPath(const std::string& folderPath)
+	{
+		m_settingsFolderPath = folderPath;
 	}
 
 }}
