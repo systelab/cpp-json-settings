@@ -5,12 +5,16 @@
 
 
 #define NO_VALIDATION_FUNCTION() \
-	[](SettingValue) -> bool { return true; }
+	[](systelab::setting::SettingValue) -> bool { return true; }
 
-#define JSON_SETTINGS_FILE(SETTINGS_FILE, CONTENT) \
-	namespace SETTINGS_FILE \
+#define SET_JSON_SETTINGS_FOLDER(FOLDER) \
+	systelab::setting::SettingDefinitionMgr().get().setSettingsFolderPath(FOLDER);
+
+
+#define JSON_SETTINGS_FILE(SETTINGS_FILE_NAMESPACE, SETTINGS_FILENAME, CONTENT) \
+	namespace SETTINGS_FILE_NAMESPACE \
 	{ \
-		static const std::string FILEPATH = SETTINGS_FILE; \
+		static const std::string FILENAME = SETTINGS_FILENAME; \
 		CONTENT \
 	}
 
@@ -23,8 +27,8 @@
 		{ \
 			SETTING_NAME##SettingStruct() \
 			{ \
-				SettingDefinition settingDefinition = { DEFAULT_VALUE, NO_VALIDATION_FUNCTION, USE_CACHE }; \
-				SettingDefinitionMgr::get().setSetting(FILEPATH, SETTING_PATH, settingDefinition); \
+				systelab::setting::SettingDefinition settingDefinition = { DEFAULT_VALUE, NO_VALIDATION_FUNCTION, USE_CACHE }; \
+				systelab::setting::SettingDefinitionMgr::get().setSetting(FILENAME, SETTING_PATH, settingDefinition); \
 			} \
 		}; \
 		static SETTING_NAME##SettingStruct structInstance; \
@@ -40,14 +44,14 @@
 		{ \
 			SETTING_NAME##SettingStruct() \
 			{ \
-				SettingDefinition::ValidationFunction boundCheck = [](const SettingDefinition::SettingValue& v) -> bool \
+				systelab::setting::SettingDefinition::ValidationFunction boundCheck = [](const SettingDefinition::SettingValue& v) -> bool \
 																	{ \
 																		bool aboveMinBound = (boost::get<int>(v) >= MIN_BOUND); \
 																		bool belowMaxBound = (boost::get<int>(v) <= MAX_BOUND); \
 																		return (aboveMinBound && belowMaxBound); \
 																	}; \
-				SettingDefinition settingDefinition = { DEFAULT_VALUE, boundCheck, USE_CACHE }; \
-				SettingDefinitionMgr::get().setSetting(FILEPATH, SETTING_PATH, settingDefinition); \
+				systelab::setting::SettingDefinition settingDefinition = { DEFAULT_VALUE, boundCheck, USE_CACHE }; \
+				systelab::setting::SettingDefinitionMgr::get().setSetting(FILENAME, SETTING_PATH, settingDefinition); \
 			} \
 		}; \
 		static SETTING_NAME##SettingStruct structInstance; \
@@ -62,8 +66,8 @@
 		{ \
 			SETTING_NAME##SettingStruct() \
 			{ \
-				SettingDefinition settingDefinition = { DEFAULT_VALUE, NO_VALIDATION_FUNCTION, USE_CACHE }; \
-				SettingDefinitionMgr::get().setSetting(FILEPATH, SETTING_PATH, settingDefinition); \
+				systelab::setting::SettingDefinition settingDefinition = { DEFAULT_VALUE, NO_VALIDATION_FUNCTION, USE_CACHE }; \
+				systelab::setting::SettingDefinitionMgr::get().setSetting(FILENAME, SETTING_PATH, settingDefinition); \
 			} \
 		}; \
 		static SETTING_NAME##SettingStruct structInstance; \
@@ -78,8 +82,8 @@
 		{ \
 			SETTING_NAME##SettingStruct() \
 			{ \
-				SettingDefinition settingDefinition = { DEFAULT_VALUE, NO_VALIDATION_FUNCTION, USE_CACHE }; \
-				SettingDefinitionMgr::get().setSetting(FILEPATH, SETTING_PATH, settingDefinition); \
+				systelab::setting::SettingDefinition settingDefinition = { DEFAULT_VALUE, NO_VALIDATION_FUNCTION, USE_CACHE }; \
+				systelab::setting::SettingDefinitionMgr::get().setSetting(FILENAME, SETTING_PATH, settingDefinition); \
 			} \
 		}; \
 		static SETTING_NAME##SettingStruct structInstance; \
