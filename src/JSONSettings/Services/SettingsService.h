@@ -15,9 +15,9 @@ namespace systelab { namespace setting {
 		SettingsService();
 		virtual ~SettingsService();
 
-		int getSettingInteger(const std::string& filepath, const std::string& settingPath) const;
-		bool getSettingBoolean(const std::string& filepath, const std::string& settingPath) const;
-		std::string getSettingString(const std::string& filepath, const std::string& settingPath) const;
+		int getSettingInteger(const std::string& filename, const std::string& settingPath) const;
+		bool getSettingBoolean(const std::string& filename, const std::string& settingPath) const;
+		std::string getSettingString(const std::string& filename, const std::string& settingPath) const;
 
 		void setSettingInteger(const std::string& filepath, const std::string& settingPath, int value);
 		void setSettingBoolean(const std::string& filepath, const std::string& settingPath, bool value);
@@ -27,23 +27,24 @@ namespace systelab { namespace setting {
 
 	private:
 		template<typename Type>
-		Type getSetting(const std::string& filepath, const std::string& settingPath) const;
+		Type getSetting(const std::string& filename, const std::string& settingPath) const;
 
 		template<typename Type>
-		void setSetting(const std::string& filepath, const std::string& settingPath, Type defaultValue);
+		void setSetting(const std::string& filename, const std::string& settingPath, Type defaultValue);
 
 		template<typename Type>
-		boost::optional<Type> getSettingFromCache(const std::string& filepath, const std::string& settingPath) const;
+		boost::optional<Type> getSettingFromCache(const std::string& filename, const std::string& settingPath) const;
 
 		template<typename Type>
-		void setSettingIntoCache(const std::string& filepath, const std::string& settingPath, const Type& value) const;
+		void setSettingIntoCache(const std::string& filename, const std::string& settingPath, const Type& value) const;
 
 		template<typename Type>
 		Type getSettingValue(const SettingValue&) const;
 
 		template<typename Type>
-		const SettingDefinition& getSettingDefinition(const std::string& filepath,
-													  const std::string& settingPath) const;
+		const SettingDefinition& getSettingDefinition(const std::string& filename, const std::string& settingPath) const;
+
+		std::string buildFilepath(const std::string& filename) const;
 	};
 
 }};

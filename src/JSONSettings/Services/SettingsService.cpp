@@ -16,43 +16,43 @@ namespace systelab { namespace setting {
 	SettingsService::SettingsService() = default;
 	SettingsService::~SettingsService() = default;
 
-	int SettingsService::getSettingInteger(const std::string& filepath,
+	int SettingsService::getSettingInteger(const std::string& filename,
 										   const std::string& settingPath) const
 	{
-		return getSetting<int>(filepath, settingPath);
+		return getSetting<int>(filename, settingPath);
 	}
 
-	bool SettingsService::getSettingBoolean(const std::string& filepath,
+	bool SettingsService::getSettingBoolean(const std::string& filename,
 											const std::string& settingPath) const
 	{
-		return getSetting<bool>(filepath, settingPath);
+		return getSetting<bool>(filename, settingPath);
 	}
 
-	std::string SettingsService::getSettingString(const std::string& filepath,
+	std::string SettingsService::getSettingString(const std::string& filename,
 												  const std::string& settingPath) const
 	{
-		return getSetting<std::string>(filepath, settingPath);
+		return getSetting<std::string>(filename, settingPath);
 	}
 
-	void SettingsService::setSettingInteger(const std::string& filepath,
+	void SettingsService::setSettingInteger(const std::string& filename,
 											const std::string& settingPath,
 											int value)
 	{
-		setSetting<int>(filepath, settingPath, value);
+		setSetting<int>(filename, settingPath, value);
 	}
 
-	void SettingsService::setSettingBoolean(const std::string& filepath,
+	void SettingsService::setSettingBoolean(const std::string& filename,
 											const std::string& settingPath,
 											bool value)
 	{
-		setSetting<bool>(filepath, settingPath, value);
+		setSetting<bool>(filename, settingPath, value);
 	}
 
-	void SettingsService::setSettingString(const std::string& filepath,
+	void SettingsService::setSettingString(const std::string& filename,
 										   const std::string& settingPath,
 										   const std::string& value)
 	{
-		setSetting<std::string>(filepath, settingPath, value);
+		setSetting<std::string>(filename, settingPath, value);
 	}
 
 	void SettingsService::clearCache()
@@ -61,13 +61,13 @@ namespace systelab { namespace setting {
 	}
 
 	template<typename Type>
-	Type SettingsService::getSetting(const std::string& filepath,
+	Type SettingsService::getSetting(const std::string& filename,
 									 const std::string& settingPath) const
 	{
-		const SettingDefinition& definition = getSettingDefinition<Type>(filepath, settingPath);
+		const SettingDefinition& definition = getSettingDefinition<Type>(filename, settingPath);
 		if (definition.useCache)
 		{
-			boost::optional<Type> cacheValue = getSettingFromCache<Type>(filepath, settingPath);
+			boost::optional<Type> cacheValue = getSettingFromCache<Type>(filename, settingPath);
 			if (cacheValue)
 			{
 				return *cacheValue;
@@ -77,7 +77,7 @@ namespace systelab { namespace setting {
 		Type value;
 		try
 		{
-			std::ifstream ifs(filepath);
+			std::ifstream ifs(buildFilepath(filename));
 			if (!ifs)
 			{
 				return getSettingValue<Type>(definition.defaultValue);
@@ -98,23 +98,23 @@ namespace systelab { namespace setting {
 
 		if (definition.useCache)
 		{
-			setSettingIntoCache<Type>(filepath, settingPath, value);
+			setSettingIntoCache<Type>(filename, settingPath, value);
 		}
 
 		return value;
 	}
 
 	template<typename Type>
-	void SettingsService::setSetting(const std::string& filepath,
+	void SettingsService::setSetting(const std::string& filename,
 									 const std::string& settingPath,
 									 Type value)
 	{
 		boost::property_tree::ptree tree;
-		const SettingDefinition& definition = getSettingDefinition<Type>(filepath, settingPath);
+		const SettingDefinition& definition = getSettingDefinition<Type>(filename, settingPath);
 
 		try
 		{
-			std::ifstream ifs(filepath);
+			std::ifstream ifs(buildFilepath(filename));
 			if (!ifs)
 			{
 				return;
@@ -139,7 +139,7 @@ namespace systelab { namespace setting {
 
 			std::ofstream f;
 			f.exceptions(~std::ofstream::goodbit);
-			f.open(filepath, std::ios_base::out);
+			f.open(buildFilepath(filename), std::ios_base::out);
 			f << &(*oss.rdbuf());
 			f.close();
 		}
@@ -149,17 +149,17 @@ namespace systelab { namespace setting {
 
 		if (definition.useCache)
 		{
-			setSettingIntoCache<Type>(filepath, settingPath, value);
+			setSettingIntoCache<Type>(filename, settingPath, value);
 		}
 	}
 
 	template<typename Type>
-	boost::optional<Type> SettingsService::getSettingFromCache(const std::string& filepath,
+	boost::optional<Type> SettingsService::getSettingFromCache(const std::string& filename,
 															   const std::string& settingPath) const
 	{
-		if (SettingsCache::get().hasSetting<Type>(filepath, settingPath))
+		if (SettingsCache::get().hasSetting<Type>(filename, settingPath))
 		{
-			return SettingsCache::get().getSetting<Type>(filepath, settingPath);
+			return SettingsCache::get().getSetting<Type>(filename, settingPath);
 		}
 		else
 		{
@@ -168,11 +168,11 @@ namespace systelab { namespace setting {
 	}
 
 	template<typename Type>
-	void SettingsService::setSettingIntoCache(const std::string& filepath,
+	void SettingsService::setSettingIntoCache(const std::string& filename,
 											  const std::string& settingPath,
 											  const Type& value) const
 	{
-		SettingsCache::get().setSetting<Type>(filepath, settingPath, value);
+		SettingsCache::get().setSetting<Type>(filename, settingPath, value);
 	}
 
 	template<typename Type>
@@ -182,24 +182,28 @@ namespace systelab { namespace setting {
 	}
 
 	template<typename Type>
-	const SettingDefinition& SettingsService::getSettingDefinition(const std::string& filepath,
+	const SettingDefinition& SettingsService::getSettingDefinition(const std::string& filename,
 																   const std::string& settingPath) const
 	{
-		if (!SettingDefinitionMgr::get().hasSetting(filepath, settingPath))
+		if (!SettingDefinitionMgr::get().hasSetting(filename, settingPath))
 		{
-			throw std::runtime_error("Undefined setting '" + settingPath + "' for file '" + filepath + "'");
+			throw std::runtime_error("Undefined setting '" + settingPath + "' for file '" + filename + "'");
 		}
 
-		const SettingDefinition& definition = SettingDefinitionMgr::get().getSetting(filepath, settingPath);
+		const SettingDefinition& definition = SettingDefinitionMgr::get().getSetting(filename, settingPath);
 		bool validType = ((std::is_same<int, Type>::value == true) && (definition.defaultValue.type == SettingValueType::IntValue)) ||
 						  ((std::is_same<bool, Type>::value == true) && (definition.defaultValue.type == SettingValueType::BooleanValue)) ||
 						  ((std::is_same<std::string, Type>::value == true) && (definition.defaultValue.type == SettingValueType::StringValue));
 		if (!validType)
 		{
-			throw std::runtime_error("Wrong type for setting '" + settingPath + "' of file '" + filepath + "'");
+			throw std::runtime_error("Wrong type for setting '" + settingPath + "' of file '" + filename + "'");
 		}
 
 		return definition;
 	}
 
+	std::string SettingsService::buildFilepath(const std::string& filename) const
+	{
+		return SettingDefinitionMgr::get().getSettingsFolderPath() + "/" + filename;
+	}
 }}
