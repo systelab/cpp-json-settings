@@ -13,33 +13,35 @@ namespace systelab { namespace setting {
 	struct SettingValue
 	{
 		SettingValue()
-			:type(SettingValueType::IntValue)
-			,intValue(0)
-		{
-		}
-
-		SettingValue(int value)
-			:type(SettingValueType::IntValue)
-			,intValue(value)
-		{
-		}
-
-		SettingValue(bool value)
-			:type(SettingValueType::BooleanValue)
-			,boolValue(value)
-		{
-		}
-
-		SettingValue(const std::string& value)
 			:type(SettingValueType::StringValue)
-			,stringValue(value)
+			,value("")
+		{
+		}
+
+		SettingValue(int intValue)
+			:type(SettingValueType::IntValue)
+		{
+			std::stringstream ss;
+			ss << intValue;
+			value = ss.str();
+		}
+
+		SettingValue(bool boolValue)
+			:type(SettingValueType::BooleanValue)
+		{
+			std::stringstream ss;
+			ss << boolValue;
+			value = ss.str();
+		}
+
+		SettingValue(const std::string& strValue)
+			:type(SettingValueType::StringValue)
+			,value(strValue)
 		{
 		}
 
 		SettingValueType type;
-		int intValue;
-		bool boolValue;
-		std::string stringValue;
+		std::string value;
 	};
 
 }}
