@@ -3,10 +3,10 @@
 
 namespace systelab { namespace setting {
 
-	class ISettingsJSONFileIOService
+	class ISettingsService
 	{
 	public:
-		virtual ~ISettingsJSONFileIOService() = default;
+		virtual ~ISettingsService() = default;
 
 		virtual int readSettingInteger(const std::string& filepath, const std::string& settingPath, int defaultValue) const = 0;
 		virtual bool readSettingBoolean(const std::string& filepath, const std::string& settingPath, bool defaultValue) const = 0;
