@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "SettingCache.h"
+#include "SettingsCache.h"
 
 #include <boost/lexical_cast.hpp>
 
