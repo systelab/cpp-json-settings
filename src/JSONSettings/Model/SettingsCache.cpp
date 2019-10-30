@@ -55,4 +55,9 @@ namespace systelab { namespace setting {
 		m_cache[file][sectionPath] = oss.str();
 	}
 
+	void SettingsCache::clear()
+	{
+		m_cache.clear();
+	}
+
 }}

@@ -27,6 +27,8 @@ namespace systelab { namespace setting {
 		template<typename Type>
 		void setSetting(const SettingsFile&, const SettingPath&, const Type&);
 
+		void clear();
+
 	private:
 		Container m_cache;
 	};
