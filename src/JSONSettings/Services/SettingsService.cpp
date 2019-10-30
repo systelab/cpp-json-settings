@@ -1,10 +1,14 @@
 #include "stdafx.h"
 #include "SettingsService.h"
 
+#include "Model/SettingDefinitionMgr.h"
 #include "Model/SettingsCache.h"
 
+#include <boost/lexical_cast.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
+
+#include <type_traits>
 
 
 namespace systelab { namespace setting {
@@ -13,56 +17,61 @@ namespace systelab { namespace setting {
 	SettingsService::~SettingsService() = default;
 
 	int SettingsService::getSettingInteger(const std::string& filepath,
-											const std::string& settingPath,
-											int defaultValue) const
+										   const std::string& settingPath) const
 	{
-		return getSetting<int>(filepath, settingPath, defaultValue);
+		return getSetting<int>(filepath, settingPath);
 	}
 
 	bool SettingsService::getSettingBoolean(const std::string& filepath,
-											 const std::string& settingPath,
-											 bool defaultValue) const
+											const std::string& settingPath) const
 	{
-		return getSetting<bool>(filepath, settingPath, defaultValue);
+		return getSetting<bool>(filepath, settingPath);
 	}
 
 	std::string SettingsService::getSettingString(const std::string& filepath,
-												   const std::string& settingPath,
-												   const std::string& defaultValue) const
+												  const std::string& settingPath) const
 	{
-		return getSetting<std::string>(filepath, settingPath, defaultValue);
+		return getSetting<std::string>(filepath, settingPath);
 	}
 
 	void SettingsService::setSettingInteger(const std::string& filepath,
-											  const std::string& settingPath,
-											  int value)
+											const std::string& settingPath,
+											int value)
 	{
 		setSetting<int>(filepath, settingPath, value);
 	}
 
 	void SettingsService::setSettingBoolean(const std::string& filepath,
-											  const std::string& settingPath,
-											  bool value)
+											const std::string& settingPath,
+											bool value)
 	{
 		setSetting<bool>(filepath, settingPath, value);
 	}
 
 	void SettingsService::setSettingString(const std::string& filepath,
-											 const std::string& settingPath,
-											 const std::string& value)
+										   const std::string& settingPath,
+										   const std::string& value)
 	{
 		setSetting<std::string>(filepath, settingPath, value);
 	}
 
+	void SettingsService::clearCache()
+	{
+		SettingsCache::get().clear();
+	}
+
 	template<typename Type>
 	Type SettingsService::getSetting(const std::string& filepath,
-									  const std::string& settingPath,
-									  const Type& defaultValue) const
+									 const std::string& settingPath) const
 	{
-		boost::optional<Type> cacheValue = getSettingFromCache<Type>(filepath, settingPath);
-		if (cacheValue)
+		const SettingDefinition& definition = getSettingDefinition<Type>(filepath, settingPath);
+		if (definition.useCache)
 		{
-			return *cacheValue;
+			boost::optional<Type> cacheValue = getSettingFromCache<Type>(filepath, settingPath);
+			if (cacheValue)
+			{
+				return *cacheValue;
+			}
 		}
 
 		Type value;
@@ -71,7 +80,7 @@ namespace systelab { namespace setting {
 			std::ifstream ifs(filepath);
 			if (!ifs)
 			{
-				return defaultValue;
+				return getSettingValue<Type>(definition.defaultValue);
 			}
 
 			std::stringstream ss;
@@ -80,24 +89,28 @@ namespace systelab { namespace setting {
 
 			boost::property_tree::ptree tree;
 			boost::property_tree::json_parser::read_json(ss, tree);
-			value = tree.get<Type>(settingPath, defaultValue);
+			value = tree.get<Type>(settingPath, getSettingValue<Type>(definition.defaultValue));
 		}
 		catch (boost::property_tree::json_parser_error& /*e*/)
 		{
-			value = defaultValue;
+			value = getSettingValue<Type>(definition.defaultValue);
 		}
 
-		setSettingIntoCache<Type>(filepath, settingPath, value);
+		if (definition.useCache)
+		{
+			setSettingIntoCache<Type>(filepath, settingPath, value);
+		}
 
 		return value;
 	}
 
 	template<typename Type>
 	void SettingsService::setSetting(const std::string& filepath,
-									   const std::string& settingPath,
-									   Type value)
+									 const std::string& settingPath,
+									 Type value)
 	{
 		boost::property_tree::ptree tree;
+		const SettingDefinition& definition = getSettingDefinition<Type>(filepath, settingPath);
 
 		try
 		{
@@ -134,7 +147,10 @@ namespace systelab { namespace setting {
 		{
 		}
 
-		setSettingIntoCache<Type>(filepath, settingPath, value);
+		if (definition.useCache)
+		{
+			setSettingIntoCache<Type>(filepath, settingPath, value);
+		}
 	}
 
 	template<typename Type>
@@ -157,6 +173,33 @@ namespace systelab { namespace setting {
 											  const Type& value) const
 	{
 		SettingsCache::get().setSetting<Type>(filepath, settingPath, value);
+	}
+
+	template<typename Type>
+	Type SettingsService::getSettingValue(const SettingValue& settingValue) const
+	{
+		return boost::lexical_cast<Type>(settingValue.value);
+	}
+
+	template<typename Type>
+	const SettingDefinition& SettingsService::getSettingDefinition(const std::string& filepath,
+																   const std::string& settingPath) const
+	{
+		if (!SettingDefinitionMgr::get().hasSetting(filepath, settingPath))
+		{
+			throw std::runtime_error("Undefined setting '" + settingPath + "' for file '" + filepath + "'");
+		}
+
+		const SettingDefinition& definition = SettingDefinitionMgr::get().getSetting(filepath, settingPath);
+		bool validType = ((std::is_same<int, Type>::value == true) && (definition.defaultValue.type == SettingValueType::IntValue)) ||
+						  ((std::is_same<bool, Type>::value == true) && (definition.defaultValue.type == SettingValueType::BooleanValue)) ||
+						  ((std::is_same<std::string, Type>::value == true) && (definition.defaultValue.type == SettingValueType::StringValue));
+		if (!validType)
+		{
+			throw std::runtime_error("Wrong type for setting '" + settingPath + "' of file '" + filepath + "'");
+		}
+
+		return definition;
 	}
 
 }}

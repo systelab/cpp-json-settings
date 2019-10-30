@@ -15,6 +15,8 @@ namespace systelab { namespace setting {
 		virtual void setSettingInteger(const std::string& filepath, const std::string& settingPath, int value) = 0;
 		virtual void setSettingBoolean(const std::string& filepath, const std::string& settingPath, bool value) = 0;
 		virtual void setSettingString(const std::string& filepath, const std::string& settingPath, const std::string& value) = 0;
+
+		virtual void clearCache() = 0;
 	};
 
 }};
