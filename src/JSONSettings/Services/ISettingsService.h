@@ -8,13 +8,13 @@ namespace systelab { namespace setting {
 	public:
 		virtual ~ISettingsService() = default;
 
-		virtual int readSettingInteger(const std::string& filepath, const std::string& settingPath, int defaultValue) const = 0;
-		virtual bool readSettingBoolean(const std::string& filepath, const std::string& settingPath, bool defaultValue) const = 0;
-		virtual std::string readSettingString(const std::string& filepath, const std::string& settingPath, const std::string& defaultValue) const = 0;
+		virtual int getSettingInteger(const std::string& filepath, const std::string& settingPath, int defaultValue) const = 0;
+		virtual bool getSettingBoolean(const std::string& filepath, const std::string& settingPath, bool defaultValue) const = 0;
+		virtual std::string getSettingString(const std::string& filepath, const std::string& settingPath, const std::string& defaultValue) const = 0;
 
-		virtual void writeSettingInteger(const std::string& filepath, const std::string& settingPath, int value) = 0;
-		virtual void writeSettingBoolean(const std::string& filepath, const std::string& settingPath, bool value) = 0;
-		virtual void writeSettingString(const std::string& filepath, const std::string& settingPath, const std::string& value) = 0;
+		virtual void setSettingInteger(const std::string& filepath, const std::string& settingPath, int value) = 0;
+		virtual void setSettingBoolean(const std::string& filepath, const std::string& settingPath, bool value) = 0;
+		virtual void setSettingString(const std::string& filepath, const std::string& settingPath, const std::string& value) = 0;
 	};
 
 }};

@@ -12,50 +12,50 @@ namespace systelab { namespace setting {
 	SettingsService::SettingsService() = default;
 	SettingsService::~SettingsService() = default;
 
-	int SettingsService::readSettingInteger(const std::string& filepath,
+	int SettingsService::getSettingInteger(const std::string& filepath,
 											const std::string& settingPath,
 											int defaultValue) const
 	{
-		return readSetting<int>(filepath, settingPath, defaultValue);
+		return getSetting<int>(filepath, settingPath, defaultValue);
 	}
 
-	bool SettingsService::readSettingBoolean(const std::string& filepath,
+	bool SettingsService::getSettingBoolean(const std::string& filepath,
 											 const std::string& settingPath,
 											 bool defaultValue) const
 	{
-		return readSetting<bool>(filepath, settingPath, defaultValue);
+		return getSetting<bool>(filepath, settingPath, defaultValue);
 	}
 
-	std::string SettingsService::readSettingString(const std::string& filepath,
+	std::string SettingsService::getSettingString(const std::string& filepath,
 												   const std::string& settingPath,
 												   const std::string& defaultValue) const
 	{
-		return readSetting<std::string>(filepath, settingPath, defaultValue);
+		return getSetting<std::string>(filepath, settingPath, defaultValue);
 	}
 
-	void SettingsService::writeSettingInteger(const std::string& filepath,
+	void SettingsService::setSettingInteger(const std::string& filepath,
 											  const std::string& settingPath,
 											  int value)
 	{
-		writeSetting<int>(filepath, settingPath, value);
+		setSetting<int>(filepath, settingPath, value);
 	}
 
-	void SettingsService::writeSettingBoolean(const std::string& filepath,
+	void SettingsService::setSettingBoolean(const std::string& filepath,
 											  const std::string& settingPath,
 											  bool value)
 	{
-		writeSetting<bool>(filepath, settingPath, value);
+		setSetting<bool>(filepath, settingPath, value);
 	}
 
-	void SettingsService::writeSettingString(const std::string& filepath,
+	void SettingsService::setSettingString(const std::string& filepath,
 											 const std::string& settingPath,
 											 const std::string& value)
 	{
-		writeSetting<std::string>(filepath, settingPath, value);
+		setSetting<std::string>(filepath, settingPath, value);
 	}
 
 	template<typename Type>
-	Type SettingsService::readSetting(const std::string& filepath,
+	Type SettingsService::getSetting(const std::string& filepath,
 									  const std::string& settingPath,
 									  const Type& defaultValue) const
 	{
@@ -93,7 +93,7 @@ namespace systelab { namespace setting {
 	}
 
 	template<typename Type>
-	void SettingsService::writeSetting(const std::string& filepath,
+	void SettingsService::setSetting(const std::string& filepath,
 									   const std::string& settingPath,
 									   Type value)
 	{
