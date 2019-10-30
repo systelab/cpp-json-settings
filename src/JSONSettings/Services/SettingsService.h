@@ -1,15 +1,16 @@
 #pragma once
 
-#include "ISettingsJSONFileIOService.h"
+#include "ISettingsService.h"
 
+#include <boost/optional.hpp>
 
 namespace systelab { namespace setting {
 
-	class SettingsJSONFileIOService : public ISettingsJSONFileIOService
+	class SettingsService : public ISettingsService
 	{
 	public:
-		SettingsJSONFileIOService();
-		virtual ~SettingsJSONFileIOService();
+		SettingsService();
+		virtual ~SettingsService();
 
 		int readSettingInteger(const std::string& filepath, const std::string& settingPath, int defaultValue) const;
 		bool readSettingBoolean(const std::string& filepath, const std::string& settingPath, bool defaultValue) const;
@@ -25,6 +26,12 @@ namespace systelab { namespace setting {
 
 		template<typename Type>
 		void writeSetting(const std::string& filepath, const std::string& settingPath, Type defaultValue);
+
+		template<typename Type>
+		boost::optional<Type> getSettingFromCache(const std::string& filepath, const std::string& settingPath) const;
+
+		template<typename Type>
+		void setSettingIntoCache(const std::string& filepath, const std::string& settingPath, const Type& value) const;
 	};
 
 }};
