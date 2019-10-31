@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "SettingsCache.h"
 
-#include <boost/lexical_cast.hpp>
-
 
 namespace systelab { namespace setting {
 
