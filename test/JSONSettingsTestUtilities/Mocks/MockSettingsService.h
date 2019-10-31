@@ -11,9 +11,9 @@ namespace systelab { namespace setting { namespace test_utility {
 		MockSettingsService();
 		virtual ~MockSettingsService();
 
-		MOCK_CONST_METHOD3(getSettingInteger, int(const std::string&, const std::string&, int));
-		MOCK_CONST_METHOD3(getSettingBoolean, int(const std::string&, const std::string&, bool));
-		MOCK_CONST_METHOD3(getSettingString, std::string(const std::string&, const std::string&, const std::string&));
+		MOCK_CONST_METHOD2(getSettingInteger, int(const std::string&, const std::string&));
+		MOCK_CONST_METHOD2(getSettingBoolean, int(const std::string&, const std::string&));
+		MOCK_CONST_METHOD2(getSettingString, std::string(const std::string&, const std::string&));
 
 		MOCK_METHOD3(setSettingInteger, int(const std::string&, const std::string&, int));
 		MOCK_METHOD3(setSettingBoolean, int(const std::string&, const std::string&, bool));
