@@ -19,7 +19,7 @@ namespace systelab { namespace setting { namespace test_utility {
 		MOCK_METHOD3(setSettingBoolean, int(const std::string&, const std::string&, bool));
 		MOCK_METHOD3(setSettingString, int(const std::string&, const std::string&, const std::string&));
 
-		MOCK_METHOD3(clearCache, void());
+		MOCK_METHOD0(clearCache, void());
 	};
 
 }}}
