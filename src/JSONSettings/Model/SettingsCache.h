@@ -34,3 +34,5 @@ namespace systelab { namespace setting {
 	};
 
 }}
+
+#include "SettingsCache.inl"
