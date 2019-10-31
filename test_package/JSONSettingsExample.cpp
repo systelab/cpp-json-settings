@@ -16,7 +16,7 @@ JSON_SETTINGS_FILE(TestSettingsFile, "PackageSettingsFile.json",
 
 int main(int argc, char *argv[])
 {
-	int settingDefaultValue = GET_JSON_SETTING_INT(systelab::setting::SettingsService(), TestSettingsFile, TestSetting)
+	int settingDefaultValue = GET_JSON_SETTING_INT(systelab::setting::SettingsService(), TestSettingsFile, TestSetting);
 	std::cout << "Setting default value: " << settingDefaultValue << std::endl;
 
     return 0;
