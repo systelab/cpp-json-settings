@@ -1,6 +1,8 @@
 #define BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE
 
 #include <iostream>
+#include <map>
+#include <sstream>
 #include <stdexcept>
 
 #include "JSONSettings/SettingsService.h"
