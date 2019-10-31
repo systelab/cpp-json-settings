@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/systelab/cpp-json-settings.svg?branch=master)](https://travis-ci.org/systelab/cpp-json-settings)
-[![Build status](https://ci.appveyor.com/api/projects/status/jtbc93k8i6vtnx56?svg=true)](https://ci.appveyor.com/project/systelab/cpp-json-settings)
+[![Build status](https://ci.appveyor.com/api/projects/status/vl7vvxt33ex4l1bk?svg=true)](https://ci.appveyor.com/project/systelab/cpp-json-settings)
 [![codecov](https://codecov.io/gh/systelab/cpp-json-settings/branch/master/graph/badge.svg)](https://codecov.io/gh/systelab/cpp-json-settings)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/dd32a177d926495dab93be941a939881)](https://www.codacy.com/app/systelab/cpp-json-settings?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=systelab/cpp-json-settings&amp;utm_campaign=Badge_Grade)
 [![Download](https://api.bintray.com/packages/systelab/conan/JSONSettings:systelab/images/download.svg)](https://bintray.com/systelab/conan/JSONSettings:systelab/_latestVersion)
