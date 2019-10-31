@@ -37,6 +37,7 @@ class JSONSettingsConan(ConanFile):
         self.copy("SettingDefinitionMacros.h", dst="include/JSONSettings", src="src/JSONSettings/Model")
         self.copy("ISettingsService.h", dst="include/JSONSettings", src="src/JSONSettings/Services")
         self.copy("SettingsService.h", dst="include/JSONSettings", src="src/JSONSettings/Services")
+        self.copy("SettingsMacros.h", dst="include/JSONSettings", src="src/JSONSettings/Services")
         self.copy("*JSONSettings.lib", dst="lib", keep_path=False)
         self.copy("*JSONSettings.pdb", dst="lib", keep_path=False)
         self.copy("*JSONSettings.a", dst="lib", keep_path=False)
