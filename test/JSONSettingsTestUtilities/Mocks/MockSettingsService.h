@@ -1,6 +1,6 @@
 #pragma once
 
-#include "JSONSettings/Services/ISettingsService.h"
+#include "JSONSettings/ISettingsService.h"
 
 
 namespace systelab { namespace setting { namespace test_utility {
