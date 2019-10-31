@@ -31,6 +31,7 @@ class JSONSettingsConan(ConanFile):
         self.copy("*.so*", dst="bin", src="lib")
 
     def package(self):
+        self.copy("SettingValue.h", dst="include/JSONSettings", src="src/JSONSettings/Model")
         self.copy("SettingDefinition.h", dst="include/JSONSettings", src="src/JSONSettings/Model")
         self.copy("SettingDefinitionMgr.h", dst="include/JSONSettings", src="src/JSONSettings/Model")
         self.copy("SettingDefinitionMacros.h", dst="include/JSONSettings", src="src/JSONSettings/Model")
