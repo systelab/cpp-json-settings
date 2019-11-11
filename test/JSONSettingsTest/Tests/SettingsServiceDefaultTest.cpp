@@ -4,6 +4,8 @@
 
 #include "TestSettingsDefinition.h"
 
+#include <boost/filesystem.hpp>
+
 
 using namespace testing;
 
@@ -13,6 +15,8 @@ namespace systelab { namespace setting { namespace unit_test {
 	{
 		void SetUp()
 		{
+			std::string folderPath = boost::filesystem::canonical(boost::filesystem::path(".")).string();
+			SET_JSON_SETTINGS_FOLDER(folderPath);
 		}
 	};
 
