@@ -38,7 +38,7 @@
 	namespace SETTING_NAME \
 	{ \
 		static const std::string PATH = #SETTING_PATH; \
-		static const std::string DEFAULT_VALUE = #SETTING_DEFAULT_VALUE; \
+		static const std::string DEFAULT_VALUE = SETTING_DEFAULT_VALUE; \
 		struct SETTING_NAME##SettingStruct \
 		{ \
 			SETTING_NAME##SettingStruct() \
