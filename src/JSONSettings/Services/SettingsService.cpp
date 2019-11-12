@@ -80,18 +80,20 @@ namespace systelab { namespace setting {
 		{
 			std::string filepath = buildFilepath(filename);
 			std::ifstream ifs(filepath);
-			if (!ifs)
+			if (ifs)
 			{
-				return getSettingValue<Type>(definition.defaultValue);
+				std::stringstream ss;
+				ss << ifs.rdbuf();
+				ifs.close();
+
+				boost::property_tree::ptree tree;
+				boost::property_tree::json_parser::read_json(ss, tree);
+				value = tree.get<Type>(settingPath, getSettingValue<Type>(definition.defaultValue));
 			}
-
-			std::stringstream ss;
-			ss << ifs.rdbuf();
-			ifs.close();
-
-			boost::property_tree::ptree tree;
-			boost::property_tree::json_parser::read_json(ss, tree);
-			value = tree.get<Type>(settingPath, getSettingValue<Type>(definition.defaultValue));
+			else
+			{
+				value = getSettingValue<Type>(definition.defaultValue);
+			}
 		}
 		catch (boost::property_tree::json_parser_error& /*e*/)
 		{
