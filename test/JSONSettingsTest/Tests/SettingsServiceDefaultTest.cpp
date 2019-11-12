@@ -15,7 +15,7 @@ namespace systelab { namespace setting { namespace unit_test {
 	{
 		void SetUp()
 		{
-			std::string folderPath = boost::filesystem::canonical(boost::filesystem::path(".")).string();
+			std::string folderPath = boost::filesystem::absolute(boost::filesystem::path("SettingsServiceDefaultTest")).string();
 			SET_JSON_SETTINGS_FOLDER(folderPath);
 		}
 	};
