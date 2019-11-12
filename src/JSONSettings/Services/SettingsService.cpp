@@ -4,6 +4,7 @@
 #include "Model/SettingDefinitionMgr.h"
 #include "Model/SettingsCache.h"
 
+#include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
@@ -77,7 +78,8 @@ namespace systelab { namespace setting {
 		Type value;
 		try
 		{
-			std::ifstream ifs(buildFilepath(filename));
+			std::string filepath = buildFilepath(filename);
+			std::ifstream ifs(filepath);
 			if (!ifs)
 			{
 				return getSettingValue<Type>(definition.defaultValue);
@@ -114,7 +116,8 @@ namespace systelab { namespace setting {
 
 		try
 		{
-			std::ifstream ifs(buildFilepath(filename));
+			std::string filepath = buildFilepath(filename);
+			std::ifstream ifs(filepath);
 			if (!ifs)
 			{
 				return;
@@ -204,6 +207,6 @@ namespace systelab { namespace setting {
 
 	std::string SettingsService::buildFilepath(const std::string& filename) const
 	{
-		return SettingDefinitionMgr::get().getSettingsFolderPath() + "/" + filename;
+		return (boost::filesystem::path(SettingDefinitionMgr::get().getSettingsFolderPath()) / filename).string();
 	}
 }}
