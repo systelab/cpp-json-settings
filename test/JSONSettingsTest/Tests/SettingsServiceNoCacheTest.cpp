@@ -1,48 +1,23 @@
 #include "stdafx.h"
-#include "JSONSettings/Services/SettingsService.h"
-#include "JSONSettings/Services/SettingsMacros.h"
+#include "SettingsServiceBaseTest.h"
 
-#include "TestSettingsDefinition.h"
-
-#include "JSONAdapterTestUtilities/JSONAdapterUtilities.h"
-#include "RapidJSONAdapter/JSONAdapter.h"
-
-#include <boost/filesystem.hpp>
-
-
-using namespace testing;
 
 namespace systelab { namespace setting { namespace unit_test {
 
-	class SettingsServiceNoCacheTest : public ::testing::Test
+	class SettingsServiceNoCacheTest : public SettingsServiceBaseTest
 	{
 	public:
 		void SetUp()
 		{
-			auto folderPath = boost::filesystem::path("SettingsServiceNoCacheTest");
-			if (!boost::filesystem::exists(folderPath))
-			{
-				boost::filesystem::create_directories(folderPath);
-			}
-
-			SET_JSON_SETTINGS_FOLDER(boost::filesystem::absolute(folderPath).string());
-			m_settingsFilepath = boost::filesystem::absolute(folderPath) / "MySettingsFile.json";
-
-			if (boost::filesystem::exists(m_settingsFilepath))
-			{
-				boost::filesystem::remove(m_settingsFilepath);
-			}
+			SettingsServiceBaseTest::SetUp();
 		}
 
 		void TearDown()
 		{
-			if (boost::filesystem::exists(m_settingsFilepath))
-			{
-				boost::filesystem::remove(m_settingsFilepath);
-			}
+			SettingsServiceBaseTest::TearDown();
 		}
 
-		void writeSettingsFile(int intValue, const std::string& strValue, bool boolValue)
+		void writeNoCacheSettingsIntoFile(int intValue, const std::string& strValue, bool boolValue)
 		{
 			std::stringstream ss;
 			ss << "{" << std::endl;
@@ -51,32 +26,9 @@ namespace systelab { namespace setting { namespace unit_test {
 			ss << "    \"BoolSettingNoCache\": \"" << (boolValue ? "true" : "false") << "\"" << std::endl;
 			ss << "}";
 
-			boost::filesystem::remove(m_settingsFilepath);
-
-			std::ofstream fileStream;
-			fileStream.open(m_settingsFilepath.string());
-			fileStream << ss.str();
-			fileStream.close();
+			std::string fileContents = ss.str();
+			writeSettingsFile(fileContents);
 		}
-
-		std::string readSettingsFile()
-		{
-			std::string fileContents;
-			std::ifstream ifs(m_settingsFilepath.string());
-			if (ifs)
-			{
-				std::stringstream ss;
-				ss << ifs.rdbuf();
-				fileContents = ss.str();
-				ifs.close();
-			}
-
-			return fileContents;
-		}
-
-	protected:
-		boost::filesystem::path m_settingsFilepath;
-		systelab::json::rapidjson::JSONAdapter m_jsonAdapter;
 	};
 
 
@@ -90,7 +42,7 @@ namespace systelab { namespace setting { namespace unit_test {
 
 	TEST_F(SettingsServiceNoCacheTest, testGetSettingsReturnsValuesFromFile)
 	{
-		writeSettingsFile(123456, "file", true);
+		writeNoCacheSettingsIntoFile(123456, "file", true);
 
 		EXPECT_EQ(123456, GET_JSON_SETTING_INT (SettingsService(), MySettingsFile, RootIntSettingNoCache));
 		EXPECT_EQ("file", GET_JSON_SETTING_STR (SettingsService(), MySettingsFile, RootStrSettingNoCache));
@@ -103,7 +55,7 @@ namespace systelab { namespace setting { namespace unit_test {
 		GET_JSON_SETTING_STR (SettingsService(), MySettingsFile, RootStrSettingNoCache);
 		GET_JSON_SETTING_BOOL(SettingsService(), MySettingsFile, RootBoolSettingNoCache);
 
-		writeSettingsFile(1111, "AAAA", false);
+		writeNoCacheSettingsIntoFile(1111, "AAAA", false);
 
 		EXPECT_EQ(  1111, GET_JSON_SETTING_INT (SettingsService(), MySettingsFile, RootIntSettingNoCache));
 		EXPECT_EQ("AAAA", GET_JSON_SETTING_STR (SettingsService(), MySettingsFile, RootStrSettingNoCache));
@@ -154,7 +106,7 @@ namespace systelab { namespace setting { namespace unit_test {
 	// SetSettings - Existing file
 	TEST_F(SettingsServiceNoCacheTest, testSetSettingIntUpdatesValueFromExistingFile)
 	{
-		writeSettingsFile(1111, "AAAA", false);
+		writeNoCacheSettingsIntoFile(1111, "AAAA", false);
 
 		SET_JSON_SETTING_INT(SettingsService(), MySettingsFile, RootIntSettingNoCache, 2222);
 
@@ -171,7 +123,7 @@ namespace systelab { namespace setting { namespace unit_test {
 
 	TEST_F(SettingsServiceNoCacheTest, testSetSettingStrUpdatesValueFromExistingFile)
 	{
-		writeSettingsFile(1111, "AAAA", false);
+		writeNoCacheSettingsIntoFile(1111, "AAAA", false);
 
 		SET_JSON_SETTING_STR(SettingsService(), MySettingsFile, RootStrSettingNoCache, "BBBBBB");
 
@@ -180,6 +132,23 @@ namespace systelab { namespace setting { namespace unit_test {
 		ss << "    \"IntSettingNoCache\": \"1111\"," << std::endl;
 		ss << "    \"StrSettingNoCache\": \"BBBBBB\"," << std::endl;
 		ss << "    \"BoolSettingNoCache\": \"false\"" << std::endl;
+		ss << "}" << std::endl;
+
+		std::string expectedJSON = ss.str();
+		EXPECT_TRUE(json::test_utility::compareJSONs(expectedJSON, readSettingsFile(), m_jsonAdapter));
+	}
+
+	TEST_F(SettingsServiceNoCacheTest, testSetSettingBoolUpdatesValueFromExistingFile)
+	{
+		writeNoCacheSettingsIntoFile(1111, "AAAA", false);
+
+		SET_JSON_SETTING_BOOL(SettingsService(), MySettingsFile, RootBoolSettingNoCache, true);
+
+		std::stringstream ss;
+		ss << "{" << std::endl;
+		ss << "    \"IntSettingNoCache\": \"1111\"," << std::endl;
+		ss << "    \"StrSettingNoCache\": \"AAAA\"," << std::endl;
+		ss << "    \"BoolSettingNoCache\": \"true\"" << std::endl;
 		ss << "}" << std::endl;
 
 		std::string expectedJSON = ss.str();
