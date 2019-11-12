@@ -118,16 +118,14 @@ namespace systelab { namespace setting {
 		{
 			std::string filepath = buildFilepath(filename);
 			std::ifstream ifs(filepath);
-			if (!ifs)
+			if (ifs)
 			{
-				return;
+				std::stringstream ss;
+				ss << ifs.rdbuf();
+				ifs.close();
+
+				boost::property_tree::json_parser::read_json(ss, tree);
 			}
-
-			std::stringstream ss;
-			ss << ifs.rdbuf();
-			ifs.close();
-
-			boost::property_tree::json_parser::read_json(ss, tree);
 		}
 		catch (boost::property_tree::json_parser_error& /*e*/)
 		{
