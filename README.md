@@ -94,7 +94,7 @@ target_link_libraries(${MY_PROJECT} ${CONAN_LIBS})
 
 The settings files should be defined using the `JSON_SETTINGS_FILE` macro, which specifies the associated symbol name (used to access to it) and the associated JSON filename.
 This macro also defines the settings to be contained on the file by making use of the `JSON_SETTING_INT`, `JSON_SETTING_STR` and `JSON_SETTING_BOOL` macros.
-Thus, for each setting, the following information needs to be defined:
+Thus, for each setting, the following information needs to be provided:
 
 * *Value type*: Defined implicitly by the macro used. Current implementation supports 3 types: integer (JSON_SETTING_INT), string (JSON_SETTING_STR) and boolean (JSON_SETTING_BOOL).
 * *Symbol name*: Name of the symbol used when accessing to the setting. It must be unique regards the settings file.
@@ -112,7 +112,7 @@ See the following example for a better understanding of how to define a settings
 
 JSON_SETTINGS_FILE(MySettingsFile, "MySettingsFile.json",
 
-	// Root setting
+	// Root settings
 	JSON_SETTING_INT (RootIntSettingCache,   "IntSettingCache",   2222,     CACHE_ENABLED)
 	JSON_SETTING_STR (RootStrSettingNoCache, "StrSettingNoCache", "SECOND", CACHE_DISABLED)
 	JSON_SETTING_BOOL(RootBoolSettingCache,  "BoolSettingCache",  false,    CACHE_ENABLED)
@@ -122,7 +122,7 @@ JSON_SETTINGS_FILE(MySettingsFile, "MySettingsFile.json",
 	JSON_SETTING_STR (SectionStrSetting,  "Section.StrSettingCache",  "ba", CACHE_ENABLED)
 	JSON_SETTING_BOOL(SectionBoolSetting, "Section.BoolSettingCache", true, CACHE_ENABLED)
 
-	// Subsection setting
+	// Subsection settings
 	JSON_SETTING_INT (SubsectionIntSetting,  "Section.Subsection.IntSettingCache",  8765,  CACHE_DISABLED)
 	JSON_SETTING_STR (SubsectionStrSetting,  "Section.Subsection.StrSettingCache",  "dc",  CACHE_DISABLED)
 	JSON_SETTING_BOOL(SubsectionBoolSetting, "Section.Subsection.BoolSettingCache", false, CACHE_DISABLED)
@@ -143,7 +143,7 @@ SET_JSON_SETTINGS_FOLDER("../Path/Of/My/Settings/Folder");
 
 ### Settings access
 
-Query the value associated to a setting using the `GET_JSON_SETTING_INT`, `GET_JSON_SETTING_STR` or `GET_JSON_SETTING_BOOL` macro with the symbol names of the file and the setting as arguments:
+Query the value associated to a setting using the `GET_JSON_SETTING_INT`, `GET_JSON_SETTING_STR` or `GET_JSON_SETTING_BOOL` macros with the symbol names of the file and the setting as arguments:
 
 ``` cpp
 #include "JSONSettings/Services/SettingsService.h"
