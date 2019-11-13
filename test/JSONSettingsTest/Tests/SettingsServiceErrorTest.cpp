@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "SettingsServiceBaseTest.h"
 
+#include "JSONSettings/Model/SettingsCache.h"
+
 
 namespace systelab { namespace setting { namespace unit_test {
 
@@ -112,6 +114,12 @@ namespace systelab { namespace setting { namespace unit_test {
 		ASSERT_THROW(SettingsService().setSettingInteger("MySettingsFile.json", "NotExistingSettingInt", 1), std::runtime_error);
 		ASSERT_THROW(SettingsService().setSettingString("MySettingsFile.json", "NotExistingSettingStr", "A"), std::runtime_error);
 		ASSERT_THROW(SettingsService().setSettingBoolean("MySettingsFile.json", "NotExistingSettingBool", true), std::runtime_error);
+	}
+
+	// Not in cache
+	TEST_F(SettingsServiceErrorTest, testGetSettingFromCacheThrowsExceptionWhenNotFound)
+	{
+		ASSERT_THROW(SettingsCache().getSetting<int>("MySettingsFile.json", "SettingNotInCache"), std::runtime_error);
 	}
 
 }}}
