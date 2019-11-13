@@ -131,6 +131,22 @@ namespace systelab { namespace setting { namespace unit_test {
 	}
 
 
+	// Invalid file
+	TEST_F(SettingsServiceErrorTest, testGetSettingReturnsDefaultValueWhenFileIsInvalid)
+	{
+		EXPECT_EQ(111,  GET_JSON_SETTING_INT (SettingsService(), InvalidSettingsFile, IntSetting));
+		EXPECT_EQ("A",  GET_JSON_SETTING_STR (SettingsService(), InvalidSettingsFile, StrSetting));
+		EXPECT_EQ(true, GET_JSON_SETTING_BOOL(SettingsService(), InvalidSettingsFile, BoolSetting));
+	}
+
+	TEST_F(SettingsServiceErrorTest, testSetSettingThrowsExceptionWhenFileIsInvalid)
+	{
+		ASSERT_THROW(SET_JSON_SETTING_INT(SettingsService(), InvalidSettingsFile, IntSetting, 222), std::runtime_error);
+		ASSERT_THROW(SET_JSON_SETTING_STR(SettingsService(), InvalidSettingsFile, StrSetting, "B"), std::runtime_error);
+		ASSERT_THROW(SET_JSON_SETTING_BOOL(SettingsService(), InvalidSettingsFile, BoolSetting, false), std::runtime_error);
+	}
+
+
 	// Not in cache
 	TEST_F(SettingsServiceErrorTest, testGetSettingFromCacheThrowsExceptionWhenNotFound)
 	{

@@ -30,5 +30,17 @@ namespace systelab { namespace setting { namespace unit_test {
 		JSON_SETTING_BOOL(SubsectionBoolSetting, "Section.Subsection.BoolSettingCache", false, CACHE_DISABLED)
 	);
 
+	JSON_SETTINGS_FILE(SecondSettingsFile, "SecondSettingsFile.json",
+		JSON_SETTING_INT (RootIntSettingCache,  "IntSettingCache",  2222, CACHE_ENABLED)
+		JSON_SETTING_STR (RootStrSettingCache,  "StrSettingCache",  "SECOND", CACHE_ENABLED)
+		JSON_SETTING_BOOL(RootBoolSettingCache, "BoolSettingCache", false, CACHE_ENABLED)
+	);
+	
+	JSON_SETTINGS_FILE(InvalidSettingsFile, "<|?s/>",
+		JSON_SETTING_INT (IntSetting,  "IntSetting", 111, CACHE_ENABLED)
+		JSON_SETTING_STR (StrSetting,  "StrSetting", "A", CACHE_ENABLED)
+		JSON_SETTING_BOOL(BoolSetting, "BoolSetting", true, CACHE_ENABLED)
+	);
+
 }}}
 
