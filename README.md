@@ -22,23 +22,40 @@ Prerequisites:
 Build library with the following steps:
   1. Clone this repository in a local drive
   2. Make a build directory (i.e. `build/`)
-  3. Install `conan` dependencies in the build directory
-  4. Run `cmake` in the build directory to configure build targets
-  5. Use `Visual Studio` (on Windows) or `make` (on Linux) to build the library
+  3. Register bintray repository for Systelab libraries on conan
+  4. Install `conan` dependencies in the build directory
+  5. Run `cmake` in the build directory to configure build targets
+  6. Use `Visual Studio` (on Windows) or `make` (on Linux) to build the library
 
 #### Windows
+
+In order to build the application on Windows for the `Release` configuration, run the following commands ($VSINSTALLPATH is the path where Visual Studio has been installed):
+
 ``` bash
 > git clone https://github.com/systelab/cpp-json-configuration
 > md build && cd build
-> conan install .. -s arch=x86
-> cmake ..
-> devenv.exe JWTUtils.sln
+> conan remote add systelab-bintray https://api.bintray.com/conan/systelab/conan
+> conan install .. -s build_type=Release -s compiler.toolset=v141 -s arch=x86_64
+> cmake .. -G "Visual Studio 15 2017 Win64"
+> "$VSINSTALLPATH/devenv.com" JSONSettings.sln /build "Release" /PROJECT "JSONSettings"
+```
+
+However, if you want to `Debug` the source code, you will need these commands:
+
+``` bash
+> git clone https://github.com/systelab/cpp-json-configuration
+> md build && cd build
+> conan remote add systelab-bintray https://api.bintray.com/conan/systelab/conan
+> conan install .. -s build_type=Debug -s compiler.toolset=v141 -s arch=x86_64
+> cmake .. -G "Visual Studio 15 2017 Win64"
+> "$VSINSTALLPATH/devenv.com" JSONSettings.sln /build "Debug" /PROJECT "JSONSettings"
 ```
 
 #### Linux
 ``` bash
 > git clone https://github.com/systelab/cpp-json-configuration
 > mkdir build && cd build
+> conan remote add systelab-bintray https://api.bintray.com/conan/systelab/conan
 > conan install ..
 > cmake .. -DCMAKE_BUILD_TYPE=[Debug | Coverage | Release]
 > make
