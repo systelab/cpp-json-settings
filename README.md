@@ -105,7 +105,7 @@ Thus, for each setting, the following information needs to be provided:
 See the following example for a better understanding of how to define a settings file:
 
 ``` cpp
-#include "JSONSettings/Model/SettingDefinitionMacros.h"
+#include "JSONSettings/SettingDefinitionMacros.h"
 
 #define CACHE_ENABLED true
 #define CACHE_DISABLED false
@@ -135,7 +135,7 @@ JSON_SETTINGS_FILE(MySettingsFile, "MySettingsFile.json",
 The folder where the JSON settings files are stored can be defined by means of the `SET_JSON_SETTINGS_FOLDER` macro:
 
 ``` cpp
-#include "JSONSettings/Model/SettingDefinitionMacros.h"
+#include "JSONSettings/SettingDefinitionMacros.h"
 
 SET_JSON_SETTINGS_FOLDER("../Path/Of/My/Settings/Folder");
 ```
@@ -146,8 +146,8 @@ SET_JSON_SETTINGS_FOLDER("../Path/Of/My/Settings/Folder");
 Query the value associated to a setting using the `GET_JSON_SETTING_INT`, `GET_JSON_SETTING_STR` or `GET_JSON_SETTING_BOOL` macros with the symbol names of the file and the setting as arguments:
 
 ``` cpp
-#include "JSONSettings/Services/SettingsService.h"
-#include "JSONSettings/Services/SettingsMacros.h"
+#include "JSONSettings/SettingsService.h"
+#include "JSONSettings/SettingsMacros.h"
 
 int settingValue = GET_JSON_SETTING_INT(MySettingsFile, SectionIntSetting);
 ```
@@ -165,7 +165,7 @@ SET_JSON_SETTING_INT(MySettingsFile, SubsectionStrSetting, "New value for subsec
 The contents of the settings cache can be removed by making use of the `clearCache()` method of the `SettingsService` class:
 
 ``` cpp
-#include "JSONSettings/Services/SettingsService.h"
+#include "JSONSettings/SettingsService.h"
 
 systelab::setting::SettingsService().clearCache();
 ```
