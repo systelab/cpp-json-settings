@@ -61,5 +61,58 @@ namespace systelab { namespace setting { namespace unit_test {
 	}
 
 
+	// Wrong type
+	TEST_F(SettingsServiceErrorTest, testGetSettingIntThrowsExceptionWhenNotForDefinedType)
+	{
+		ASSERT_THROW(GET_JSON_SETTING_INT(SettingsService(), MySettingsFile, SectionStrSetting), std::runtime_error);
+		ASSERT_THROW(GET_JSON_SETTING_INT(SettingsService(), MySettingsFile, SectionBoolSetting), std::runtime_error);
+	}
+
+	TEST_F(SettingsServiceErrorTest, testGetSettingStrThrowsExceptionWhenNotForDefinedType)
+	{
+		ASSERT_THROW(GET_JSON_SETTING_STR(SettingsService(), MySettingsFile, SectionIntSetting), std::runtime_error);
+		ASSERT_THROW(GET_JSON_SETTING_STR(SettingsService(), MySettingsFile, SectionBoolSetting), std::runtime_error);
+	}
+
+	TEST_F(SettingsServiceErrorTest, testGetSettingBoolThrowsExceptionWhenNotForDefinedType)
+	{
+		ASSERT_THROW(GET_JSON_SETTING_BOOL(SettingsService(), MySettingsFile, SectionIntSetting), std::runtime_error);
+		ASSERT_THROW(GET_JSON_SETTING_BOOL(SettingsService(), MySettingsFile, SectionStrSetting), std::runtime_error);
+	}
+
+	TEST_F(SettingsServiceErrorTest, testSetSettingIntThrowsExceptionWhenNotForDefinedType)
+	{
+		ASSERT_THROW(SET_JSON_SETTING_INT(SettingsService(), MySettingsFile, SectionStrSetting, 1), std::runtime_error);
+		ASSERT_THROW(SET_JSON_SETTING_INT(SettingsService(), MySettingsFile, SectionBoolSetting, 1), std::runtime_error);
+	}
+
+	TEST_F(SettingsServiceErrorTest, testSetSettingStrThrowsExceptionWhenNotForDefinedType)
+	{
+		ASSERT_THROW(SET_JSON_SETTING_STR(SettingsService(), MySettingsFile, SectionIntSetting, "A"), std::runtime_error);
+		ASSERT_THROW(SET_JSON_SETTING_STR(SettingsService(), MySettingsFile, SectionBoolSetting, "A"), std::runtime_error);
+	}
+
+	TEST_F(SettingsServiceErrorTest, testSetSettingBoolThrowsExceptionWhenNotForDefinedType)
+	{
+		ASSERT_THROW(SET_JSON_SETTING_BOOL(SettingsService(), MySettingsFile, SectionIntSetting, true), std::runtime_error);
+		ASSERT_THROW(SET_JSON_SETTING_BOOL(SettingsService(), MySettingsFile, SectionStrSetting, true), std::runtime_error);
+	}
+
+
+	// Undefined setting
+	TEST_F(SettingsServiceErrorTest, testGetSettingThrowsExceptionWhenGivenSettingNotDefined)
+	{
+		ASSERT_THROW(SettingsService().getSettingInteger("MySettingsFile.json", "NotExistingSettingInt"), std::runtime_error);
+		ASSERT_THROW(SettingsService().getSettingString("MySettingsFile.json", "NotExistingSettingStr"), std::runtime_error);
+		ASSERT_THROW(SettingsService().getSettingBoolean("MySettingsFile.json", "NotExistingSettingBool"), std::runtime_error);
+	}
+
+	TEST_F(SettingsServiceErrorTest, testSetSettingThrowsExceptionWhenGivenSettingNotDefined)
+	{
+		ASSERT_THROW(SettingsService().setSettingInteger("MySettingsFile.json", "NotExistingSettingInt", 1), std::runtime_error);
+		ASSERT_THROW(SettingsService().setSettingString("MySettingsFile.json", "NotExistingSettingStr", "A"), std::runtime_error);
+		ASSERT_THROW(SettingsService().setSettingBoolean("MySettingsFile.json", "NotExistingSettingBool", true), std::runtime_error);
+	}
+
 }}}
 
