@@ -10,6 +10,7 @@
 #include <boost/property_tree/json_parser.hpp>
 
 #include <type_traits>
+#include <iostream>
 
 
 namespace systelab { namespace setting {
@@ -146,8 +147,9 @@ namespace systelab { namespace setting {
 			f << &(*oss.rdbuf());
 			f.close();
 		}
-		catch (boost::property_tree::json_parser_error& /*e*/)
+		catch (std::exception& /*e*/)
 		{
+			throw std::runtime_error("Unable to write on file '" + buildFilepath(filename) + "'");
 		}
 
 		if (definition.useCache)
