@@ -15,6 +15,8 @@ class JSONSettingsConan(ConanFile):
 
     def configure(self):
         self.options["boost"].shared = True
+        self.options["RapidJSONAdapter"].gtest = self.options.gtest
+        self.options["JSONAdapterTestUtilities"].gtest = self.options.gtest
 
     def requirements(self):
         self.requires(("boost/%s@conan/stable") % self.options.boost)
