@@ -101,12 +101,19 @@ namespace systelab { namespace setting { namespace unit_test {
 	}
 
 
-	// Undefined setting
+	// Undefined setting/file
 	TEST_F(SettingsServiceErrorTest, testGetSettingThrowsExceptionWhenGivenSettingNotDefined)
 	{
 		ASSERT_THROW(SettingsService().getSettingInteger("MySettingsFile.json", "NotExistingSettingInt"), std::runtime_error);
 		ASSERT_THROW(SettingsService().getSettingString("MySettingsFile.json", "NotExistingSettingStr"), std::runtime_error);
 		ASSERT_THROW(SettingsService().getSettingBoolean("MySettingsFile.json", "NotExistingSettingBool"), std::runtime_error);
+	}
+
+	TEST_F(SettingsServiceErrorTest, testGetSettingThrowsExceptionWhenGivenFileNotDefined)
+	{
+		ASSERT_THROW(SettingsService().getSettingInteger("NotDefinedSettingsFile.json", "SettingInt"), std::runtime_error);
+		ASSERT_THROW(SettingsService().getSettingString("NotDefinedSettingsFile.json", "SettingStr"), std::runtime_error);
+		ASSERT_THROW(SettingsService().getSettingBoolean("NotDefinedSettingsFile.json", "SettingBool"), std::runtime_error);
 	}
 
 	TEST_F(SettingsServiceErrorTest, testSetSettingThrowsExceptionWhenGivenSettingNotDefined)
@@ -115,6 +122,14 @@ namespace systelab { namespace setting { namespace unit_test {
 		ASSERT_THROW(SettingsService().setSettingString("MySettingsFile.json", "NotExistingSettingStr", "A"), std::runtime_error);
 		ASSERT_THROW(SettingsService().setSettingBoolean("MySettingsFile.json", "NotExistingSettingBool", true), std::runtime_error);
 	}
+
+	TEST_F(SettingsServiceErrorTest, testSetSettingThrowsExceptionWhenGivenFileNotDefined)
+	{
+		ASSERT_THROW(SettingsService().setSettingInteger("NotDefinedSettingsFile.json", "SettingInt", 1), std::runtime_error);
+		ASSERT_THROW(SettingsService().setSettingString("NotDefinedSettingsFile.json", "SettingStr", "A"), std::runtime_error);
+		ASSERT_THROW(SettingsService().setSettingBoolean("NotDefinedSettingsFile.json", "SettingBool", true), std::runtime_error);
+	}
+
 
 	// Not in cache
 	TEST_F(SettingsServiceErrorTest, testGetSettingFromCacheThrowsExceptionWhenNotFound)
