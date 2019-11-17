@@ -149,14 +149,14 @@ Query the value associated to a setting using the `GET_JSON_SETTING_INT`, `GET_J
 #include "JSONSettings/SettingsService.h"
 #include "JSONSettings/SettingsMacros.h"
 
-int settingValue = GET_JSON_SETTING_INT(MySettingsFile, SectionIntSetting);
+int settingValue = GET_JSON_SETTING_INT(systelab::setting::SettingsService(), MySettingsFile, SectionIntSetting);
 ```
 > Notice that the header file with the settings file definition must be included to use the symbol names
 
 Similarly, a setting value can be changed through the `SET_JSON_SETTING_INT`, `SET_JSON_SETTING_STR` and `SET_JSON_SETTING_BOOL` macros:
 
 ``` cpp
-SET_JSON_SETTING_INT(MySettingsFile, SubsectionStrSetting, "New value for subsection setting");
+SET_JSON_SETTING_INT(systelab::setting::SettingsService(), MySettingsFile, SubsectionStrSetting, "New value for subsection setting");
 ```
 
 
