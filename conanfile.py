@@ -12,6 +12,7 @@ class JSONSettingsConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     options = {"boost": ["1.66.0", "1.67.0"], "gtest": ["1.7.0", "1.8.1"]}
     default_options = {"boost":"1.67.0", "gtest":"1.8.1"}
+    exports_sources = "*"
 
     def configure(self):
         self.options["boost"].shared = True
