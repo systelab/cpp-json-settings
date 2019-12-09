@@ -1,4 +1,4 @@
-from conans import ConanFile, tools
+from conans import ConanFile, CMake, tools
 
 class JSONSettingsConan(ConanFile):
     name = "JSONSettings"
@@ -22,12 +22,17 @@ class JSONSettingsConan(ConanFile):
         self.requires(("boost/%s@conan/stable") % self.options.boost)
 
     def build_requirements(self):
-        self.build_requires("RapidJSONAdapter/1.0.4@systelab/stable")
-        self.build_requires("JSONAdapterTestUtilities/1.0.4@systelab/stable")
+        self.build_requires("RapidJSONAdapter/1.0.5@systelab/stable")
+        self.build_requires("JSONAdapterTestUtilities/1.0.8@systelab/stable")
         if self.options.gtest == "1.7.0":
             self.build_requires("gtest/1.7.0@systelab/stable")
         else:
             self.build_requires("gtest/1.8.1@bincrafters/stable")
+
+    def build(self):
+        cmake = CMake(self)
+        cmake.configure(source_folder=".")
+        cmake.build()
 
     def imports(self):
         self.copy("*.dll", dst=("bin/%s" % self.settings.build_type), src="bin")
