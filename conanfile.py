@@ -10,8 +10,8 @@ class JSONSettingsConan(ConanFile):
     license = "MIT"
     generators = "cmake_find_package"
     settings = "os", "compiler", "build_type", "arch"
-    options = {"boost": ["1.66.0", "1.67.0"], "gtest": ["1.7.0", "1.8.1"]}
-    default_options = {"boost":"1.67.0", "gtest":"1.8.1"}
+    options = {"boost": ["1.66.0", "1.67.0"], "gtest": ["1.7.0", "1.8.1", "1.10.0"]}
+    default_options = {"boost":"1.67.0", "gtest":"1.10.0"}
     exports_sources = "*"
 
     def configure(self):
@@ -23,12 +23,14 @@ class JSONSettingsConan(ConanFile):
         self.requires(("boost/%s@conan/stable") % self.options.boost)
 
     def build_requirements(self):
-        self.build_requires("RapidJSONAdapter/1.0.5@systelab/stable")
-        self.build_requires("JSONAdapterTestUtilities/1.0.8@systelab/stable")
+        self.build_requires("RapidJSONAdapter/1.0.6@systelab/stable")
+        self.build_requires("JSONAdapterTestUtilities/1.0.9@systelab/stable")
         if self.options.gtest == "1.7.0":
             self.build_requires("gtest/1.7.0@systelab/stable")
-        else:
+        elif self.options.gtest == "1.8.1":
             self.build_requires("gtest/1.8.1@bincrafters/stable")
+        else:
+            self.build_requires("gtest/1.10.0@systelab/stable")
 
     def build(self):
         cmake = CMake(self)
