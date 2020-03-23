@@ -26,7 +26,14 @@ namespace systelab { namespace setting {
 			auto itSetting = itFile->second.find(path);
 			if (itSetting != itFile->second.end())
 			{
-				return boost::lexical_cast<Type>(itSetting->second);
+				if (std::is_same<bool, Type>::value == true)
+				{
+					return boost::lexical_cast<Type>(itSetting->second == "true");
+				}
+				else
+				{
+					return boost::lexical_cast<Type>(itSetting->second);
+				}
 			}
 		}
 
@@ -38,9 +45,7 @@ namespace systelab { namespace setting {
 								   const SettingPath& sectionPath,
 								   const Type& value)
 	{
-		std::stringstream oss;
-		oss << value;
-		m_cache[file][sectionPath] = oss.str();
+		m_cache[file][sectionPath] = SettingValue(value).value;
 	}
 
 }}

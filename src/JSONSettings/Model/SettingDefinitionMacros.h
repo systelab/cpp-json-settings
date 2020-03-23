@@ -34,6 +34,22 @@
 		static SETTING_NAME##SettingStruct structInstance; \
 	}
 
+#define JSON_SETTING_DBL(SETTING_NAME, SETTING_PATH, SETTING_DEFAULT_VALUE, USE_CACHE) \
+	namespace SETTING_NAME \
+	{ \
+		static const std::string PATH = SETTING_PATH; \
+		static const double DEFAULT_VALUE = SETTING_DEFAULT_VALUE; \
+		struct SETTING_NAME##SettingStruct \
+		{ \
+			SETTING_NAME##SettingStruct() \
+			{ \
+				systelab::setting::SettingDefinition settingDefinition = { DEFAULT_VALUE, NO_VALIDATION_FUNCTION(), USE_CACHE }; \
+				systelab::setting::SettingDefinitionMgr::get().setSetting(FILENAME, PATH, settingDefinition); \
+			} \
+		}; \
+		static SETTING_NAME##SettingStruct structInstance; \
+	}
+
 #define JSON_SETTING_STR(SETTING_NAME, SETTING_PATH, SETTING_DEFAULT_VALUE, USE_CACHE) \
 	namespace SETTING_NAME \
 	{ \

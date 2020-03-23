@@ -6,8 +6,9 @@ namespace systelab { namespace setting {
 	enum class SettingValueType
 	{
 		IntValue = 0,
-		BooleanValue = 1,
-		StringValue = 2
+		DoubleValue = 1,
+		BooleanValue = 2,
+		StringValue = 3
 	};
 
 	struct SettingValue
@@ -26,12 +27,18 @@ namespace systelab { namespace setting {
 			value = ss.str();
 		}
 
-		SettingValue(bool boolValue)
-			:type(SettingValueType::BooleanValue)
+		SettingValue(double doubleValue)
+			:type(SettingValueType::DoubleValue)
 		{
 			std::stringstream ss;
-			ss << boolValue;
+			ss << std::setprecision(std::numeric_limits<double>::max_digits10 - 1) << doubleValue;
 			value = ss.str();
+		}
+
+		SettingValue(bool boolValue)
+			:type(SettingValueType::BooleanValue)
+			,value(boolValue ? "true" : "false")
+		{
 		}
 
 		SettingValue(const std::string& strValue)

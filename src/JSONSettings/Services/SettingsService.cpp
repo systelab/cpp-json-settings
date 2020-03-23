@@ -24,6 +24,12 @@ namespace systelab { namespace setting {
 		return getSetting<int>(filename, settingPath);
 	}
 
+	double SettingsService::getSettingDouble(const std::string& filename,
+											 const std::string& settingPath) const
+	{
+		return getSetting<double>(filename, settingPath);
+	}
+
 	bool SettingsService::getSettingBoolean(const std::string& filename,
 											const std::string& settingPath) const
 	{
@@ -41,6 +47,13 @@ namespace systelab { namespace setting {
 											int value)
 	{
 		setSetting<int>(filename, settingPath, value);
+	}
+
+	void SettingsService::setSettingDouble(const std::string& filename,
+										   const std::string& settingPath,
+										   double value)
+	{
+		setSetting<double>(filename, settingPath, value);
 	}
 
 	void SettingsService::setSettingBoolean(const std::string& filename,
@@ -136,7 +149,7 @@ namespace systelab { namespace setting {
 
 		try
 		{
-			tree.put<Type>(settingPath, value);
+			tree.put<std::string>(settingPath, SettingValue(value).value);
 
 			std::stringstream oss;
 			boost::property_tree::json_parser::write_json(oss, tree);
@@ -183,7 +196,14 @@ namespace systelab { namespace setting {
 	template<typename Type>
 	Type SettingsService::getSettingValue(const SettingValue& settingValue) const
 	{
-		return boost::lexical_cast<Type>(settingValue.value);
+		if (std::is_same<bool, Type>::value == true)
+		{
+			return boost::lexical_cast<Type>(settingValue.value == "true");
+		}
+		else
+		{
+			return boost::lexical_cast<Type>(settingValue.value);
+		}
 	}
 
 	template<typename Type>
@@ -197,6 +217,7 @@ namespace systelab { namespace setting {
 
 		const SettingDefinition& definition = SettingDefinitionMgr::get().getSetting(filename, settingPath);
 		bool validType = ((std::is_same<int, Type>::value == true) && (definition.defaultValue.type == SettingValueType::IntValue)) ||
+						  ((std::is_same<double, Type>::value == true) && (definition.defaultValue.type == SettingValueType::DoubleValue)) ||
 						  ((std::is_same<bool, Type>::value == true) && (definition.defaultValue.type == SettingValueType::BooleanValue)) ||
 						  ((std::is_same<std::string, Type>::value == true) && (definition.defaultValue.type == SettingValueType::StringValue));
 		if (!validType)

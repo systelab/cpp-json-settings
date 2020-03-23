@@ -15,15 +15,17 @@ namespace systelab { namespace setting {
 		SettingsService();
 		virtual ~SettingsService();
 
-		int getSettingInteger(const std::string& filename, const std::string& settingPath) const;
-		bool getSettingBoolean(const std::string& filename, const std::string& settingPath) const;
-		std::string getSettingString(const std::string& filename, const std::string& settingPath) const;
+		int getSettingInteger(const std::string& filename, const std::string& settingPath) const override;
+		double getSettingDouble(const std::string& filename, const std::string& settingPath) const override;
+		bool getSettingBoolean(const std::string& filename, const std::string& settingPath) const override;
+		std::string getSettingString(const std::string& filename, const std::string& settingPath) const override;
 
-		void setSettingInteger(const std::string& filepath, const std::string& settingPath, int value);
-		void setSettingBoolean(const std::string& filepath, const std::string& settingPath, bool value);
-		void setSettingString(const std::string& filepath, const std::string& settingPath, const std::string& value);
+		void setSettingInteger(const std::string& filepath, const std::string& settingPath, int value) override;
+		void setSettingDouble(const std::string& filepath, const std::string& settingPath, double value) override;
+		void setSettingBoolean(const std::string& filepath, const std::string& settingPath, bool value) override;
+		void setSettingString(const std::string& filepath, const std::string& settingPath, const std::string& value) override;
 
-		void clearCache();
+		void clearCache() override;
 
 	private:
 		template<typename Type>
