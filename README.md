@@ -93,10 +93,10 @@ target_link_libraries(${MY_PROJECT} ${CONAN_LIBS})
 ### Settings definition
 
 The settings files should be defined using the `JSON_SETTINGS_FILE` macro, which specifies the associated symbol name (used to access to it) and the associated JSON filename.
-This macro also defines the settings to be contained on the file by making use of the `JSON_SETTING_INT`, `JSON_SETTING_STR` and `JSON_SETTING_BOOL` macros.
+This macro also defines the settings to be contained on the file by making use of the `JSON_SETTING_INT`, `JSON_SETTING_DBL`, `JSON_SETTING_STR` and `JSON_SETTING_BOOL` macros.
 Thus, for each setting, the following information needs to be provided:
 
-* *Value type*: Defined implicitly by the macro used. Current implementation supports 3 types: integer (JSON_SETTING_INT), string (JSON_SETTING_STR) and boolean (JSON_SETTING_BOOL).
+* *Value type*: Defined implicitly by the macro used. Current implementation supports 3 types: integer (JSON_SETTING_INT), double (JSON_SETTING_DBL) string (JSON_SETTING_STR) and boolean (JSON_SETTING_BOOL).
 * *Symbol name*: Name of the symbol used when accessing to the setting. It must be unique regards the settings file.
 * *Path*: Path of the setting when storing it on a JSON file. Represented as a string with the list of parent sections of the setting separated each one by a dot (`.`) character.
 * *Default value*: Default value of the setting when not possible to retrieve it from the JSON file (i.e file not exists).
@@ -114,17 +114,20 @@ JSON_SETTINGS_FILE(MySettingsFile, "MySettingsFile.json",
 
 	// Root settings
 	JSON_SETTING_INT (RootIntSettingCache,   "IntSettingCache",   2222,     CACHE_ENABLED)
+	JSON_SETTING_DBL (RootDblSettingCache,   "DblSettingCache",   3.33,     CACHE_DISABLED)
 	JSON_SETTING_STR (RootStrSettingNoCache, "StrSettingNoCache", "SECOND", CACHE_DISABLED)
 	JSON_SETTING_BOOL(RootBoolSettingCache,  "BoolSettingCache",  false,    CACHE_ENABLED)
 	
 	// Section settings
 	JSON_SETTING_INT (SectionIntSetting,  "Section.IntSettingCache",  4321, CACHE_ENABLED)
+	JSON_SETTING_DBL (SectionDblSetting,  "Section.DblSettingCache",  55.5, CACHE_ENABLED)
 	JSON_SETTING_STR (SectionStrSetting,  "Section.StrSettingCache",  "ba", CACHE_ENABLED)
 	JSON_SETTING_BOOL(SectionBoolSetting, "Section.BoolSettingCache", true, CACHE_ENABLED)
 
 	// Subsection settings
-	JSON_SETTING_INT (SubsectionIntSetting,  "Section.Subsection.IntSettingCache",  8765,  CACHE_DISABLED)
-	JSON_SETTING_STR (SubsectionStrSetting,  "Section.Subsection.StrSettingCache",  "dc",  CACHE_DISABLED)
+	JSON_SETTING_INT (SubsectionIntSetting,  "Section.Subsection.IntSettingCache",   8765, CACHE_DISABLED)
+	JSON_SETTING_DBL (SubsectionDblSetting,  "Section.Subsection.DblSettingCache",  8.888, CACHE_DISABLED)
+	JSON_SETTING_STR (SubsectionStrSetting,  "Section.Subsection.StrSettingCache",   "dc", CACHE_DISABLED)
 	JSON_SETTING_BOOL(SubsectionBoolSetting, "Section.Subsection.BoolSettingCache", false, CACHE_DISABLED)
 );
 ```
@@ -143,7 +146,7 @@ SET_JSON_SETTINGS_FOLDER("../Path/Of/My/Settings/Folder");
 
 ### Settings access
 
-Query the value associated to a setting using the `GET_JSON_SETTING_INT`, `GET_JSON_SETTING_STR` or `GET_JSON_SETTING_BOOL` macros with the symbol names of the file and the setting as arguments:
+Query the value associated to a setting using the `GET_JSON_SETTING_INT`, `GET_JSON_SETTING_DBL`, `GET_JSON_SETTING_STR` or `GET_JSON_SETTING_BOOL` macros with the symbol names of the file and the setting as arguments:
 
 ``` cpp
 #include "JSONSettings/SettingsService.h"
@@ -153,7 +156,7 @@ int settingValue = GET_JSON_SETTING_INT(systelab::setting::SettingsService(), My
 ```
 > Notice that the header file with the settings file definition must be included to use the symbol names
 
-Similarly, a setting value can be changed through the `SET_JSON_SETTING_INT`, `SET_JSON_SETTING_STR` and `SET_JSON_SETTING_BOOL` macros:
+Similarly, a setting value can be changed through the `SET_JSON_SETTING_INT`, `SET_JSON_SETTING_DBL`, `SET_JSON_SETTING_STR` and `SET_JSON_SETTING_BOOL` macros:
 
 ``` cpp
 SET_JSON_SETTING_INT(systelab::setting::SettingsService(), MySettingsFile, SubsectionStrSetting, "New value for subsection setting");
