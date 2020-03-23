@@ -1,6 +1,8 @@
 #define BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE
 
+#include <iomanip>
 #include <iostream>
+#include <limits>
 #include <map>
 #include <sstream>
 #include <stdexcept>
