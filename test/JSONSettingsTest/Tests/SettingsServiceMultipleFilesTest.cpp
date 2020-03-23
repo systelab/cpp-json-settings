@@ -32,6 +32,7 @@ namespace systelab { namespace setting { namespace unit_test {
 			std::stringstream ss;
 			ss << "{" << std::endl;
 			ss << "    \"IntSettingCache\": \"123\"," << std::endl;
+			ss << "    \"DblSettingCache\": \"123.321\"," << std::endl;
 			ss << "    \"StrSettingCache\": \"NotThis\"," << std::endl;
 			ss << "    \"BoolSettingCache\": \"true\"" << std::endl;
 			ss << "}";
@@ -75,6 +76,7 @@ namespace systelab { namespace setting { namespace unit_test {
 	TEST_F(SettingsServiceMultipleFilesTest, testGetSettingsForSecondFileReturnsDefaultValues)
 	{
 		EXPECT_EQ(    2222, GET_JSON_SETTING_INT (SettingsService(), SecondSettingsFile, RootIntSettingCache));
+		EXPECT_EQ(   2.222, GET_JSON_SETTING_DBL (SettingsService(), SecondSettingsFile, RootDblSettingCache));
 		EXPECT_EQ("SECOND", GET_JSON_SETTING_STR (SettingsService(), SecondSettingsFile, RootStrSettingCache));
 		EXPECT_EQ(   false, GET_JSON_SETTING_BOOL(SettingsService(), SecondSettingsFile, RootBoolSettingCache));
 	}
@@ -84,12 +86,14 @@ namespace systelab { namespace setting { namespace unit_test {
 		std::stringstream ss;
 		ss << "{" << std::endl;
 		ss << "    \"IntSettingCache\": \"3333\"," << std::endl;
+		ss << "    \"DblSettingCache\": \"77.88\"," << std::endl;
 		ss << "    \"StrSettingCache\": \"CCCC\"," << std::endl;
 		ss << "    \"BoolSettingCache\": \"true\"" << std::endl;
 		ss << "}";
 		writeSecondSettingsFile(ss.str());
 
 		EXPECT_EQ(  3333, GET_JSON_SETTING_INT (SettingsService(), SecondSettingsFile, RootIntSettingCache));
+		EXPECT_EQ( 77.88, GET_JSON_SETTING_DBL (SettingsService(), SecondSettingsFile, RootDblSettingCache));
 		EXPECT_EQ("CCCC", GET_JSON_SETTING_STR (SettingsService(), SecondSettingsFile, RootStrSettingCache));
 		EXPECT_EQ(  true, GET_JSON_SETTING_BOOL(SettingsService(), SecondSettingsFile, RootBoolSettingCache));
 	}
@@ -97,22 +101,26 @@ namespace systelab { namespace setting { namespace unit_test {
 	TEST_F(SettingsServiceMultipleFilesTest, testGetSettingsForSecondFileReturnsValuesFromCacheWhenAlreadyRead)
 	{
 		GET_JSON_SETTING_INT (SettingsService(), MySettingsFile, RootIntSettingCache);
+		GET_JSON_SETTING_DBL (SettingsService(), MySettingsFile, RootDblSettingCache);
 		GET_JSON_SETTING_STR (SettingsService(), MySettingsFile, RootStrSettingCache);
 		GET_JSON_SETTING_BOOL(SettingsService(), MySettingsFile, RootBoolSettingCache);
 
 		GET_JSON_SETTING_INT (SettingsService(), SecondSettingsFile, RootIntSettingCache);
+		GET_JSON_SETTING_DBL (SettingsService(), SecondSettingsFile, RootDblSettingCache);
 		GET_JSON_SETTING_STR (SettingsService(), SecondSettingsFile, RootStrSettingCache);
 		GET_JSON_SETTING_BOOL(SettingsService(), SecondSettingsFile, RootBoolSettingCache);
 
 		std::stringstream ss;
 		ss << "{" << std::endl;
 		ss << "    \"IntSettingCache\": \"3333\"," << std::endl;
+		ss << "    \"DblSettingCache\": \"77.88\"," << std::endl;
 		ss << "    \"StrSettingCache\": \"CCCC\"," << std::endl;
 		ss << "    \"BoolSettingCache\": \"true\"" << std::endl;
 		ss << "}";
 		writeSecondSettingsFile(ss.str());
 
 		EXPECT_EQ(    2222, GET_JSON_SETTING_INT (SettingsService(), SecondSettingsFile, RootIntSettingCache));
+		EXPECT_EQ(   2.222, GET_JSON_SETTING_DBL (SettingsService(), SecondSettingsFile, RootDblSettingCache));
 		EXPECT_EQ("SECOND", GET_JSON_SETTING_STR (SettingsService(), SecondSettingsFile, RootStrSettingCache));
 		EXPECT_EQ(   false, GET_JSON_SETTING_BOOL(SettingsService(), SecondSettingsFile, RootBoolSettingCache));
 	}
@@ -122,6 +130,12 @@ namespace systelab { namespace setting { namespace unit_test {
 	TEST_F(SettingsServiceMultipleFilesTest, testSetSettingIntForSecondFileDoesNotWriteOnFirstFile)
 	{
 		SET_JSON_SETTING_INT(SettingsService(), SecondSettingsFile, RootIntSettingCache, 7777);
+		EXPECT_TRUE(json::test_utility::compareJSONs(m_firstSettingsFileContent, readSettingsFile(), m_jsonAdapter));
+	}
+
+	TEST_F(SettingsServiceMultipleFilesTest, testSetSettingDblForSecondFileDoesNotWriteOnFirstFile)
+	{
+		SET_JSON_SETTING_DBL(SettingsService(), SecondSettingsFile, RootDblSettingCache, 1234.56789);
 		EXPECT_TRUE(json::test_utility::compareJSONs(m_firstSettingsFileContent, readSettingsFile(), m_jsonAdapter));
 	}
 
