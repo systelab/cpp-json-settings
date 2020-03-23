@@ -4,6 +4,7 @@
 #define _SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING 1
 
 // STL
+#include <limits>
 #include <memory>
 #include <string>
 
