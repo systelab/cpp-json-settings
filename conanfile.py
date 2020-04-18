@@ -23,8 +23,8 @@ class JSONSettingsConan(ConanFile):
         self.requires(("boost/%s@conan/stable") % self.options.boost)
 
     def build_requirements(self):
-        self.build_requires("RapidJSONAdapter/1.0.6@systelab/stable")
-        self.build_requires("JSONAdapterTestUtilities/1.0.9@systelab/stable")
+        self.build_requires("RapidJSONAdapter/1.0.7@systelab/stable")
+        self.build_requires("JSONAdapterTestUtilities/1.0.10@systelab/stable")
         if self.options.gtest == "1.7.0":
             self.build_requires("gtest/1.7.0@systelab/stable")
         elif self.options.gtest == "1.8.1":
