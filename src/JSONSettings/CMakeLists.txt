@@ -1,7 +1,12 @@
 cmake_minimum_required(VERSION 3.2)
 
 # Find external dependencies
-find_package(Boost)
+find_package(boost)
+if (NOT TARGET boost::boost)
+    find_package (Boost REQUIRED)
+    add_library (boost::boost INTERFACE IMPORTED)
+    target_link_libraries (boost::boost PUBLIC Boost::Boost)
+endif()
 
 # Configure preprocessor definitions
 add_compile_options(-DRAPIDJSON_HAS_STDSTRING=1)
@@ -14,7 +19,7 @@ set(JSON_SETTINGS JSONSettings)
 file(GLOB_RECURSE JSON_SETTINGS_SRC "*.cpp")
 file(GLOB_RECURSE JSON_SETTINGS_HDR "*.h")
 add_library(${JSON_SETTINGS} STATIC ${JSON_SETTINGS_SRC} ${JSON_SETTINGS_HDR})
-target_link_libraries(${JSON_SETTINGS} Boost::Boost)
+target_link_libraries(${JSON_SETTINGS} boost::boost)
 
 #Configure source groups
 foreach(FILE ${JSON_SETTINGS_SRC} ${JSON_SETTINGS_HDR}) 
