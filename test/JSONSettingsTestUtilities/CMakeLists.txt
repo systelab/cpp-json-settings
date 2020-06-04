@@ -14,8 +14,14 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # Find external dependencides
-find_package(gtest)
 find_package(JSONSettings)
+
+set(GTEST_PACKAGE_NAME gtest)
+find_package(${GTEST_PACKAGE_NAME})
+if (NOT TARGET ${GTEST_PACKAGE_NAME}::${GTEST_PACKAGE_NAME})
+    set(GTEST_PACKAGE_NAME GTest)
+    find_package(${GTEST_PACKAGE_NAME})
+endif()
 
 # Configure JSON settings test utilities project
 set(JSON_SETTINGS_TEST_UTILITIES_PROJECT JSONSettingsTestUtilities)
@@ -38,7 +44,9 @@ foreach (TMP_PATH ${JSON_SETTINGS_TEST_UTILITIES_PROJECT_HDR})
 endforeach(TMP_PATH)
 
 add_library(${JSON_SETTINGS_TEST_UTILITIES_PROJECT} STATIC ${JSON_SETTINGS_TEST_UTILITIES_PROJECT_SRC} ${JSON_SETTINGS_TEST_UTILITIES_PROJECT_HDR})
-target_link_libraries(${JSON_SETTINGS_TEST_UTILITIES_PROJECT} JSONSettings::JSONSettings gtest::gtest)
+target_link_libraries(${JSON_SETTINGS_TEST_UTILITIES_PROJECT}
+					  JSONSettings::JSONSettings
+					  ${GTEST_PACKAGE_NAME}::${GTEST_PACKAGE_NAME})
 
 # Configure source groups
 foreach(FILE ${JSON_SETTINGS_TEST_UTILITIES_PROJECT_SRC} ${JSON_SETTINGS_TEST_UTILITIES_PROJECT_HDR})

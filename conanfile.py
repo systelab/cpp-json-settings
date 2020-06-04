@@ -28,14 +28,14 @@ class JSONSettingsConan(ConanFile):
             self.requires(("boost/%s") % self.options.boost)
 
     def build_requirements(self):
-        self.build_requires("RapidJSONAdapter/1.0.7@systelab/stable")
-        self.build_requires("JSONAdapterTestUtilities/1.0.10@systelab/stable")
+        self.build_requires("RapidJSONAdapter/1.0.8@systelab/stable")
+        self.build_requires("JSONAdapterTestUtilities/1.0.11@systelab/stable")
         if self.options.gtest == "1.7.0":
-            self.build_requires("gtest/1.7.0@systelab/stable")
+            self.build_requires("gtest/1.7.0")
         elif self.options.gtest == "1.8.1":
-            self.build_requires("gtest/1.8.1@bincrafters/stable")
+            self.build_requires("gtest/1.8.1")
         else:
-            self.build_requires("gtest/1.10.0@systelab/stable")
+            self.build_requires("gtest/1.10.0")
 
     def build(self):
         cmake = CMake(self)
