@@ -41,6 +41,13 @@ namespace systelab { namespace setting { namespace unit_test {
 		JSON_SETTING_BOOL(RootBoolSettingCache, "BoolSettingCache",    false, CACHE_ENABLED)
 	);
 	
+	JSON_SETTINGS_ENCRYPTED_FILE(EncryptedSettingsFile, "EncryptedSettingsFile.json", []() { return "Key"; },
+		JSON_SETTING_INT(RootIntSettingCache,   "IntSettingCache",  9999, CACHE_ENABLED)
+		JSON_SETTING_DBL(RootDblSettingCache,   "DblSettingCache",   9.9, CACHE_ENABLED)
+		JSON_SETTING_STR(RootStrSettingCache,   "StrSettingCache",  "99", CACHE_ENABLED)
+		JSON_SETTING_BOOL(RootBoolSettingCache, "BoolSettingCache", true, CACHE_ENABLED)
+	);
+
 	JSON_SETTINGS_FILE(InvalidSettingsFile, "<|?s/>",
 		JSON_SETTING_INT (IntSetting,  "IntSetting",   111, CACHE_ENABLED)
 		JSON_SETTING_DBL (DblSetting,  "DblSetting",   1.1, CACHE_ENABLED)
