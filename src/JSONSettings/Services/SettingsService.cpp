@@ -3,6 +3,10 @@
 
 #include "Model/SettingDefinitionMgr.h"
 #include "Model/SettingsCache.h"
+#include "Services/EncryptedFileIOService.h"
+#include "Services/FileIOService.h"
+
+#include "EncryptionAdapterInterface/IEncryptionAdapter.h"
 
 #include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>
@@ -15,7 +19,16 @@
 
 namespace systelab { namespace setting {
 
-	SettingsService::SettingsService() = default;
+	SettingsService::SettingsService(const systelab::encryption::IEncryptionAdapter& encryptionAdapter)
+		: m_fileIOService(std::make_unique<EncryptedFileIOService>(encryptionAdapter))
+	{
+	}
+
+	SettingsService::SettingsService()
+		: m_fileIOService(std::make_unique<FileIOService>())
+	{
+	}
+
 	SettingsService::~SettingsService() = default;
 
 	int SettingsService::getSettingInteger(const std::string& filename,
@@ -80,6 +93,8 @@ namespace systelab { namespace setting {
 									 const std::string& settingPath) const
 	{
 		const SettingDefinition& definition = getSettingDefinition<Type>(filename, settingPath);
+		const SecurityKey encryptionKey = getFileEncryptionKey(filename);
+
 		if (definition.useCache)
 		{
 			boost::optional<Type> cacheValue = getSettingFromCache<Type>(filename, settingPath);
@@ -93,15 +108,11 @@ namespace systelab { namespace setting {
 		try
 		{
 			std::string filepath = buildFilepath(filename);
-			std::ifstream ifs(filepath);
-			if (ifs)
+			auto fileStream = m_fileIOService->read(filepath, encryptionKey);
+			if (fileStream)
 			{
-				std::stringstream ss;
-				ss << ifs.rdbuf();
-				ifs.close();
-
 				boost::property_tree::ptree tree;
-				boost::property_tree::json_parser::read_json(ss, tree);
+				boost::property_tree::json_parser::read_json(*fileStream, tree);
 				value = tree.get<Type>(settingPath, getSettingValue<Type>(definition.defaultValue));
 			}
 			else
@@ -129,18 +140,15 @@ namespace systelab { namespace setting {
 	{
 		boost::property_tree::ptree tree;
 		const SettingDefinition& definition = getSettingDefinition<Type>(filename, settingPath);
+		const SecurityKey encryptionKey = getFileEncryptionKey(filename);
 
 		try
 		{
 			std::string filepath = buildFilepath(filename);
-			std::ifstream ifs(filepath);
-			if (ifs)
+			auto fileStream = m_fileIOService->read(filepath, encryptionKey);
+			if (fileStream)
 			{
-				std::stringstream ss;
-				ss << ifs.rdbuf();
-				ifs.close();
-
-				boost::property_tree::json_parser::read_json(ss, tree);
+				boost::property_tree::json_parser::read_json(*fileStream, tree);
 			}
 		}
 		catch (boost::property_tree::json_parser_error& /*e*/)
@@ -154,11 +162,7 @@ namespace systelab { namespace setting {
 			std::stringstream oss;
 			boost::property_tree::json_parser::write_json(oss, tree);
 
-			std::ofstream f;
-			f.exceptions(~std::ofstream::goodbit);
-			f.open(buildFilepath(filename), std::ios_base::out);
-			f << &(*oss.rdbuf());
-			f.close();
+			m_fileIOService->write(buildFilepath(filename), encryptionKey, *oss.rdbuf());
 		}
 		catch (std::exception& /*e*/)
 		{
@@ -226,6 +230,11 @@ namespace systelab { namespace setting {
 		}
 
 		return definition;
+	}
+
+	SecurityKey SettingsService::getFileEncryptionKey(const std::string& filename) const
+	{
+		return SettingDefinitionMgr::get().getSettingsFileEncryptionKey(filename);
 	}
 
 	std::string SettingsService::buildFilepath(const std::string& filename) const

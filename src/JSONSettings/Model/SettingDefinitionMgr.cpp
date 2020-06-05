@@ -6,6 +6,7 @@ namespace systelab { namespace setting {
 
 	SettingDefinitionMgr::SettingDefinitionMgr()
 		:m_settings()
+		,m_settingsFileEncryptionKey()
 		,m_settingsFolderPath("")
 	{
 	}
@@ -46,6 +47,17 @@ namespace systelab { namespace setting {
 										  const SettingDefinition& definition)
 	{
 		m_settings[file][sectionPath] = definition;
+	}
+
+	SecurityKey SettingDefinitionMgr::getSettingsFileEncryptionKey(const SettingsFile& file) const
+	{
+		return m_settingsFileEncryptionKey.at(file);
+	}
+
+	void SettingDefinitionMgr::setSettingsFileEncryptionKey(const SettingsFile& file,
+															const SecurityKey& key)
+	{
+		m_settingsFileEncryptionKey[file] = key;
 	}
 
 	std::string SettingDefinitionMgr::getSettingsFolderPath() const

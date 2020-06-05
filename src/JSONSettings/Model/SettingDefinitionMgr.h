@@ -1,5 +1,6 @@
 #pragma once
 
+#include "SecurityKey.h"
 #include "SettingDefinition.h"
 
 
@@ -23,11 +24,15 @@ namespace systelab { namespace setting {
 		const SettingDefinition& getSetting(const SettingsFile&, const SettingPath&) const;
 		void setSetting(const SettingsFile&, const SettingPath&, const SettingDefinition&);
 
+		SecurityKey SettingDefinitionMgr::getSettingsFileEncryptionKey(const SettingsFile&) const;
+		void SettingDefinitionMgr::setSettingsFileEncryptionKey(const SettingsFile&, const SecurityKey&);
+
 		std::string getSettingsFolderPath() const;
 		void setSettingsFolderPath(const std::string&);
 
 	private:
 		SettingsContainer m_settings;
+		std::map<SettingsFile, SecurityKey> m_settingsFileEncryptionKey;
 		std::string m_settingsFolderPath;
 	};
 

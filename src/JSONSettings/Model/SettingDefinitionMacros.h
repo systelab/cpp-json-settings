@@ -15,6 +15,31 @@
 	namespace SETTINGS_FILE_NAMESPACE \
 	{ \
 		static const std::string FILENAME = SETTINGS_FILENAME; \
+		static const systelab::setting::SecurityKey ENCRYPTION_KEY = []() { return ""; }; \
+		struct SettingsFileInitializationStruct \
+		{ \
+			SettingsFileInitializationStruct() \
+			{ \
+				systelab::setting::SettingDefinitionMgr::get().setSettingsFileEncryptionKey(FILENAME, ENCRYPTION_KEY); \
+			} \
+		}; \
+		static SettingsFileInitializationStruct structInstance; \
+		CONTENT \
+	}
+
+#define JSON_SETTINGS_ENCRYPTED_FILE(SETTINGS_FILE_NAMESPACE, SETTINGS_FILENAME, SETTINGS_ENCRYPTION_KEY, CONTENT) \
+	namespace SETTINGS_FILE_NAMESPACE \
+	{ \
+		static const std::string FILENAME = SETTINGS_FILENAME; \
+		static const systelab::setting::SecurityKey ENCRYPTION_KEY = SETTINGS_ENCRYPTION_KEY; \
+		struct SettingsFileInitializationStruct \
+		{ \
+			SettingsFileInitializationStruct() \
+			{ \
+				systelab::setting::SettingDefinitionMgr::get().setSettingsFileEncryptionKey(FILENAME, ENCRYPTION_KEY); \
+			} \
+		}; \
+		static SettingsFileInitializationStruct structInstance; \
 		CONTENT \
 	}
 
