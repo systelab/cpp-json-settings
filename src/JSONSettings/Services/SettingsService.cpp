@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "SettingsService.h"
 
+#include "Model/SecurityKey.h"
 #include "Model/SettingDefinitionMgr.h"
 #include "Model/SettingsCache.h"
 #include "Services/EncryptedFileIOService.h"
@@ -93,7 +94,7 @@ namespace systelab { namespace setting {
 									 const std::string& settingPath) const
 	{
 		const SettingDefinition& definition = getSettingDefinition<Type>(filename, settingPath);
-		const SecurityKey encryptionKey = getFileEncryptionKey(filename);
+		const SecurityKey encryptionKey = SettingDefinitionMgr::get().getSettingsFileEncryptionKey(filename);
 
 		if (definition.useCache)
 		{
@@ -140,7 +141,7 @@ namespace systelab { namespace setting {
 	{
 		boost::property_tree::ptree tree;
 		const SettingDefinition& definition = getSettingDefinition<Type>(filename, settingPath);
-		const SecurityKey encryptionKey = getFileEncryptionKey(filename);
+		const SecurityKey encryptionKey = SettingDefinitionMgr::get().getSettingsFileEncryptionKey(filename);
 
 		try
 		{
@@ -230,11 +231,6 @@ namespace systelab { namespace setting {
 		}
 
 		return definition;
-	}
-
-	SecurityKey SettingsService::getFileEncryptionKey(const std::string& filename) const
-	{
-		return SettingDefinitionMgr::get().getSettingsFileEncryptionKey(filename);
 	}
 
 	std::string SettingsService::buildFilepath(const std::string& filename) const

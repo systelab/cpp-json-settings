@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ISettingsService.h"
-#include "../Model/SecurityKey.h"
 
 #include <boost/optional.hpp>
 
@@ -53,8 +52,6 @@ namespace systelab { namespace setting {
 
 		template<typename Type>
 		const SettingDefinition& getSettingDefinition(const std::string& filename, const std::string& settingPath) const;
-
-		SecurityKey getFileEncryptionKey(const std::string& filename) const;
 
 		std::string buildFilepath(const std::string& filename) const;
 

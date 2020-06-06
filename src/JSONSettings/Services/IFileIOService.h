@@ -24,4 +24,5 @@ namespace systelab { namespace setting {
 			}
 		};
 	};
+
 }}
