@@ -55,6 +55,7 @@ class JSONSettingsConan(ConanFile):
         self.copy("SettingDefinition.h", dst="include/JSONSettings", src="src/JSONSettings/Model")
         self.copy("SettingDefinitionMgr.h", dst="include/JSONSettings", src="src/JSONSettings/Model")
         self.copy("SettingDefinitionMacros.h", dst="include/JSONSettings", src="src/JSONSettings/Model")
+        self.copy("SecurityKey.h", dst="include/JSONSettings", src="src/JSONSettings/Model")
         self.copy("ISettingsService.h", dst="include/JSONSettings", src="src/JSONSettings/Services")
         self.copy("SettingsService.h", dst="include/JSONSettings", src="src/JSONSettings/Services")
         self.copy("SettingsMacros.h", dst="include/JSONSettings", src="src/JSONSettings/Services")
