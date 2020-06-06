@@ -186,7 +186,7 @@ systelab::setting::SettingsService().clearCache();
 
 ### Files encryption
 
-This library can work with encrypted settings files when they are defined using the `JSON_SETTINGS_ENCRYPTED_FILE` macro. It works the same way than the `JSON_SETTINGS_FILE` macro, but it takes an additional argument more that represents the key to be used to encrypt/decrypt the file. Moreover, with the purpose of allowing more flexibility on how encryption key is obtained, it should be provided as a function (i.e. a lambda) that returns a string.
+This library can work with encrypted settings files when they are defined using the `JSON_SETTINGS_ENCRYPTED_FILE` macro. It works the same way than the `JSON_SETTINGS_FILE` macro, but it takes an additional argument that represents the key to be used to encrypt/decrypt the file. Moreover, with the purpose of allowing more flexibility on how encryption key is obtained, it should be provided as a function (i.e. a lambda) that returns a string.
 
 ``` cpp
 #include "JSONSettings/SettingDefinitionMacros.h"
