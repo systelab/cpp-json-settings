@@ -19,7 +19,7 @@ namespace systelab { namespace setting {
 	{
 	public:
 		SettingsService();
-		SettingsService::SettingsService(const systelab::encryption::IEncryptionAdapter&);
+		SettingsService(const systelab::encryption::IEncryptionAdapter&);
 		virtual ~SettingsService();
 
 		int getSettingInteger(const std::string& filename, const std::string& settingPath) const override;
