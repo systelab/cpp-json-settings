@@ -24,8 +24,8 @@ namespace systelab { namespace setting {
 		const SettingDefinition& getSetting(const SettingsFile&, const SettingPath&) const;
 		void setSetting(const SettingsFile&, const SettingPath&, const SettingDefinition&);
 
-		SecurityKey SettingDefinitionMgr::getSettingsFileEncryptionKey(const SettingsFile&) const;
-		void SettingDefinitionMgr::setSettingsFileEncryptionKey(const SettingsFile&, const SecurityKey&);
+		SecurityKey getSettingsFileEncryptionKey(const SettingsFile&) const;
+		void setSettingsFileEncryptionKey(const SettingsFile&, const SecurityKey&);
 
 		std::string getSettingsFolderPath() const;
 		void setSettingsFolderPath(const std::string&);
