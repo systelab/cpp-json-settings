@@ -18,6 +18,7 @@ class JSONSettingsConan(ConanFile):
         self.options["boost"].shared = True
         self.options["RapidJSONAdapter"].gtest = self.options.gtest
         self.options["JSONAdapterTestUtilities"].gtest = self.options.gtest
+        self.options["CaeserCypherEncryptionAdapter"].gtest = self.options.gtest
 
     def requirements(self):
         self.requires("EncryptionAdapterInterface/1.0.2@systelab/stable")
