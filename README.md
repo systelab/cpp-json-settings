@@ -13,6 +13,10 @@ This library provides utilities to save/load configuration settings on JSON file
 * Compile-time error detection
 * Basic types: string, boolean, integer and double
 * Sections hierarchy
+* In-memory cache
+* Encryption of JSON files
+
+
 ## Setup
 
 ### Download using Conan
