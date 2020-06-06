@@ -8,7 +8,39 @@
 
 This library provides utilities to save/load configuration settings on JSON files.
 
+## Supported features
+
+* Compile-time error detection
+* Basic types: string, boolean, integer and double
+* Sections hierarchy
 ## Setup
+
+### Download using Conan
+
+  1. Create/update your `conanfile.txt` to add this library as follows:
+
+```
+[requires]
+JSONSettings/1.2.0@systelab/stable
+
+[generators]
+cmake
+```
+
+  2. Integrate Conan into CMake by adding the following code into your `CMakeLists.txt`:
+
+```cmake
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
+```
+
+  3. Link against `${CONAN_LIBS}` when configuring your executables in CMake:
+
+```cmake
+set(MY_PROJECT MyProject)
+add_executable(${MY_PROJECT} main.cpp)
+target_link_libraries(${MY_PROJECT} ${CONAN_LIBS})
+```
 
 ### Build from sources
 
@@ -61,32 +93,6 @@ However, if you want to `Debug` the source code, you will need these commands:
 > make
 ```
 
-### Download using Conan
-
-  1. Create/update your `conanfile.txt` to add this library as follows:
-
-```
-[requires]
-JSONSettings/1.0.0@systelab/stable
-
-[generators]
-cmake
-```
-
-  2. Integrate Conan into CMake by adding the following code into your `CMakeLists.txt`:
-
-```cmake
-include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-conan_basic_setup()
-```
-
-  3. Link against `${CONAN_LIBS}` when configuring your executables in CMake:
-
-```cmake
-set(MY_PROJECT MyProject)
-add_executable(${MY_PROJECT} main.cpp)
-target_link_libraries(${MY_PROJECT} ${CONAN_LIBS})
-```
 
 ## Usage
 
@@ -171,5 +177,42 @@ The contents of the settings cache can be removed by making use of the `clearCac
 #include "JSONSettings/SettingsService.h"
 
 systelab::setting::SettingsService().clearCache();
+```
+
+
+### Files encryption
+
+This library can work with encrypted settings files when they are defined using the `JSON_SETTINGS_ENCRYPTED_FILE` macro. It works the same way than the `JSON_SETTINGS_FILE` macro, but it takes an additional argument more that represents the key to be used to encrypt/decrypt the file. Moreover, with the purpose of allowing more flexibility on how encryption key is obtained, it should be provided as a function (i.e. a lambda) that returns a string.
+
+``` cpp
+#include "JSONSettings/SettingDefinitionMacros.h"
+
+JSON_SETTINGS_FILE(EncryptedSettingsFile, "EncryptedSettingsFile.json",
+                   []() { return "MySuperSecretEncryptionKey"; },
+
+	JSON_SETTING_INT (IntSetting, "IntSetting", 1234, true)
+	...
+
+);
+```
+
+Next step consists of defining the encryption method/algorithm to use. It is supported any implementation of the systelab's [C++ Encryption Adapter interface](https://github.com/systelab/cpp-encryption-adapter), represented by an object of type `systelab::encryption::IEncryptionAdapter`. For instance, if the simple [Caeser Cypher](https://github.com/systelab/cpp-caeser-cypher-encryption-adapter) algorithm is the selected one, then an instance of `systelab::encryption::caeser_cypher::EncryptionAdapter` will be required.
+
+``` cpp
+#include "CaeserCypherEncryptionAdapter/EncryptionAdapter.h"
+
+std::unique_ptr<systelab::encryption::IEncryptionAdapter> encryptionAdapter =
+    std::make<systelab::encryption::caeser_cypher::EncryptionAdapter>();
+```
+
+Finally, settings access works like when accessing a non-encrypted file. The only difference is on the instance of `systelab::setting::SettingsService` provided to the settings access macros. So, here this service needs to be created by providing a reference to the encryption adapter object previously built.
+
+``` cpp
+#include "JSONSettings/SettingsService.h"
+#include "JSONSettings/SettingsMacros.h"
+
+int settingValue = GET_JSON_SETTING_INT(systelab::setting::SettingsService(*encryptionAdapter), EncryptedSettingsFile, IntSetting);
+
+SET_JSON_SETTING_INT(systelab::setting::SettingsService(*encryptionAdapter), EncryptedSettingsFile, IntSetting, 4321);
 ```
 
