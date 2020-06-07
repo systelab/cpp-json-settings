@@ -7,6 +7,8 @@
 #include <boost/filesystem.hpp>
 
 
+using namespace testing;
+
 namespace systelab { namespace setting { namespace unit_test {
 
 	class EncryptedFileIOServiceTest : public ::testing::Test
