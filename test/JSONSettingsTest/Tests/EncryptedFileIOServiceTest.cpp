@@ -79,18 +79,18 @@ namespace systelab { namespace setting { namespace unit_test {
 		writeEncryptedFile(fileContents);
 
 		auto readFileContents = m_encryptedFileIOService->read(m_workingFilepath.string(), [this]() { return m_encryptionKey; });
-		ASSERT_TRUE(readFileContents);
+		ASSERT_TRUE(readFileContents.is_initialized());
 		EXPECT_EQ(fileContents, (*readFileContents).str());
 	}
 
-	TEST_F(EncryptedFileIOServiceTest, testReadReturnsNoneWhenFileDoesNotExist)
+	TEST_F(EncryptedFileIOServiceTest, testReadReturnsNullWhenFileDoesNotExist)
 	{
-		ASSERT_FALSE(m_encryptedFileIOService->read(m_workingFilepath.string(), [this]() { return m_encryptionKey; }));
+		ASSERT_FALSE(m_encryptedFileIOService->read(m_workingFilepath.string(), [this]() { return m_encryptionKey; }).is_initialized());
 	}
 
-	TEST_F(EncryptedFileIOServiceTest, testReadReturnsNoneWhenFileExistsButEncryptionKeyIsInvalid)
+	TEST_F(EncryptedFileIOServiceTest, testReadReturnsNullWhenFileExistsButEncryptionKeyIsInvalid)
 	{
-		ASSERT_FALSE(m_encryptedFileIOService->read(m_workingFilepath.string(), []() { return "InvalidEncryptionKey"; }));
+		ASSERT_FALSE(m_encryptedFileIOService->read(m_workingFilepath.string(), []() { return "InvalidEncryptionKey"; }).is_initialized());
 	}
 
 

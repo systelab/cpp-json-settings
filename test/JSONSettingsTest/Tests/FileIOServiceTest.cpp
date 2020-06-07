@@ -72,13 +72,13 @@ namespace systelab { namespace setting { namespace unit_test {
 		writeFile(fileContents);
 
 		auto readFileContents = m_fileIOService->read(m_workingFilepath.string(), []() { return ""; });
-		ASSERT_TRUE(readFileContents);
+		ASSERT_TRUE(readFileContents.is_initialized());
 		EXPECT_EQ(fileContents, (*readFileContents).str());
 	}
 
-	TEST_F(FileIOServiceTest, testReadReturnsNoneWhenFileDoesNotExist)
+	TEST_F(FileIOServiceTest, testReadReturnsNullWhenFileDoesNotExist)
 	{
-		ASSERT_FALSE(m_fileIOService->read(m_workingFilepath.string(), []() { return ""; }));
+		ASSERT_FALSE(m_fileIOService->read(m_workingFilepath.string(), []() { return ""; }).is_initialized());
 	}
 
 	TEST_F(FileIOServiceTest, testReadThrowsExceptionWhenEncryptionKeyIsNotEmpty)
