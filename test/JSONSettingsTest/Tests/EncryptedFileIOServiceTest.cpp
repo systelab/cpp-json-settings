@@ -2,6 +2,7 @@
 #include "JSONSettings/Services/EncryptedFileIOService.h"
 
 #include "CaeserCypherEncryptionAdapter/EncryptionAdapter.h"
+#include "EncryptionAdapterTestUtilities/Mocks/MockEncryptionAdapter.h"
 
 #include <boost/filesystem.hpp>
 
@@ -88,8 +89,16 @@ namespace systelab { namespace setting { namespace unit_test {
 		ASSERT_FALSE(m_encryptedFileIOService->read(m_workingFilepath.string(), [this]() { return m_encryptionKey; }).is_initialized());
 	}
 
-	TEST_F(EncryptedFileIOServiceTest, testReadReturnsNullWhenFileExistsButEncryptionKeyIsInvalid)
+	TEST_F(EncryptedFileIOServiceTest, testReadReturnsNullWhenFileExistsButDecryptionFailsDueToInvalidKey)
 	{
+		std::string fileContents = "This is my wonderful contents.";
+		writeEncryptedFile(fileContents);
+
+		systelab::encryption::test_utility::MockEncryptionAdapter mockEncryptionAdapter;
+		ON_CALL(mockEncryptionAdapter, decryptString(_,_))
+			.WillByDefault(Throw(systelab::encryption::IEncryptionAdapter::Exception("Error decrypting")));
+
+		m_encryptedFileIOService = std::make_unique<EncryptedFileIOService>(mockEncryptionAdapter);
 		ASSERT_FALSE(m_encryptedFileIOService->read(m_workingFilepath.string(), []() { return "InvalidEncryptionKey"; }).is_initialized());
 	}
 
