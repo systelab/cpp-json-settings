@@ -14,6 +14,7 @@ if (NOT TARGET ${GTEST_PACKAGE_NAME}::${GTEST_PACKAGE_NAME})
     find_package(${GTEST_PACKAGE_NAME})
 endif()
 
+find_package(EncryptionAdapterTestUtilities)
 find_package(CaeserCypherEncryptionAdapter)
 find_package(RapidJSONAdapter)
 find_package(JSONAdapterTestUtilities)
@@ -26,6 +27,7 @@ add_executable(${JSON_SETTINGS_TEST_PROJECT} ${JSON_SETTINGS_TEST_PROJECT_SRC} $
 target_link_libraries(${JSON_SETTINGS_TEST_PROJECT}
 					  JSONSettings 
 					  ${GTEST_PACKAGE_NAME}::${GTEST_PACKAGE_NAME}
+					  EncryptionAdapterTestUtilities::EncryptionAdapterTestUtilities
 					  CaeserCypherEncryptionAdapter::CaeserCypherEncryptionAdapter
 					  RapidJSONAdapter::RapidJSONAdapter
 					  JSONAdapterTestUtilities::JSONAdapterTestUtilities)
