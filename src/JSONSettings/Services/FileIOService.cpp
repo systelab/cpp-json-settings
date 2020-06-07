@@ -11,7 +11,7 @@ namespace systelab { namespace setting {
 	{
 		if (encryptionKey().size() > 0)
 		{
-			throw Exception("Unable to read encrypted settings file when no encryption adapter provided.");
+			throw NoEncryptionAdapterException();
 		}
 
 		std::ifstream ifs(filepath);
@@ -32,7 +32,7 @@ namespace systelab { namespace setting {
 	{
 		if (encryptionKey().size() > 0)
 		{
-			throw Exception("Unable to write on encrypted settings file when no encryption adapter provided.");
+			throw NoEncryptionAdapterException();
 		}
 
 		std::ofstream f;
