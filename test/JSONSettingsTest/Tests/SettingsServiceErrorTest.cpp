@@ -2,6 +2,7 @@
 #include "SettingsServiceBaseTest.h"
 
 #include "JSONSettings/Model/SettingsCache.h"
+#include "JSONSettings/Services/IFileIOService.h"
 
 
 namespace systelab { namespace setting { namespace unit_test {
@@ -188,6 +189,24 @@ namespace systelab { namespace setting { namespace unit_test {
 	TEST_F(SettingsServiceErrorTest, testGetSettingFromCacheThrowsExceptionWhenNotFound)
 	{
 		ASSERT_THROW(SettingsCache().getSetting<int>("MySettingsFile.json", "SettingNotInCache"), std::runtime_error);
+	}
+
+
+	// No encryption adapter
+	TEST_F(SettingsServiceErrorTest, testGetEncryptedSettingThowsExceptionWhenNoEncryptionAdapter)
+	{
+		ASSERT_THROW(GET_JSON_SETTING_INT(SettingsService(), EncryptedSettingsFile, SectionIntSetting), IFileIOService::NoEncryptionAdapterException);
+		ASSERT_THROW(GET_JSON_SETTING_DBL(SettingsService(), EncryptedSettingsFile, SectionDblSetting), IFileIOService::NoEncryptionAdapterException);
+		ASSERT_THROW(GET_JSON_SETTING_STR(SettingsService(), EncryptedSettingsFile, SectionStrSetting), IFileIOService::NoEncryptionAdapterException);
+		ASSERT_THROW(GET_JSON_SETTING_BOOL(SettingsService(), EncryptedSettingsFile, SectionBoolSetting), IFileIOService::NoEncryptionAdapterException);
+	}
+
+	TEST_F(SettingsServiceErrorTest, testSetEncryptedSettingThowsExceptionWhenNoEncryptionAdapter)
+	{
+		ASSERT_THROW(SET_JSON_SETTING_INT(SettingsService(), EncryptedSettingsFile, SectionIntSetting, 1), IFileIOService::NoEncryptionAdapterException);
+		ASSERT_THROW(SET_JSON_SETTING_DBL(SettingsService(), EncryptedSettingsFile, SectionDblSetting, 1.2), IFileIOService::NoEncryptionAdapterException);
+		ASSERT_THROW(SET_JSON_SETTING_STR(SettingsService(), EncryptedSettingsFile, SectionStrSetting, "a"), IFileIOService::NoEncryptionAdapterException);
+		ASSERT_THROW(SET_JSON_SETTING_BOOL(SettingsService(), EncryptedSettingsFile, SectionBoolSetting, false), IFileIOService::NoEncryptionAdapterException);
 	}
 
 }}}
