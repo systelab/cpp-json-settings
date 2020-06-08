@@ -46,7 +46,7 @@ namespace systelab { namespace setting { namespace unit_test {
 			boost::filesystem::remove(m_workingFilepath);
 
 			std::ofstream fileStream;
-			fileStream.open(m_workingFilepath.string());
+			fileStream.open(m_workingFilepath.string(), std::ofstream::binary);
 			fileStream << m_encryptionAdapter.encryptString(m_encryptionKey, fileContents);
 			fileStream.close();
 		}
@@ -54,7 +54,7 @@ namespace systelab { namespace setting { namespace unit_test {
 		std::string readEncryptedFile()
 		{
 			std::string fileContents;
-			std::ifstream ifs(m_workingFilepath.string());
+			std::ifstream ifs(m_workingFilepath.string(), std::ios::binary);
 			if (ifs)
 			{
 				std::stringstream ss;
