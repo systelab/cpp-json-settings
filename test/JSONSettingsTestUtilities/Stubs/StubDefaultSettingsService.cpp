@@ -3,15 +3,16 @@
 
 #include "JSONSettings/SettingDefinitionMgr.h"
 
+using namespace testing;
 
 namespace systelab { namespace setting { namespace test_utility {
 
 	StubDefaultSettingsService::StubDefaultSettingsService()
 	{
-		ON_CALL(*this, getSettingInteger(_, _)).WillByDefault(Invoke(&this, &StubDefaultSettingsService::getSettingIntegerStub));
-		ON_CALL(*this, getSettingDouble(_, _)).WillByDefault(Invoke(&this, &StubDefaultSettingsService::getSettingDoubleStub));
-		ON_CALL(*this, getSettingBoolean(_, _)).WillByDefault(Invoke(&this, &StubDefaultSettingsService::getSettingBooleanStub));
-		ON_CALL(*this, getSettingString(_, _)).WillByDefault(Invoke(&this, &StubDefaultSettingsService::getSettingStringStub));
+		ON_CALL(*this, getSettingInteger(_, _)).WillByDefault(Invoke(this, &StubDefaultSettingsService::getSettingIntegerStub));
+		ON_CALL(*this, getSettingDouble(_, _)).WillByDefault(Invoke(this, &StubDefaultSettingsService::getSettingDoubleStub));
+		ON_CALL(*this, getSettingBoolean(_, _)).WillByDefault(Invoke(this, &StubDefaultSettingsService::getSettingBooleanStub));
+		ON_CALL(*this, getSettingString(_, _)).WillByDefault(Invoke(this, &StubDefaultSettingsService::getSettingStringStub));
 	}
 
 	StubDefaultSettingsService::~StubDefaultSettingsService() = default;

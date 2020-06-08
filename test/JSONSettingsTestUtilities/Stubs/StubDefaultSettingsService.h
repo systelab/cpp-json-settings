@@ -14,7 +14,7 @@ namespace systelab { namespace setting { namespace test_utility {
 		virtual int getSettingIntegerStub(const std::string&, const std::string&);
 		virtual double getSettingDoubleStub(const std::string&, const std::string&);
 		virtual bool getSettingBooleanStub(const std::string&, const std::string&);
-		virtual std::string getSettingString(const std::string&, const std::string&);
+		virtual std::string getSettingStringStub(const std::string&, const std::string&);
 	};
 
 }}}
