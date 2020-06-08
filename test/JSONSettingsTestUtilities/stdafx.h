@@ -7,6 +7,7 @@
 #include <gmock/gmock.h>
 
 // STL
+#include <functional>
 #include <istream>
 #include <ostream>
 #include <map>
