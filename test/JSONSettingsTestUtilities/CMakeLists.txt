@@ -13,7 +13,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 # Add project folder into includes
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-# Find external dependencides
+# Find external dependencies
 find_package(JSONSettings)
 
 set(GTEST_PACKAGE_NAME gtest)
