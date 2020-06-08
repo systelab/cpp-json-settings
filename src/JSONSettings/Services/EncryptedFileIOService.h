@@ -20,7 +20,6 @@ namespace systelab { namespace setting {
 
 	private:
 		const systelab::encryption::IEncryptionAdapter& m_encryptionAdapter;
-		std::unique_ptr<IFileIOService> m_fileIOService;
 	};
 
 }}

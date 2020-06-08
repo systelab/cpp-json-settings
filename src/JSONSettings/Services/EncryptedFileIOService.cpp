@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "EncryptedFileIOService.h"
 
-#include "FileIOService.h"
-
 #include "EncryptionAdapterInterface/IEncryptionAdapter.h"
 
 
@@ -10,7 +8,6 @@ namespace systelab { namespace setting {
 
 	EncryptedFileIOService::EncryptedFileIOService(const systelab::encryption::IEncryptionAdapter& encryptionAdapter)
 		:m_encryptionAdapter(encryptionAdapter)
-		,m_fileIOService(std::make_unique<FileIOService>())
 	{
 	}
 
@@ -18,15 +15,21 @@ namespace systelab { namespace setting {
 
 	boost::optional<std::stringstream> EncryptedFileIOService::read(const std::string& filepath, const SecurityKey& encryptionKey) const
 	{
-		boost::optional<std::stringstream> encryptedFileStream = m_fileIOService->read(filepath, []() { return ""; });
-		if (!encryptedFileStream)
+		std::ifstream inputFileStream(filepath, std::ios::binary);
+		if (!inputFileStream)
 		{
 			return boost::none;
 		}
 
+		std::stringstream encryptedFileStream;
+		encryptedFileStream << inputFileStream.rdbuf();
+		inputFileStream.close();
+
 		try
 		{
-			return std::stringstream(m_encryptionAdapter.decryptString(encryptionKey(), encryptedFileStream->str()));
+			std::string key = encryptionKey();
+			std::string encryptedFileContents = encryptedFileStream.str();
+			return std::stringstream(m_encryptionAdapter.decryptString(key, encryptedFileContents));
 		}
 		catch (systelab::encryption::IEncryptionAdapter::Exception&)
 		{
@@ -39,7 +42,11 @@ namespace systelab { namespace setting {
 		std::stringstream ss;
 		ss << &buffer;
 		std::stringstream out(m_encryptionAdapter.encryptString(encryptionKey(), ss.str()));
-		m_fileIOService->write(filepath, []() { return ""; }, *out.rdbuf());
+		std::string outputStr = out.str();
+
+		std::ofstream outputFileStream(filepath, std::ofstream::binary);
+		outputFileStream << outputStr;
+		outputFileStream.close();
 	}
 
 }}
