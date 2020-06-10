@@ -2,6 +2,7 @@
 #include "SettingsGetAllEndpoint.h"
 
 #include "Helpers/ReplyBuilderHelper.h"
+#include "Helpers/SettingCurrentValueHelper.h"
 
 #include "JSONSettings/ISettingsService.h"
 #include "JSONSettings/SettingDefinitionMgr.h"
@@ -45,7 +46,8 @@ namespace systelab { namespace setting { namespace rest_api {
 			{
 				auto settingPath = settingData.first;
 				auto settingDefinition = settingData.second;
-				auto settingCurrentValue = getSettingCurrentValue(settingPath, settingDefinition.defaultValue.type);
+				auto settingCurrentValue = SettingCurrentValueHelper::query(*m_settingsService, m_settingsFile,
+																			settingPath, settingDefinition.defaultValue.type);
 
 				auto jsonSetting = jsonSettingsArray->buildValue(systelab::json::OBJECT_TYPE);
 				jsonSetting->addMember("id", settingDefinition.id);
