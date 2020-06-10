@@ -73,15 +73,30 @@ build_script:
   - cd ..
   - cd ..
   - cd ..
-  - cd build
 
 test_script:
+  - ps: cd build
   - ps: cd bin
   - ps: cd $env:CONFIGURATION
   - JSONSettingsTest.exe --gtest_output=xml:JSONSettingsTest.xml
+  - ps: cd ..
+  - ps: cd ..
+  - ps: cd ..
+  - ps: cd src
+  - ps: cd JSONSettingsRESTAPI
+  - ps: cd build
+  - ps: cd bin
+  - ps: cd $env:CONFIGURATION
+  - JSONSettingsRESTAPITest.exe --gtest_output=xml:JSONSettingsRESTAPITest.xml
+  - ps: cd ..
+  - ps: cd ..
+  - ps: cd ..
+  - ps: cd ..
+  - ps: cd ..
 
 after_test:
-  - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\JSONSettingsTest.xml))
+  - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\build\bin\$env:CONFIGURATION\JSONSettingsTest.xml))
+  - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\src\JSONSettingsRESTAPI\build\bin\$env:CONFIGURATION\JSONSettingsRESTAPITest.xml))
 
 artifacts:
   - path: 'build\lib\%CONFIGURATION%\JSONSettings.lib'
