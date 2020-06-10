@@ -50,7 +50,7 @@ class JSONSettingsRESTAPIConan(ConanFile):
         self.copy("*.so*", dst="bin", src="lib")
 
     def package(self):
-        self.copy("*.h", dst="include/JSONSettingsRESTAPI", keep_path=True)
+        self.copy("*.h", src="Endpoints", dst="include/JSONSettingsRESTAPI", keep_path=False)
         self.copy("*JSONSettingsRESTAPI.lib", dst="lib", keep_path=False)
         self.copy("*JSONSettingsRESTAPI.pdb", dst="lib", keep_path=False)
         self.copy("*JSONSettingsRESTAPI.a", dst="lib", keep_path=False)
