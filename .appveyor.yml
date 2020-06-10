@@ -21,6 +21,7 @@ environment:
     visual_studio: Visual Studio 16 2019
     compiler_toolset: v142
     gtest: 1.10.0
+    openssl: 1.1.1g
     boost: 1.71.0
 
   - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
@@ -28,8 +29,9 @@ environment:
     platform: Win32
     visual_studio: Visual Studio 15 2017
     compiler_toolset: v141
-    gtest: 1.7.0
     boost: 1.66.0
+    openssl: 1.1.1g
+    gtest: 1.7.0
 
 install:
   - "SET PATH=%PYTHON%;%PYTHON%/Scripts/;%PATH%"
@@ -56,6 +58,18 @@ build_script:
   - msbuild JSONSettingsTestUtilities.sln /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
   - conan export-pkg ../conanfile.py JSONSettingsTestUtilities/%APPVEYOR_BUILD_VERSION%@systelab/stable -s build_type=%CONFIGURATION% -s compiler.toolset=%COMPILER_TOOLSET% -s arch=%ARCH% -o boost=%BOOST% -o gtest=%GTEST%
   - conan test ../test_package/conanfile.py JSONSettingsTestUtilities/%APPVEYOR_BUILD_VERSION%@systelab/stable -s build_type=%CONFIGURATION% -s compiler.toolset=%COMPILER_TOOLSET% -s arch=%ARCH% -o boost=%BOOST% -o gtest=%GTEST%
+  - cd ..
+  - cd ..
+  - cd ..
+  - cd src
+  - cd JSONSettingsRESTAPI
+  - md build
+  - cd build
+  - conan install .. -s build_type=%CONFIGURATION% -s compiler.toolset=%COMPILER_TOOLSET% -s arch=%ARCH% -e VERSION="%APPVEYOR_BUILD_VERSION%" -o boost=%BOOST% -o openssl=%OPENSSL% -o gtest=%GTEST%
+  - cmake .. -G "%VISUAL_STUDIO%" -A %PLATFORM%
+  - msbuild JSONSettingsRESTAPI.sln /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+  - conan export-pkg ../conanfile.py JSONSettingsRESTAPI/%APPVEYOR_BUILD_VERSION%@systelab/stable -s build_type=%CONFIGURATION% -s compiler.toolset=%COMPILER_TOOLSET% -s arch=%ARCH% -o boost=%BOOST% -o openssl=%OPENSSL% -o gtest=%GTEST%
+  - conan test ../test_package/conanfile.py JSONSettingsRESTAPI/%APPVEYOR_BUILD_VERSION%@systelab/stable -s build_type=%CONFIGURATION% -s compiler.toolset=%COMPILER_TOOLSET% -s arch=%ARCH% -o boost=%BOOST% -o openssl=%OPENSSL% -o gtest=%GTEST%
   - cd ..
   - cd ..
   - cd ..
