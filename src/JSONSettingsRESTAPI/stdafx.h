@@ -4,8 +4,10 @@
 
 // STL
 #include <functional>
+#include <iomanip>
 #include <istream>
 #include <ostream>
 #include <map>
+#include <sstream>
 #include <string>
 #include <vector>
