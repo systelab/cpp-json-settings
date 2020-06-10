@@ -7,7 +7,7 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "JSONSettingsRESTAPI/SettingsRESTAPIGetAllEndpoint.h"
+#include "JSONSettingsRESTAPI/SettingsGetAllEndpoint.h"
 
 #include "JSONSettings/SettingsFile.h"
 #include "JSONSettings/SettingsService.h"
@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 	auto settingsService = std::make_unique<systelab::setting::SettingsService>();
 	systelab::json::rapidjson::JSONAdapter jsonAdapter;
 	
-	auto endpoint = std::make_unique<systelab::setting::rest_api::SettingsRESTAPIGetAllEndpoint>
+	auto endpoint = std::make_unique<systelab::setting::rest_api::SettingsGetAllEndpoint>
 						(settingsFile, std::move(settingsService), jsonAdapter);
     return 0;
 }
