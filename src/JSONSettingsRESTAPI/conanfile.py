@@ -23,8 +23,7 @@ class JSONSettingsRESTAPIConan(ConanFile):
 
     def requirements(self):
         self.requires("RESTAPICore/1.1.1@systelab/stable")
-        if self.options.openssl != "1.0.2n":
-            self.requires("zlib/1.2.11")
+        self.requires("zlib/1.2.11")
 
         if ("%s" % self.version) == "None":
             self.requires("JSONSettings/%s@systelab/stable" % os.environ['VERSION'])
