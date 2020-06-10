@@ -30,7 +30,7 @@ environment:
     visual_studio: Visual Studio 15 2017
     compiler_toolset: v141
     boost: 1.66.0
-    openssl: 1.1.1g
+    openssl: 1.0.2n
     gtest: 1.7.0
 
 install:
