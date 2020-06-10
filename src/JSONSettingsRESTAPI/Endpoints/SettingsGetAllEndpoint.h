@@ -1,7 +1,10 @@
 #pragma once
 
-#include "JSONSettings/SettingsFile.h"
 #include "RESTAPICore/Endpoint/IEndpoint.h"
+
+#include "JSONSettings/SettingsFile.h"
+#include "JSONSettings/SettingPath.h"
+#include "JSONSettings/SettingValue.h"
 
 
 namespace systelab {
@@ -26,7 +29,13 @@ namespace systelab { namespace setting { namespace rest_api {
 
 		std::unique_ptr<systelab::web_server::Reply> execute(const systelab::rest_api_core::EndpointRequestData&) override;
 
-	private:
+	protected:
+		virtual std::unique_ptr<systelab::web_server::Reply> buildSettingsFileNotFoundReply() const;
+		virtual std::unique_ptr<systelab::web_server::Reply> buildInternalErrorReply(const std::string& errorMessage) const;
+
+		SettingValue getSettingCurrentValue(const SettingPath&, const SettingValueType&) const;
+
+	protected:
 		const SettingsFile& m_settingsFile;
 		std::unique_ptr<ISettingsService> m_settingsService;
 		const systelab::json::IJSONAdapter& m_jsonAdapter;
