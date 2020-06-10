@@ -79,28 +79,4 @@ namespace systelab { namespace setting { namespace rest_api {
 		return ReplyBuilderHelper::buildMessage(systelab::web_server::Reply::INTERNAL_SERVER_ERROR, errorMessage);
 	}
 
-	SettingValue SettingsGetAllEndpoint::getSettingCurrentValue(const SettingPath& settingPath, const SettingValueType& settingValueType) const
-	{
-		SettingValue settingValue;
-		if (settingValueType == SettingValueType::IntValue)
-		{
-			settingValue = SettingValue(m_settingsService->getSettingInteger(m_settingsFile, settingPath)).value;
-		}
-		else if (settingValueType == SettingValueType::DoubleValue)
-		{
-			settingValue = SettingValue(m_settingsService->getSettingDouble(m_settingsFile, settingPath)).value;
-		}
-		else if (settingValueType == SettingValueType::BooleanValue)
-		{
-			settingValue = SettingValue(m_settingsService->getSettingBoolean(m_settingsFile, settingPath)).value;
-		}
-		else if (settingValueType == SettingValueType::StringValue)
-		{
-			settingValue = SettingValue(m_settingsService->getSettingString(m_settingsFile, settingPath)).value;
-		}
-
-		return settingValue;
-	}
-
-
 }}}

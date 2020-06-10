@@ -3,8 +3,6 @@
 #include "RESTAPICore/Endpoint/IEndpoint.h"
 
 #include "JSONSettings/SettingsFile.h"
-#include "JSONSettings/SettingPath.h"
-#include "JSONSettings/SettingValue.h"
 
 
 namespace systelab {
@@ -32,8 +30,6 @@ namespace systelab { namespace setting { namespace rest_api {
 	protected:
 		virtual std::unique_ptr<systelab::web_server::Reply> buildSettingsFileNotFoundReply() const;
 		virtual std::unique_ptr<systelab::web_server::Reply> buildInternalErrorReply(const std::string& errorMessage) const;
-
-		SettingValue getSettingCurrentValue(const SettingPath&, const SettingValueType&) const;
 
 	protected:
 		const SettingsFile& m_settingsFile;
