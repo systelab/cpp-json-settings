@@ -3,6 +3,7 @@
 
 #include "Helpers/ReplyBuilderHelper.h"
 #include "Helpers/SettingCurrentValueHelper.h"
+#include "Helpers/SettingSerializationHelper.h"
 
 #include "JSONSettings/ISettingsService.h"
 #include "JSONSettings/SettingDefinitionMgr.h"
@@ -50,12 +51,7 @@ namespace systelab { namespace setting { namespace rest_api {
 																			settingPath, settingDefinition.defaultValue.type);
 
 				auto jsonSetting = jsonSettingsArray->buildValue(systelab::json::OBJECT_TYPE);
-				jsonSetting->addMember("id", settingDefinition.id);
-				jsonSetting->addMember("path", settingPath);
-				// jsonSetting->addMember("type", settingDefinition.defaultValue.type);
-				jsonSetting->addMember("defaultValue", settingDefinition.defaultValue.value);
-				jsonSetting->addMember("currentValue", settingCurrentValue.value);
-
+				SettingSerializationHelper::serialize(settingPath, settingDefinition, settingCurrentValue, *jsonSetting);
 				jsonSettingsArray->addArrayValue(std::move(jsonSetting));
 			}
 
