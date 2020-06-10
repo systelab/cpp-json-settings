@@ -88,6 +88,8 @@ artifacts:
     name: JSONSettings.lib
   - path: 'test\JSONSettingsTestUtilities\build\lib\%CONFIGURATION%\JSONSettingsTestUtilities.lib'
     name: JSONSettingsTestUtilities.lib
+  - path: 'src\JSONSettingsRESTAPI\build\lib\%CONFIGURATION%\JSONSettingsRESTAPI.lib'
+    name: JSONSettingsRESTAPI.lib
 
 deploy_script:
   - ps: >- 
