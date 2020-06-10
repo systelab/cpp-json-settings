@@ -12,11 +12,14 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # Find tested package
 find_package(JSONSettingsRESTAPI)
+find_package(RapidJSONAdapter)
 
 # Configure test package project
 set(JSON_SETTINGS_REST_API_PACKAGE_TEST_PROJECT JSONSettingsRESTAPIPackageTest)
 add_executable(${JSON_SETTINGS_REST_API_PACKAGE_TEST_PROJECT} JSONSettingsRESTAPIExample.cpp)
-target_link_libraries(${JSON_SETTINGS_REST_API_PACKAGE_TEST_PROJECT} JSONSettingsRESTAPI::JSONSettingsRESTAPI)
+target_link_libraries(${JSON_SETTINGS_REST_API_PACKAGE_TEST_PROJECT}
+                      JSONSettingsRESTAPI::JSONSettingsRESTAPI
+                      RapidJSONAdapter::RapidJSONAdapter)
 
 # Register test
 enable_testing()
