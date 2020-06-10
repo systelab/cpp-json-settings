@@ -12,7 +12,7 @@
 #include "JSONSettings/SettingsFile.h"
 #include "JSONSettings/SettingsService.h"
 
-#include "RapidJSONAdapterInterface/JSONAdapter.h"
+#include "RapidJSONAdapter/JSONAdapter.h"
 
 
 int main(int argc, char *argv[])
