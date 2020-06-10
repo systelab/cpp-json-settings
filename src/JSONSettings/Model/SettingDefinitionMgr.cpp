@@ -47,6 +47,7 @@ namespace systelab { namespace setting {
 										  const SettingDefinition& definition)
 	{
 		m_settings[file][sectionPath] = definition;
+		m_settings[file][sectionPath].id = m_settings[file].size();
 	}
 
 	SecurityKey SettingDefinitionMgr::getSettingsFileEncryptionKey(const SettingsFile& file) const
