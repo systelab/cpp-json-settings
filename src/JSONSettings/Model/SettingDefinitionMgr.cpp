@@ -24,6 +24,17 @@ namespace systelab { namespace setting {
 		return m_settings.find(file) != m_settings.end();
 	}
 
+	std::map<SettingPath, SettingDefinition> SettingDefinitionMgr::getFileSettings(const SettingsFile& file) const
+	{
+		std::map<SettingPath, SettingDefinition> settings;
+		if (hasFile(file))
+		{
+			settings = m_settings.find(file)->second;
+		}
+
+		return settings;
+	}
+
 	bool SettingDefinitionMgr::hasSetting(const SettingsFile& file,
 										  const SettingPath& sectionPath) const
 	{

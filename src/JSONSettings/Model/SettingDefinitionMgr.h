@@ -20,6 +20,8 @@ namespace systelab { namespace setting {
 		static SettingDefinitionMgr& get();
 
 		bool hasFile(const SettingsFile&) const;
+		std::map<SettingPath, SettingDefinition> getFileSettings(const SettingsFile&) const;
+
 		bool hasSetting(const SettingsFile&, const SettingPath&) const;
 		const SettingDefinition& getSetting(const SettingsFile&, const SettingPath&) const;
 		void setSetting(const SettingsFile&, const SettingPath&, const SettingDefinition&);
