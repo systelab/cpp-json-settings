@@ -45,3 +45,7 @@ checkErrors
 echo -e "\nUploading JSONSettingsTestUtilities/$VERSION@systelab/stable to systelab-bintray...\n\n"
 conan upload "JSONSettingsTestUtilities/$VERSION@systelab/stable" --all -r systelab-bintray --force
 checkErrors
+
+echo -e "\nUploading JSONSettingsRESTAPI/$VERSION@systelab/stable to systelab-bintray...\n\n"
+conan upload "JSONSettingsRESTAPI/$VERSION@systelab/stable" --all -r systelab-bintray --force
+checkErrors
