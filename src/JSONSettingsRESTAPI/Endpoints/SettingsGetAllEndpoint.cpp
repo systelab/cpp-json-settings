@@ -5,11 +5,12 @@
 #include "JSONSettings/SettingDefinitionMgr.h"
 
 #include "JSONAdapterInterface/IJSONAdapter.h"
+#include "WebServerAdapterInterface/Model/Reply.h"
 
 
 namespace systelab { namespace setting { namespace rest_api {
 
-	SettingsGetAllEndpoint::SettingsGetAllEndpoint(const std::string& settingsFile,
+	SettingsGetAllEndpoint::SettingsGetAllEndpoint(const SettingsFile& settingsFile,
 												   std::unique_ptr<ISettingsService> settingsService,
 												   const systelab::json::IJSONAdapter& jsonAdapter)
 		:m_settingsFile(settingsFile)
@@ -22,12 +23,14 @@ namespace systelab { namespace setting { namespace rest_api {
 
 	std::unique_ptr<systelab::web_server::Reply> SettingsGetAllEndpoint::execute(const systelab::rest_api_core::EndpointRequestData&)
 	{
-		//if (SettingDefinitionMgr::get().hasFile(static_cast<SettingDefinitionMgr::Set>settingFile))
-		//{
+		if (!SettingDefinitionMgr::get().hasFile(m_settingsFile))
+		{
+			auto reply = std::make_unique<systelab::web_server::Reply>();
+			reply->setStatus(systelab::web_server::Reply::NOT_FOUND);
+			return reply;
+		}
 
-		//}
-
-		//if (m)
+		
 
 		throw "Not implemented";
 	}
