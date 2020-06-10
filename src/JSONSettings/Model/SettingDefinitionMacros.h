@@ -52,7 +52,7 @@
 		{ \
 			SETTING_NAME##SettingStruct() \
 			{ \
-				systelab::setting::SettingDefinition settingDefinition = { DEFAULT_VALUE, NO_VALIDATION_FUNCTION(), USE_CACHE }; \
+				systelab::setting::SettingDefinition settingDefinition = { -1, DEFAULT_VALUE, NO_VALIDATION_FUNCTION(), USE_CACHE }; \
 				systelab::setting::SettingDefinitionMgr::get().setSetting(FILENAME, PATH, settingDefinition); \
 			} \
 		}; \
@@ -68,7 +68,7 @@
 		{ \
 			SETTING_NAME##SettingStruct() \
 			{ \
-				systelab::setting::SettingDefinition settingDefinition = { DEFAULT_VALUE, NO_VALIDATION_FUNCTION(), USE_CACHE }; \
+				systelab::setting::SettingDefinition settingDefinition = { -1, DEFAULT_VALUE, NO_VALIDATION_FUNCTION(), USE_CACHE }; \
 				systelab::setting::SettingDefinitionMgr::get().setSetting(FILENAME, PATH, settingDefinition); \
 			} \
 		}; \
@@ -84,7 +84,7 @@
 		{ \
 			SETTING_NAME##SettingStruct() \
 			{ \
-				systelab::setting::SettingDefinition settingDefinition = { DEFAULT_VALUE, NO_VALIDATION_FUNCTION(), USE_CACHE }; \
+				systelab::setting::SettingDefinition settingDefinition = { -1, DEFAULT_VALUE, NO_VALIDATION_FUNCTION(), USE_CACHE }; \
 				systelab::setting::SettingDefinitionMgr::get().setSetting(FILENAME, PATH, settingDefinition); \
 			} \
 		}; \
@@ -100,7 +100,7 @@
 		{ \
 			SETTING_NAME##SettingStruct() \
 			{ \
-				systelab::setting::SettingDefinition settingDefinition = { DEFAULT_VALUE, NO_VALIDATION_FUNCTION(), USE_CACHE }; \
+				systelab::setting::SettingDefinition settingDefinition = { -1, DEFAULT_VALUE, NO_VALIDATION_FUNCTION(), USE_CACHE }; \
 				systelab::setting::SettingDefinitionMgr::get().setSetting(FILENAME, PATH, settingDefinition); \
 			} \
 		}; \

@@ -2,6 +2,8 @@
 
 #include "SecurityKey.h"
 #include "SettingDefinition.h"
+#include "SettingsFile.h"
+#include "SettingPath.h"
 
 
 namespace systelab { namespace setting {
@@ -9,8 +11,6 @@ namespace systelab { namespace setting {
 	class SettingDefinitionMgr
 	{
 	private:
-		typedef std::string SettingsFile;
-		typedef std::string SettingPath;
 		typedef std::map< SettingsFile, std::map<SettingPath, SettingDefinition> > SettingsContainer;
 
 	public:
