@@ -3,8 +3,9 @@ cmake_minimum_required(VERSION 3.2)
 # Enable testing module
 enable_testing()
 
-# Add project folder into includes
+# Configure include directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
+include_directories(${CMAKE_SOURCE_DIR}/..)
 
 # Find external dependencies
 set(GTEST_PACKAGE_NAME gtest)
