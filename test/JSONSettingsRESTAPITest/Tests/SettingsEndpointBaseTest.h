@@ -3,6 +3,7 @@
 #include "TestSettingsDefinition.h"
 
 #include "CaeserCypherEncryptionAdapter/EncryptionAdapter.h"
+#include "JSONSettings/SettingsService.h"
 #include "RapidJSONAdapter/JSONAdapter.h"
 
 #include <boost/filesystem.hpp>
@@ -31,8 +32,10 @@ namespace systelab { namespace setting { namespace rest_api { namespace unit_tes
 		{
 			if (boost::filesystem::exists(m_settingsFolderPath))
 			{
-				boost::filesystem::remove(m_settingsFolderPath);
+				boost::filesystem::remove_all(m_settingsFolderPath);
 			}
+
+			SettingsService().clearCache();
 		}
 
 		void removeSettingsFile(const SettingsFile& file)
