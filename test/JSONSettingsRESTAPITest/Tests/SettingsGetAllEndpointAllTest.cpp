@@ -1,11 +1,9 @@
 #include "stdafx.h"
+#include "SettingsEndpointBaseTest.h"
+
 #include "JSONSettingsRESTAPI/Endpoints/SettingsGetAllEndpoint.h"
 
-#include "TestSettingsDefinition.h"
-
-#include "CaeserCypherEncryptionAdapter/EncryptionAdapter.h"
 #include "JSONSettings/SettingsService.h"
-#include "RapidJSONAdapter/JSONAdapter.h"
 #include "RESTAPICore/Endpoint/EndpointRequestData.h"
 #include "WebServerAdapterInterface/Model/Reply.h"
 
@@ -16,12 +14,17 @@ using namespace systelab::json::test_utility;
 
 namespace systelab { namespace setting { namespace rest_api { namespace unit_test {
 
-	class SettingsGetAllEndpointTest : public Test
+	class SettingsGetAllEndpointTest : public SettingsEndpointBaseTest
 	{
 	public:
 		void SetUp()
 		{
+			SettingsEndpointBaseTest::SetUp();
+		}
 
+		void TearDown()
+		{
+			SettingsEndpointBaseTest::TearDown();
 		}
 
 		std::unique_ptr<systelab::rest_api_core::IEndpoint> buildEndpoint(const SettingsFile& file)
