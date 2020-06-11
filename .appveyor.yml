@@ -21,6 +21,7 @@ environment:
     visual_studio: Visual Studio 16 2019
     compiler_toolset: v142
     gtest: 1.10.0
+    openssl: 1.1.1g
     boost: 1.71.0
 
   - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
@@ -28,8 +29,9 @@ environment:
     platform: Win32
     visual_studio: Visual Studio 15 2017
     compiler_toolset: v141
-    gtest: 1.7.0
     boost: 1.66.0
+    openssl: 1.0.2n
+    gtest: 1.7.0
 
 install:
   - "SET PATH=%PYTHON%;%PYTHON%/Scripts/;%PATH%"
@@ -59,27 +61,57 @@ build_script:
   - cd ..
   - cd ..
   - cd ..
+  - cd src
+  - cd JSONSettingsRESTAPI
+  - md build
   - cd build
+  - conan install .. -s build_type=%CONFIGURATION% -s compiler.toolset=%COMPILER_TOOLSET% -s arch=%ARCH% -e VERSION="%APPVEYOR_BUILD_VERSION%" -o boost=%BOOST% -o openssl=%OPENSSL% -o gtest=%GTEST%
+  - cmake .. -G "%VISUAL_STUDIO%" -A %PLATFORM%
+  - msbuild JSONSettingsRESTAPI.sln /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+  - conan export-pkg ../conanfile.py JSONSettingsRESTAPI/%APPVEYOR_BUILD_VERSION%@systelab/stable -s build_type=%CONFIGURATION% -s compiler.toolset=%COMPILER_TOOLSET% -s arch=%ARCH% -o boost=%BOOST% -o openssl=%OPENSSL% -o gtest=%GTEST%
+  - conan test ../test_package/conanfile.py JSONSettingsRESTAPI/%APPVEYOR_BUILD_VERSION%@systelab/stable -s build_type=%CONFIGURATION% -s compiler.toolset=%COMPILER_TOOLSET% -s arch=%ARCH% -o boost=%BOOST% -o openssl=%OPENSSL% -o gtest=%GTEST%
+  - cd ..
+  - cd ..
+  - cd ..
 
 test_script:
+  - ps: cd build
   - ps: cd bin
   - ps: cd $env:CONFIGURATION
   - JSONSettingsTest.exe --gtest_output=xml:JSONSettingsTest.xml
+  - ps: cd ..
+  - ps: cd ..
+  - ps: cd ..
+  - ps: cd src
+  - ps: cd JSONSettingsRESTAPI
+  - ps: cd build
+  - ps: cd bin
+  - ps: cd $env:CONFIGURATION
+  - JSONSettingsRESTAPITest.exe --gtest_output=xml:JSONSettingsRESTAPITest.xml
+  - ps: cd ..
+  - ps: cd ..
+  - ps: cd ..
+  - ps: cd ..
+  - ps: cd ..
 
 after_test:
-  - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\JSONSettingsTest.xml))
+  - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\build\bin\$env:CONFIGURATION\JSONSettingsTest.xml))
+  - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\src\JSONSettingsRESTAPI\build\bin\$env:CONFIGURATION\JSONSettingsRESTAPITest.xml))
 
 artifacts:
   - path: 'build\lib\%CONFIGURATION%\JSONSettings.lib'
     name: JSONSettings.lib
   - path: 'test\JSONSettingsTestUtilities\build\lib\%CONFIGURATION%\JSONSettingsTestUtilities.lib'
     name: JSONSettingsTestUtilities.lib
+  - path: 'src\JSONSettingsRESTAPI\build\lib\%CONFIGURATION%\JSONSettingsRESTAPI.lib'
+    name: JSONSettingsRESTAPI.lib
 
 deploy_script:
   - ps: >- 
       if($env:appveyor_repo_tag -eq 'True') {
         conan upload JSONSettings/$env:appveyor_build_version@systelab/stable --all -r systelab-bintray --force
         conan upload JSONSettingsTestUtilities/$env:appveyor_build_version@systelab/stable --all -r systelab-bintray --force
+        conan upload JSONSettingsRESTAPI/$env:appveyor_build_version@systelab/stable --all -r systelab-bintray --force
       } else {
         echo "Not uploading because this is not a tag build"
       }
