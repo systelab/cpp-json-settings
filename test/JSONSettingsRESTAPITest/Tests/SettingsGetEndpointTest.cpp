@@ -66,7 +66,7 @@ namespace systelab { namespace setting { namespace rest_api { namespace unit_tes
 	};
 
 
-	// Happy path - Not encrypted file
+	// Happy path - Not encrypted file - Integer setting
 	TEST_F(SettingsGetEndpointTest, testExecuteForIntSettingOfMySettingsFileWhenFileDoesNotExist)
 	{
 		auto endpoint = buildEndpoint(MySettingsFile::FILENAME);
@@ -90,6 +90,90 @@ namespace systelab { namespace setting { namespace rest_api { namespace unit_tes
 		EXPECT_EQ(systelab::web_server::Reply::OK, reply->getStatus());
 		EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
 		EXPECT_TRUE(compareJSONs(buildSettingExpectedContent(1, "IntSettingCache", "integer", true, "1234", "54321"),
+								 reply->getContent(), m_jsonAdapter));
+	}
+
+
+	// Happy path - Not encrypted file - Double setting
+	TEST_F(SettingsGetEndpointTest, testExecuteForDblSettingOfMySettingsFileWhenFileDoesNotExist)
+	{
+		auto endpoint = buildEndpoint(MySettingsFile::FILENAME);
+		auto reply = endpoint->execute(buildHappyPathEndpointRequestData(2)); // DblSetting has id=2
+
+		ASSERT_TRUE(reply != nullptr);
+		EXPECT_EQ(systelab::web_server::Reply::OK, reply->getStatus());
+		EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
+		EXPECT_TRUE(compareJSONs(buildSettingExpectedContent(2, "DblSettingNoCache", "double", false, "5.678", "5.678"),
+								 reply->getContent(), m_jsonAdapter));
+	}
+
+	TEST_F(SettingsGetEndpointTest, testExecuteForDblSettingOfMySettingsFileWhenFileExists)
+	{
+		writeMySettingsFile(54321, 9.87654, "XYZ", true);
+
+		auto endpoint = buildEndpoint(MySettingsFile::FILENAME);
+		auto reply = endpoint->execute(buildHappyPathEndpointRequestData(2)); // DblSetting has id=2
+
+		ASSERT_TRUE(reply != nullptr);
+		EXPECT_EQ(systelab::web_server::Reply::OK, reply->getStatus());
+		EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
+		EXPECT_TRUE(compareJSONs(buildSettingExpectedContent(2, "DblSettingNoCache", "double", false, "5.678", "9.87654"),
+								 reply->getContent(), m_jsonAdapter));
+	}
+
+
+	// Happy path - Not encrypted file - String setting
+	TEST_F(SettingsGetEndpointTest, testExecuteForStrSettingOfMySettingsFileWhenFileDoesNotExist)
+	{
+		auto endpoint = buildEndpoint(MySettingsFile::FILENAME);
+		auto reply = endpoint->execute(buildHappyPathEndpointRequestData(3)); // StrSetting has id=3
+
+		ASSERT_TRUE(reply != nullptr);
+		EXPECT_EQ(systelab::web_server::Reply::OK, reply->getStatus());
+		EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
+		EXPECT_TRUE(compareJSONs(buildSettingExpectedContent(3, "Section.StrSettingCache", "string", true, "ba", "ba"),
+								 reply->getContent(), m_jsonAdapter));
+	}
+
+	TEST_F(SettingsGetEndpointTest, testExecuteForStrSettingOfMySettingsFileWhenFileExists)
+	{
+		writeMySettingsFile(54321, 9.87654, "XYZ", true);
+
+		auto endpoint = buildEndpoint(MySettingsFile::FILENAME);
+		auto reply = endpoint->execute(buildHappyPathEndpointRequestData(3)); // StrSetting has id=3
+
+		ASSERT_TRUE(reply != nullptr);
+		EXPECT_EQ(systelab::web_server::Reply::OK, reply->getStatus());
+		EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
+		EXPECT_TRUE(compareJSONs(buildSettingExpectedContent(3, "Section.StrSettingCache", "string", true, "ba", "XYZ"),
+								 reply->getContent(), m_jsonAdapter));
+	}
+
+
+	// Happy path - Not encrypted file - Boolean setting
+	TEST_F(SettingsGetEndpointTest, testExecuteForBoolSettingOfMySettingsFileWhenFileDoesNotExist)
+	{
+		auto endpoint = buildEndpoint(MySettingsFile::FILENAME);
+		auto reply = endpoint->execute(buildHappyPathEndpointRequestData(4)); // Boolean setting has id=4
+
+		ASSERT_TRUE(reply != nullptr);
+		EXPECT_EQ(systelab::web_server::Reply::OK, reply->getStatus());
+		EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
+		EXPECT_TRUE(compareJSONs(buildSettingExpectedContent(4, "Section.Subsection.BoolSettingNoCache", "boolean", false, "false", "false"),
+								 reply->getContent(), m_jsonAdapter));
+	}
+
+	TEST_F(SettingsGetEndpointTest, testExecuteForBoolSettingOfMySettingsFileWhenFileExists)
+	{
+		writeMySettingsFile(54321, 9.87654, "XYZ", true);
+
+		auto endpoint = buildEndpoint(MySettingsFile::FILENAME);
+		auto reply = endpoint->execute(buildHappyPathEndpointRequestData(4)); // Boolean setting has id=4
+
+		ASSERT_TRUE(reply != nullptr);
+		EXPECT_EQ(systelab::web_server::Reply::OK, reply->getStatus());
+		EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
+		EXPECT_TRUE(compareJSONs(buildSettingExpectedContent(4, "Section.Subsection.BoolSettingNoCache", "boolean", false, "false", "true"),
 								 reply->getContent(), m_jsonAdapter));
 	}
 
