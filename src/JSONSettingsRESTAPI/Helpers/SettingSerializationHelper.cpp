@@ -22,19 +22,19 @@ namespace systelab { namespace setting { namespace rest_api {
 		std::string typeStr = "";
 		if (type == SettingValueType::BooleanValue)
 		{
-			return "boolean";
+			typeStr = "boolean";
 		}
 		else if (type == SettingValueType::DoubleValue)
 		{
-			return "double";
+			typeStr = "double";
 		}
 		else if (type == SettingValueType::IntValue)
 		{
-			return "integer";
+			typeStr = "integer";
 		}
 		else if (type == SettingValueType::StringValue)
 		{
-			return "string";
+			typeStr = "string";
 		}
 
 		return typeStr;
