@@ -39,7 +39,7 @@ namespace systelab { namespace setting { namespace rest_api { namespace unit_tes
 			return std::make_unique<SettingsSetValueEndpoint>(file, std::move(settingsService), m_jsonAdapter);
 		}
 
-		rest_api_core::EndpointRequestData buildHappyPathEndpointRequestData(int settingId, std::string& newSettingValue)
+		rest_api_core::EndpointRequestData buildHappyPathEndpointRequestData(int settingId, const std::string& newSettingValue)
 		{
 			std::stringstream ss;
 			ss << "{";
@@ -49,7 +49,7 @@ namespace systelab { namespace setting { namespace rest_api { namespace unit_tes
 			return buildEndpointRequestData(settingId, ss.str());
 		}
 
-		rest_api_core::EndpointRequestData buildEndpointRequestData(int settingId, std::string& requestContent)
+		rest_api_core::EndpointRequestData buildEndpointRequestData(int settingId, const std::string& requestContent)
 		{
 			rest_api_core::EndpointRequestData endpointRequestData;
 			endpointRequestData.setParameters(rest_api_core::EndpointRequestParams({}, { {"id", settingId} }));
@@ -78,109 +78,130 @@ namespace systelab { namespace setting { namespace rest_api { namespace unit_tes
 	};
 
 
-	//// Happy path - Not encrypted file
-	//TEST_F(SettingsSetValueEndpointTest, testExecuteForIntSettingOfMySettingsFileReturns)
-	//{
-	//	auto endpoint = buildEndpoint(MySettingsFile::FILENAME);
-	//	auto reply = endpoint->execute(buildHappyPathEndpointRequestData(1)); // IntSetting has id=1
+	// Integer setting
+	TEST_F(SettingsSetValueEndpointTest, testExecuteForIntSettingAndValidValueReturnsOKReply)
+	{
+		auto endpoint = buildEndpoint(MySettingsFile::FILENAME);
+		auto reply = endpoint->execute(buildHappyPathEndpointRequestData(1, "9876")); // Integer setting has id=1
 
-	//	ASSERT_TRUE(reply != nullptr);
-	//	EXPECT_EQ(systelab::web_server::Reply::OK, reply->getStatus());
-	//	EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
-	//	EXPECT_TRUE(compareJSONs(buildSettingExpectedContent(1, "IntSettingCache", "integer", true, "1234", "1234"),
-	//							 reply->getContent(), m_jsonAdapter));
-	//}
+		ASSERT_TRUE(reply != nullptr);
+		EXPECT_EQ(systelab::web_server::Reply::OK, reply->getStatus());
+		EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
+		EXPECT_TRUE(compareJSONs(buildSettingExpectedContent(1, "IntSettingCache", "integer", true, "1234", "9876"),
+								 reply->getContent(), m_jsonAdapter));
+	}
 
-	//TEST_F(SettingsSetValueEndpointTest, testExecuteForIntSettingOfMySettingsFileWhenFileExists)
-	//{
-	//	writeMySettingsFile(54321, 9.87654, "XYZ", true);
+	TEST_F(SettingsSetValueEndpointTest, testExecuteForIntSettingAndValidValueWritesValueInMySettingsFile)
+	{
+		auto endpoint = buildEndpoint(MySettingsFile::FILENAME);
+		endpoint->execute(buildHappyPathEndpointRequestData(1, "9876")); // Integer setting has id=1
 
-	//	auto endpoint = buildEndpoint(MySettingsFile::FILENAME);
-	//	auto reply = endpoint->execute(buildHappyPathEndpointRequestData(1)); // IntSetting has id=1
+		std::string expectedSettingsFileContent = "{ \"IntSettingCache\": \"9876\" }";
+		EXPECT_TRUE(compareJSONs(expectedSettingsFileContent, *readSettingsFile(MySettingsFile::FILENAME), m_jsonAdapter));
+	}
 
-	//	ASSERT_TRUE(reply != nullptr);
-	//	EXPECT_EQ(systelab::web_server::Reply::OK, reply->getStatus());
-	//	EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
-	//	EXPECT_TRUE(compareJSONs(buildSettingExpectedContent(1, "IntSettingCache", "integer", true, "1234", "54321"),
-	//							 reply->getContent(), m_jsonAdapter));
-	//}
+	TEST_F(SettingsSetValueEndpointTest, testExecuteForIntSettingAndInvalidValueReturnsBadRequestReply)
+	{
+		auto endpoint = buildEndpoint(MySettingsFile::FILENAME);
+		auto reply = endpoint->execute(buildHappyPathEndpointRequestData(1, "ThisIsNotAnInteger")); // Integer setting has id=1
 
+		ASSERT_TRUE(reply != nullptr);
+		EXPECT_EQ(systelab::web_server::Reply::BAD_REQUEST, reply->getStatus());
+		EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
+		EXPECT_TRUE(compareJSONs(buildExpectedMessageReplyContent("New setting value not valid."),
+								 reply->getContent(), m_jsonAdapter));
 
-	//// Happy path - Encrypted file
-	//TEST_F(SettingsSetValueEndpointTest, testExecuteForFirstSettingOfEncryptedSettingsFileWhenFileDoesNotExist)
-	//{
-	//	auto endpoint = buildEndpoint(EncryptedSettingsFile::FILENAME);
-	//	auto reply = endpoint->execute(buildHappyPathEndpointRequestData(1));
-
-	//	ASSERT_TRUE(reply != nullptr);
-	//	EXPECT_EQ(systelab::web_server::Reply::OK, reply->getStatus());
-	//	EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
-	//	EXPECT_TRUE(compareJSONs(buildSettingExpectedContent(1, "Section.IntSettingCache", "integer", true, "9999", "9999"),
-	//							 reply->getContent(), m_jsonAdapter));
-	//}
-
-	//TEST_F(SettingsSetValueEndpointTest, testExecuteForFirstSettingOfEncryptedSettingsFileWhenFileExists)
-	//{
-	//	writeEncryptedSettingsFile(6666, 6.6, "6G6", false);
-
-	//	auto endpoint = buildEndpoint(EncryptedSettingsFile::FILENAME);
-	//	auto reply = endpoint->execute(buildHappyPathEndpointRequestData(1)); // IntSetting has id=1
-
-	//	ASSERT_TRUE(reply != nullptr);
-	//	EXPECT_EQ(systelab::web_server::Reply::OK, reply->getStatus());
-	//	EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
-	//	EXPECT_TRUE(compareJSONs(buildSettingExpectedContent(1, "Section.IntSettingCache", "integer", true, "9999", "6666"),
-	//							 reply->getContent(), m_jsonAdapter));
-	//}
+		ASSERT_FALSE(readSettingsFile(MySettingsFile::FILENAME));
+	}
 
 
-	//// Error cases
-	//TEST_F(SettingsSetValueEndpointTest, testExecuteForNotDefinedSettingsFileReturnsNotFoundReply)
-	//{
-	//	auto endpoint = buildEndpoint("NotExistingFile");
-	//	auto reply = endpoint->execute(buildHappyPathEndpointRequestData(1));
+	// Double setting
+	// String setting
+	// Boolean setting
 
-	//	ASSERT_TRUE(reply != nullptr);
-	//	EXPECT_EQ(systelab::web_server::Reply::NOT_FOUND, reply->getStatus());
-	//	EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
-	//	EXPECT_TRUE(compareJSONs("{}", reply->getContent(), m_jsonAdapter));
-	//}
 
-	//TEST_F(SettingsSetValueEndpointTest, testExecuteForNotExistingSettingInSettingsFileReturnsNotFoundReply)
-	//{
-	//	unsigned int notExistingSettingId = 666;
-	//	auto endpoint = buildEndpoint(MySettingsFile::FILENAME);
-	//	auto reply = endpoint->execute(buildHappyPathEndpointRequestData(notExistingSettingId));
+	// Encrypted setting
+	TEST_F(SettingsSetValueEndpointTest, testExecuteForEncryptedSettingAndValidValueReturnsOKReply)
+	{
+		auto endpoint = buildEndpoint(EncryptedSettingsFile::FILENAME);
+		auto reply = endpoint->execute(buildHappyPathEndpointRequestData(1, "5555"));
 
-	//	ASSERT_TRUE(reply != nullptr);
-	//	EXPECT_EQ(systelab::web_server::Reply::NOT_FOUND, reply->getStatus());
-	//	EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
-	//	EXPECT_TRUE(compareJSONs("{}", reply->getContent(), m_jsonAdapter));
-	//}
+		ASSERT_TRUE(reply != nullptr);
+		EXPECT_EQ(systelab::web_server::Reply::OK, reply->getStatus());
+		EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
+		EXPECT_TRUE(compareJSONs(buildSettingExpectedContent(1, "Section.IntSettingCache", "integer", true, "9999", "5555"),
+								 reply->getContent(), m_jsonAdapter));
+	}
 
-	//TEST_F(SettingsSetValueEndpointTest, testExecuteForEncryptedFileWithoutEncryptionAdapterReturnsInternalServerErrorReply)
-	//{
-	//	auto endpoint = buildEndpointWithoutEncryptionAdapter(EncryptedSettingsFile::FILENAME);
-	//	auto reply = endpoint->execute(buildHappyPathEndpointRequestData(1));
+	TEST_F(SettingsSetValueEndpointTest, testExecuteForEncryptedSettingAndValidValueWritesValueInEncryptedSettingsFile)
+	{
+		auto endpoint = buildEndpoint(EncryptedSettingsFile::FILENAME);
+		endpoint->execute(buildHappyPathEndpointRequestData(1, "5555"));
 
-	//	ASSERT_TRUE(reply != nullptr);
-	//	EXPECT_EQ(systelab::web_server::Reply::INTERNAL_SERVER_ERROR, reply->getStatus());
-	//	EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
-	//	EXPECT_TRUE(compareJSONs(buildExpectedMessageReplyContent("Unable to access encrypted settings file when no encryption adapter provided."),
-	//							 reply->getContent(), m_jsonAdapter));
-	//}
+		std::string expectedSettingsFileContent = "{ \"Section\": { \"IntSettingCache\": \"5555\" } }";
+		EXPECT_TRUE(compareJSONs(expectedSettingsFileContent, *readSettingsFile(EncryptedSettingsFile::FILENAME, EncryptedSettingsFile::ENCRYPTION_KEY), m_jsonAdapter));
+	}
 
-	//TEST_F(SettingsSetValueEndpointTest, testExecuteForRequestThatDoesNotHaveIdNumericParameterReturnsInternalServerErrorReply)
-	//{
-	//	auto endpoint = buildEndpointWithoutEncryptionAdapter(EncryptedSettingsFile::FILENAME);
-	//	auto reply = endpoint->execute(rest_api_core::EndpointRequestData());
 
-	//	ASSERT_TRUE(reply != nullptr);
-	//	EXPECT_EQ(systelab::web_server::Reply::INTERNAL_SERVER_ERROR, reply->getStatus());
-	//	EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
-	//	EXPECT_TRUE(compareJSONs(buildExpectedMessageReplyContent("Configured endpoint route lacks 'id' numeric parameter."),
-	//							 reply->getContent(), m_jsonAdapter));
-	//}
+	// Error cases
+	TEST_F(SettingsSetValueEndpointTest, testExecuteForNotDefinedSettingsFileReturnsNotFoundReply)
+	{
+		auto endpoint = buildEndpoint("NotExistingFile");
+		auto reply = endpoint->execute(buildHappyPathEndpointRequestData(1, "9876"));
+
+		ASSERT_TRUE(reply != nullptr);
+		EXPECT_EQ(systelab::web_server::Reply::NOT_FOUND, reply->getStatus());
+		EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
+		EXPECT_TRUE(compareJSONs("{}", reply->getContent(), m_jsonAdapter));
+	}
+
+	TEST_F(SettingsSetValueEndpointTest, testExecuteForNotExistingSettingInSettingsFileReturnsNotFoundReply)
+	{
+		unsigned int notExistingSettingId = 666;
+		auto endpoint = buildEndpoint(MySettingsFile::FILENAME);
+		auto reply = endpoint->execute(buildHappyPathEndpointRequestData(notExistingSettingId, "9876"));
+
+		ASSERT_TRUE(reply != nullptr);
+		EXPECT_EQ(systelab::web_server::Reply::NOT_FOUND, reply->getStatus());
+		EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
+		EXPECT_TRUE(compareJSONs("{}", reply->getContent(), m_jsonAdapter));
+	}
+
+	TEST_F(SettingsSetValueEndpointTest, testExecuteForEncryptedFileWithoutEncryptionAdapterReturnsInternalServerErrorReply)
+	{
+		auto endpoint = buildEndpointWithoutEncryptionAdapter(EncryptedSettingsFile::FILENAME);
+		auto reply = endpoint->execute(buildHappyPathEndpointRequestData(1, "9876"));
+
+		ASSERT_TRUE(reply != nullptr);
+		EXPECT_EQ(systelab::web_server::Reply::INTERNAL_SERVER_ERROR, reply->getStatus());
+		EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
+		EXPECT_TRUE(compareJSONs(buildExpectedMessageReplyContent("Unable to access encrypted settings file when no encryption adapter provided."),
+								 reply->getContent(), m_jsonAdapter));
+	}
+
+	TEST_F(SettingsSetValueEndpointTest, testExecuteForRequestThatDoesNotHaveIdNumericParameterReturnsInternalServerErrorReply)
+	{
+		auto endpoint = buildEndpoint(MySettingsFile::FILENAME);
+		auto reply = endpoint->execute(rest_api_core::EndpointRequestData());
+
+		ASSERT_TRUE(reply != nullptr);
+		EXPECT_EQ(systelab::web_server::Reply::INTERNAL_SERVER_ERROR, reply->getStatus());
+		EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
+		EXPECT_TRUE(compareJSONs(buildExpectedMessageReplyContent("Configured endpoint route lacks 'id' numeric parameter."),
+								 reply->getContent(), m_jsonAdapter));
+	}
+
+	TEST_F(SettingsSetValueEndpointTest, testExecuteForRequestWhoseContentIsNotAValidJSONReturnsBadRequestReply)
+	{
+		auto endpoint = buildEndpointWithoutEncryptionAdapter(EncryptedSettingsFile::FILENAME);
+		auto reply = endpoint->execute(buildEndpointRequestData(1, "This is not a JSON content"));
+
+		ASSERT_TRUE(reply != nullptr);
+		EXPECT_EQ(systelab::web_server::Reply::BAD_REQUEST, reply->getStatus());
+		EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
+		EXPECT_TRUE(compareJSONs(buildExpectedMessageReplyContent("Request content not in JSON format."),
+								 reply->getContent(), m_jsonAdapter));
+	}
 
 }}}}
 
