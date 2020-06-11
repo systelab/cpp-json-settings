@@ -7,6 +7,7 @@
 
 namespace systelab { namespace json {
 	class IJSONAdapter;
+	class IJSONDocument;
 }}
 
 namespace systelab { namespace setting { namespace rest_api {
@@ -18,6 +19,13 @@ namespace systelab { namespace setting { namespace rest_api {
 												   const SettingValueType&,
 												   const std::string& requestContent,
 												   std::string& errorMessage);
+
+	private:
+		static bool validateJSONSchema(const systelab::json::IJSONAdapter&,
+									   const systelab::json::IJSONDocument&,
+									   std::string& schemaErrorMessage);
+
+		static bool validateSettingValueType(const SettingValue& newValue);
 	};
 
 }}}
