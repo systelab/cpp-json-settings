@@ -51,7 +51,7 @@ namespace systelab { namespace setting { namespace rest_api {
 			auto settingValueType = settingDefinition.defaultValue.type;
 
 			std::string errorMessage;
-			auto newSettingValue = SettingValueParsingHelper::parse(settingValueType, endpointRequestData.getContent(), errorMessage);
+			auto newSettingValue = SettingValueParsingHelper::parse(m_jsonAdapter, settingValueType, endpointRequestData.getContent(), errorMessage);
 			if (!newSettingValue)
 			{
 				return buildInvalidSettingValueReply(errorMessage);
