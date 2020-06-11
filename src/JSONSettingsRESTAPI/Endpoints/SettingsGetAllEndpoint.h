@@ -3,6 +3,7 @@
 #include "RESTAPICore/Endpoint/IEndpoint.h"
 
 #include "JSONSettings/SettingsFile.h"
+#include "JSONSettings/SettingPath.h"
 
 
 namespace systelab {
@@ -12,6 +13,7 @@ namespace systelab {
 	}
 	namespace setting {
 		class ISettingsService;
+		struct SettingDefinition;
 	}
 }
 
@@ -28,6 +30,8 @@ namespace systelab { namespace setting { namespace rest_api {
 		std::unique_ptr<systelab::web_server::Reply> execute(const systelab::rest_api_core::EndpointRequestData&) override;
 
 	protected:
+		virtual std::vector<std::pair<SettingPath, SettingDefinition>> sortSettingsById(const std::map<SettingPath, SettingDefinition>& settings) const;
+
 		virtual std::unique_ptr<systelab::web_server::Reply> buildSettingsFileNotFoundReply() const;
 		virtual std::unique_ptr<systelab::web_server::Reply> buildInternalErrorReply(const std::string& errorMessage) const;
 

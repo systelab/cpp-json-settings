@@ -14,6 +14,8 @@
 
 #include "WebServerAdapterInterface/Model/Reply.h"
 
+#include <algorithm>
+
 
 namespace systelab { namespace setting { namespace rest_api {
 
@@ -41,9 +43,11 @@ namespace systelab { namespace setting { namespace rest_api {
 			auto& jsonRoot = jsonDocument->getRootValue();
 			jsonRoot.setType(systelab::json::OBJECT_TYPE);
 
-			auto jsonSettingsArray = jsonRoot.buildValue(systelab::json::ARRAY_TYPE);
 			auto settings = SettingDefinitionMgr::get().getFileSettings(m_settingsFile);
-			for (const auto& settingData : settings)
+			auto sortedSettings = sortSettingsById(settings);
+
+			auto jsonSettingsArray = jsonRoot.buildValue(systelab::json::ARRAY_TYPE);
+			for (const auto& settingData : sortedSettings)
 			{
 				auto settingPath = settingData.first;
 				auto settingDefinition = settingData.second;
@@ -63,6 +67,24 @@ namespace systelab { namespace setting { namespace rest_api {
 		{
 			return buildInternalErrorReply(exc.what());
 		}
+	}
+
+	std::vector<std::pair<SettingPath, SettingDefinition>> SettingsGetAllEndpoint::sortSettingsById(const std::map<SettingPath, SettingDefinition>& settings) const
+	{
+		std::vector<std::pair<SettingPath, SettingDefinition>> sortedSettings;
+		for (const auto& setting : settings)
+		{
+			sortedSettings.push_back(setting);
+		}
+
+		std::sort(sortedSettings.begin(), sortedSettings.end(),
+			[](const std::pair<SettingPath, SettingDefinition>& s1, const std::pair<SettingPath, SettingDefinition>& s2) -> bool
+			{
+				return (s1.second.id < s2.second.id);
+			}
+		);
+
+		return sortedSettings;
 	}
 
 	std::unique_ptr<systelab::web_server::Reply> SettingsGetAllEndpoint::buildSettingsFileNotFoundReply() const
