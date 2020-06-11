@@ -47,6 +47,11 @@ namespace systelab { namespace setting {
 		{
 		}
 
+		inline friend bool operator== (const SettingValue& lhs, const SettingValue& rhs)
+		{
+			return (lhs.type == rhs.type) && (lhs.value == rhs.value);
+		}
+
 		SettingValueType type;
 		std::string value;
 	};
