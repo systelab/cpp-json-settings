@@ -6,7 +6,7 @@
 #define CACHE_ENABLED true
 #define CACHE_DISABLED false
 
-namespace systelab { namespace setting { namespace unit_test {
+namespace systelab { namespace setting { namespace rest_api { namespace unit_test {
 
 	JSON_SETTINGS_FILE(MySettingsFile, "MySettingsFile.json",
 
@@ -37,5 +37,5 @@ namespace systelab { namespace setting { namespace unit_test {
 		JSON_SETTING_BOOL(BoolSetting, "BoolSetting", true, CACHE_ENABLED)
 	);
 
-}}}
+}}}}
 
