@@ -116,6 +116,44 @@ namespace systelab { namespace setting { namespace rest_api { namespace unit_tes
 
 
 	// Double setting
+	TEST_F(SettingsSetValueEndpointTest, testExecuteForDblSettingAndValidValueReturnsOKReply)
+	{
+		auto endpoint = buildEndpoint(MySettingsFile::FILENAME);
+		auto reply = endpoint->execute(buildHappyPathEndpointRequestData(2, "98.76")); // Double setting has id=2
+
+		ASSERT_TRUE(reply != nullptr);
+		EXPECT_EQ(systelab::web_server::Reply::OK, reply->getStatus());
+		EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
+		EXPECT_TRUE(compareJSONs(buildSettingExpectedContent(2, "DblSettingNoCache", "double", false, "5.678", "98.76"),
+								 reply->getContent(), m_jsonAdapter));
+	}
+
+	TEST_F(SettingsSetValueEndpointTest, testExecuteForDblSettingAndValidValueWritesValueInMySettingsFile)
+	{
+		auto endpoint = buildEndpoint(MySettingsFile::FILENAME);
+		endpoint->execute(buildHappyPathEndpointRequestData(2, "98.76")); // Double setting has id=2
+
+		std::string expectedSettingsFileContent = "{ \"DblSettingNoCache\": \"98.76\" }";
+		EXPECT_TRUE(compareJSONs(expectedSettingsFileContent, *readSettingsFile(MySettingsFile::FILENAME), m_jsonAdapter));
+	}
+
+	TEST_F(SettingsSetValueEndpointTest, testExecuteForDblSettingAndInvalidValueReturnsBadRequestReply)
+	{
+		auto endpoint = buildEndpoint(MySettingsFile::FILENAME);
+		auto reply = endpoint->execute(buildHappyPathEndpointRequestData(2, "ThisIsNotADouble")); // Double setting has id=2
+
+		ASSERT_TRUE(reply != nullptr);
+		EXPECT_EQ(systelab::web_server::Reply::BAD_REQUEST, reply->getStatus());
+		EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
+		EXPECT_TRUE(compareJSONs(buildExpectedMessageReplyContent("New setting value not valid."),
+								 reply->getContent(), m_jsonAdapter));
+
+		ASSERT_FALSE(readSettingsFile(MySettingsFile::FILENAME));
+	}
+
+
+
+
 	// String setting
 	// Boolean setting
 
