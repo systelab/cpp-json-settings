@@ -3,11 +3,11 @@
 
 #include "JSONSettingsRESTAPI/Endpoints/SettingsGetAllEndpoint.h"
 
-#include "JSONSettings/SettingsService.h"
 #include "RESTAPICore/Endpoint/EndpointRequestData.h"
 #include "WebServerAdapterInterface/Model/Reply.h"
 
 #include "JSONAdapterTestUtilities/JSONAdapterUtilities.h"
+
 
 using namespace testing;
 using namespace systelab::json::test_utility;
@@ -86,7 +86,9 @@ namespace systelab { namespace setting { namespace rest_api { namespace unit_tes
 		systelab::encryption::caeser_cypher::EncryptionAdapter m_encryptionAdapter;
 	};
 
-	TEST_F(SettingsGetAllEndpointTest, testExecuteForMySettingsFileWhenNoFileOnDisk)
+
+	// Happy path scenarios
+	TEST_F(SettingsGetAllEndpointTest, testExecuteForMySettingsFileWhenFileDoesNotExistReturnsExpectedReply)
 	{
 		auto endpoint = buildEndpoint(MySettingsFile::FILENAME);
 		auto reply = endpoint->execute(rest_api_core::EndpointRequestData());
@@ -98,6 +100,24 @@ namespace systelab { namespace setting { namespace rest_api { namespace unit_tes
 		auto expectedReplyContent = buildMySettingsFileExpectedContent("1234", "5.678", "ba", "false");
 		EXPECT_TRUE(compareJSONs(expectedReplyContent, reply->getContent(), m_jsonAdapter));
 	}
+
+	TEST_F(SettingsGetAllEndpointTest, testExecuteForMySettingsFileWhenFileExistsReturnsExpectedReply)
+	{
+		writeMySettingsFile(54321, 9.87654, "XYZ", true);
+
+		auto endpoint = buildEndpoint(MySettingsFile::FILENAME);
+		auto reply = endpoint->execute(rest_api_core::EndpointRequestData());
+
+		ASSERT_TRUE(reply != nullptr);
+		EXPECT_EQ(systelab::web_server::Reply::OK, reply->getStatus());
+		EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
+
+		auto expectedReplyContent = buildMySettingsFileExpectedContent("54321", "9.87654", "XYZ", "true");
+		EXPECT_TRUE(compareJSONs(expectedReplyContent, reply->getContent(), m_jsonAdapter));
+	}
+
+
+	// Error cases
 
 }}}}
 
