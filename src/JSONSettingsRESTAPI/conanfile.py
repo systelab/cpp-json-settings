@@ -20,6 +20,9 @@ class JSONSettingsRESTAPIConan(ConanFile):
         self.options["RESTAPICore"].gtest = self.options.gtest
         self.options["JSONSettings"].boost = self.options.boost
         self.options["JSONSettings"].gtest = self.options.gtest
+
+        self.options["CaeserCypherEncryptionAdapter"].gtest = self.options.gtest
+        self.options["RapidJSONAdapter"].gtest = self.options.gtest
         self.options["JSONAdapterTestUtilities"].gtest = self.options.gtest
 
     def requirements(self):
