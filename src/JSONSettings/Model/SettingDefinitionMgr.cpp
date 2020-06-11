@@ -57,8 +57,17 @@ namespace systelab { namespace setting {
 										  const SettingPath& sectionPath,
 										  const SettingDefinition& definition)
 	{
-		m_settings[file][sectionPath] = definition;
-		m_settings[file][sectionPath].id = static_cast<int>(m_settings[file].size());
+		if (hasSetting(file, sectionPath))
+		{
+			unsigned int existingId = m_settings[file][sectionPath].id;
+			m_settings[file][sectionPath] = definition;
+			m_settings[file][sectionPath].id = existingId;
+		}
+		else
+		{
+			m_settings[file][sectionPath] = definition;
+			m_settings[file][sectionPath].id = static_cast<int>(m_settings[file].size());
+		}
 	}
 
 	SecurityKey SettingDefinitionMgr::getSettingsFileEncryptionKey(const SettingsFile& file) const
