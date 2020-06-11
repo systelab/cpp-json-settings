@@ -81,13 +81,55 @@ namespace systelab { namespace setting { namespace rest_api { namespace unit_tes
 			return expectedContentStream.str();
 		}
 
+		std::string buildEncryptedSettingsFileExpectedContent(const std::string& intSetting,
+															  const std::string& dblSetting,
+															  const std::string& strSetting,
+															  const std::string& boolSetting)
+		{
+			std::stringstream expectedContentStream;
+			expectedContentStream << "{" << std::endl;
+			expectedContentStream << "    \"settings\": [{" << std::endl;
+			expectedContentStream << "         \"id\": 1," << std::endl;
+			expectedContentStream << "         \"path\": \"Section.IntSettingCache\"," << std::endl;
+			expectedContentStream << "         \"type\": \"integer\"," << std::endl;
+			expectedContentStream << "         \"useCache\": true," << std::endl;
+			expectedContentStream << "         \"defaultValue\": \"9999\"," << std::endl;
+			expectedContentStream << "         \"currentValue\": \"" << intSetting << "\"" << std::endl;
+			expectedContentStream << "      }, {" << std::endl;
+			expectedContentStream << "         \"id\": 2," << std::endl;
+			expectedContentStream << "         \"path\": \"Section.DblSettingCache\"," << std::endl;
+			expectedContentStream << "         \"type\": \"double\"," << std::endl;
+			expectedContentStream << "         \"useCache\": true," << std::endl;
+			expectedContentStream << "         \"defaultValue\": \"9.9\"," << std::endl;
+			expectedContentStream << "         \"currentValue\": \"" << dblSetting << "\"" << std::endl;
+			expectedContentStream << "      }, {" << std::endl;
+			expectedContentStream << "         \"id\": 3," << std::endl;
+			expectedContentStream << "         \"path\": \"Section.StrSettingCache\"," << std::endl;
+			expectedContentStream << "         \"type\": \"string\"," << std::endl;
+			expectedContentStream << "         \"useCache\": true," << std::endl;
+			expectedContentStream << "         \"defaultValue\": \"99\"," << std::endl;
+			expectedContentStream << "         \"currentValue\": \"" << strSetting << "\"" << std::endl;
+			expectedContentStream << "      }, {" << std::endl;
+			expectedContentStream << "         \"id\": 4," << std::endl;
+			expectedContentStream << "         \"path\": \"Section.BoolSettingCache\"," << std::endl;
+			expectedContentStream << "         \"type\": \"boolean\"," << std::endl;
+			expectedContentStream << "         \"useCache\": true," << std::endl;
+			expectedContentStream << "         \"defaultValue\": \"true\"," << std::endl;
+			expectedContentStream << "         \"currentValue\": \"" << boolSetting << "\"" << std::endl;
+			expectedContentStream << "      }" << std::endl;
+			expectedContentStream << "   ]" << std::endl;
+			expectedContentStream << "}";
+
+			return expectedContentStream.str();
+		}
+
 	protected:
 		systelab::json::rapidjson::JSONAdapter m_jsonAdapter;
 		systelab::encryption::caeser_cypher::EncryptionAdapter m_encryptionAdapter;
 	};
 
 
-	// Happy path scenarios
+	// Happy path - Not encrypted file
 	TEST_F(SettingsGetAllEndpointTest, testExecuteForMySettingsFileWhenFileDoesNotExistReturnsExpectedReply)
 	{
 		auto endpoint = buildEndpoint(MySettingsFile::FILENAME);
@@ -113,6 +155,36 @@ namespace systelab { namespace setting { namespace rest_api { namespace unit_tes
 		EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
 
 		auto expectedReplyContent = buildMySettingsFileExpectedContent("54321", "9.87654", "XYZ", "true");
+		EXPECT_TRUE(compareJSONs(expectedReplyContent, reply->getContent(), m_jsonAdapter));
+	}
+
+
+	// Happy path - Encrypted file
+	TEST_F(SettingsGetAllEndpointTest, testExecuteForEncryptedSettingsFileWhenFileDoesNotExistReturnsExpectedReply)
+	{
+		auto endpoint = buildEndpoint(EncryptedSettingsFile::FILENAME);
+		auto reply = endpoint->execute(rest_api_core::EndpointRequestData());
+
+		ASSERT_TRUE(reply != nullptr);
+		EXPECT_EQ(systelab::web_server::Reply::OK, reply->getStatus());
+		EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
+
+		auto expectedReplyContent = buildEncryptedSettingsFileExpectedContent("9999", "9.9", "99", "true");
+		EXPECT_TRUE(compareJSONs(expectedReplyContent, reply->getContent(), m_jsonAdapter));
+	}
+
+	TEST_F(SettingsGetAllEndpointTest, testExecuteForEncryptedSettingsFileWhenFileExistsReturnsExpectedReply)
+	{
+		writeEncryptedSettingsFile(6666, 6.6, "6G6", false);
+
+		auto endpoint = buildEndpoint(EncryptedSettingsFile::FILENAME);
+		auto reply = endpoint->execute(rest_api_core::EndpointRequestData());
+
+		ASSERT_TRUE(reply != nullptr);
+		EXPECT_EQ(systelab::web_server::Reply::OK, reply->getStatus());
+		EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
+
+		auto expectedReplyContent = buildEncryptedSettingsFileExpectedContent("6666", "6.6", "6G6", "false");
 		EXPECT_TRUE(compareJSONs(expectedReplyContent, reply->getContent(), m_jsonAdapter));
 	}
 
