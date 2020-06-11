@@ -122,10 +122,6 @@ namespace systelab { namespace setting { namespace rest_api { namespace unit_tes
 
 			return expectedContentStream.str();
 		}
-
-	protected:
-		systelab::json::rapidjson::JSONAdapter m_jsonAdapter;
-		systelab::encryption::caeser_cypher::EncryptionAdapter m_encryptionAdapter;
 	};
 
 
