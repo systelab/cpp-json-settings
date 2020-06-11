@@ -295,5 +295,18 @@ namespace systelab { namespace setting { namespace rest_api { namespace unit_tes
 								 reply->getContent(), m_jsonAdapter));
 	}
 
+	TEST_F(SettingsSetValueEndpointTest, testExecuteForRequestWhoseContentDoesNotSatisfyJSONSchemaReturnsBadRequestReply)
+	{
+		auto endpoint = buildEndpointWithoutEncryptionAdapter(EncryptedSettingsFile::FILENAME);
+		auto reply = endpoint->execute(buildEndpointRequestData(1, "{ \"anotherField\": 23 }"));
+
+		ASSERT_TRUE(reply != nullptr);
+		EXPECT_EQ(systelab::web_server::Reply::BAD_REQUEST, reply->getStatus());
+		EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
+		EXPECT_TRUE(compareJSONs(buildExpectedMessageReplyContent("Request content does not statisfy JSON schema: "
+																  "Invalid schema: # Invalid keyword: required Invalid document: #"),
+								 reply->getContent(), m_jsonAdapter));
+	}
+
 }}}}
 
