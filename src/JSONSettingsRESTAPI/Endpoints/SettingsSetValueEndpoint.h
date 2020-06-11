@@ -22,7 +22,7 @@ namespace systelab { namespace setting { namespace rest_api {
 	class SettingsSetValueEndpoint : public systelab::rest_api_core::IEndpoint
 	{
 	public:
-		SettingsSetValueEndpoint(SettingsFile& settingsFile,
+		SettingsSetValueEndpoint(const SettingsFile& settingsFile,
 								 std::unique_ptr<ISettingsService>,
 								 const systelab::json::IJSONAdapter&);
 		virtual ~SettingsSetValueEndpoint();
@@ -35,7 +35,7 @@ namespace systelab { namespace setting { namespace rest_api {
 		virtual std::unique_ptr<systelab::web_server::Reply> buildInternalErrorReply(const std::string& errorMessage) const;
 
 	protected:
-		SettingsFile& m_settingsFile;
+		const SettingsFile& m_settingsFile;
 		std::unique_ptr<ISettingsService> m_settingsService;
 		const systelab::json::IJSONAdapter& m_jsonAdapter;
 	};

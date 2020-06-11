@@ -20,7 +20,7 @@
 
 namespace systelab { namespace setting { namespace rest_api {
 
-	SettingsSetValueEndpoint::SettingsSetValueEndpoint(SettingsFile& settingsFile,
+	SettingsSetValueEndpoint::SettingsSetValueEndpoint(const SettingsFile& settingsFile,
 													   std::unique_ptr<ISettingsService> settingsService,
 													   const systelab::json::IJSONAdapter& jsonAdapter)
 		:m_settingsFile(settingsFile)
