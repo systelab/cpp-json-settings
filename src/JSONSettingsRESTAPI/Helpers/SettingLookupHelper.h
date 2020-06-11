@@ -11,7 +11,7 @@ namespace systelab { namespace setting { namespace rest_api {
 	class SettingLookupHelper
 	{
 	public:
-		static boost::optional<SettingPath> findSetting(const SettingsFile&, int settingId);
+		static boost::optional<SettingPath> findById(const SettingsFile&, int settingId);
 	};
 
 }}}

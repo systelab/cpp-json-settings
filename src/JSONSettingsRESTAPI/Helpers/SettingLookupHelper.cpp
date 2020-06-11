@@ -6,7 +6,7 @@
 
 namespace systelab { namespace setting { namespace rest_api {
 
-	boost::optional<SettingPath> SettingLookupHelper::findSetting(const SettingsFile& file, int settingId)
+	boost::optional<SettingPath> SettingLookupHelper::findById(const SettingsFile& file, int settingId)
 	{
 		auto settings = SettingDefinitionMgr::get().getFileSettings(file);
 		for (const auto& settingData : settings)
