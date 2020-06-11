@@ -3,6 +3,7 @@
 
 #include "Helpers/ReplyBuilderHelper.h"
 #include "Helpers/SettingCurrentValueHelper.h"
+#include "Helpers/SettingLookupHelper.h"
 #include "Helpers/SettingSerializationHelper.h"
 
 #include "JSONSettings/ISettingsService.h"
@@ -39,7 +40,7 @@ namespace systelab { namespace setting { namespace rest_api {
 			}
 
 			unsigned int settingId = endpointRequestData.getParameters().getNumericParameter("id");
-			auto settingPath = findSetting(settingId);
+			auto settingPath = SettingLookupHelper::findById(m_settingsFile, settingId);
 			if (!settingPath)
 			{
 				return buildSettingNotFoundReply();
@@ -60,20 +61,6 @@ namespace systelab { namespace setting { namespace rest_api {
 		{
 			return buildInternalErrorReply(exc.what());
 		}
-	}
-
-	boost::optional<SettingPath> SettingsGetEndpoint::findSetting(int settingId) const
-	{
-		auto settings = SettingDefinitionMgr::get().getFileSettings(m_settingsFile);
-		for (const auto& settingData : settings)
-		{
-			if (settingData.second.id == settingId)
-			{
-				return settingData.first;
-			}
-		}
-
-		return boost::none;
 	}
 
 	std::unique_ptr<systelab::web_server::Reply> SettingsGetEndpoint::buildSettingNotFoundReply() const
