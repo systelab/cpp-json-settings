@@ -12,6 +12,7 @@ namespace systelab { namespace setting { namespace rest_api {
 		jsonValue.addMember("id", definition.id);
 		jsonValue.addMember("path", path);
 		jsonValue.addMember("type", translateSettingValueTypeToString(definition.defaultValue.type));
+		jsonValue.addMember("useCache", definition.useCache);
 		jsonValue.addMember("defaultValue", definition.defaultValue.value);
 		jsonValue.addMember("currentValue", currentValue.value);
 	}
