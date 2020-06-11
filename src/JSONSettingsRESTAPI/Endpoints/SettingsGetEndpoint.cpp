@@ -35,7 +35,7 @@ namespace systelab { namespace setting { namespace rest_api {
 		{
 			if (!endpointRequestData.getParameters().hasNumericParameter("id"))
 			{
-				throw std::runtime_error("Configured endpoint route lacks 'id' numeric parameter");
+				throw std::runtime_error("Configured endpoint route lacks 'id' numeric parameter.");
 			}
 
 			unsigned int settingId = endpointRequestData.getParameters().getNumericParameter("id");
