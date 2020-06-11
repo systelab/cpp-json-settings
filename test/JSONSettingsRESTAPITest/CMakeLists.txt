@@ -16,6 +16,7 @@ if (NOT TARGET ${GTEST_PACKAGE_NAME}::${GTEST_PACKAGE_NAME})
 endif()
 
 find_package(RapidJSONAdapter)
+find_package(CaeserCypherEncryptionAdapter)
 find_package(JSONAdapterTestUtilities)
 
 # Configure test project
@@ -27,6 +28,7 @@ target_link_libraries(${JSON_SETTINGS_REST_API_TEST_PROJECT}
 					  JSONSettingsRESTAPI 
 					  ${GTEST_PACKAGE_NAME}::${GTEST_PACKAGE_NAME}
 					  RapidJSONAdapter::RapidJSONAdapter
+					  CaeserCypherEncryptionAdapter::CaeserCypherEncryptionAdapter
 					  JSONAdapterTestUtilities::JSONAdapterTestUtilities)
 
 # Ignored missing PDBs link warning on Visual Studio
