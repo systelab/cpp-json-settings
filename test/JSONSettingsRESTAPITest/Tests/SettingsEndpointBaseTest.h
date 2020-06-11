@@ -44,6 +44,45 @@ namespace systelab { namespace setting { namespace rest_api { namespace unit_tes
 			}
 		}
 
+		void writeMySettingsFile(int intValue, double dblValue, const std::string& strValue, bool boolValue)
+		{
+			std::stringstream ss;
+			ss.precision(std::numeric_limits<double>::max_digits10 - 1);
+			ss << "{" << std::endl;
+			ss << "    \"IntSettingCache\": \"" << intValue << "\"," << std::endl;
+			ss << "    \"DblSettingNoCache\": \"" << dblValue << "\"," << std::endl;
+			ss << "    \"Section\": " << std::endl;
+			ss << "    {" << std::endl;
+			ss << "        \"StrSettingCache\": \"" << strValue << "\"," << std::endl;
+			ss << "        \"Subsection\": " << std::endl;
+			ss << "        {" << std::endl;
+			ss << "            \"BoolSettingNoCache\": \"" << (boolValue ? "true" : "false") << "\"" << std::endl;
+			ss << "        }" << std::endl;
+			ss << "    }" << std::endl;
+			ss << "}";
+
+			std::string fileContents = ss.str();
+			writeSettingsFile(MySettingsFile::FILENAME, fileContents);
+		}
+
+		void writeEncryptedSettingsFile(int intValue, double dblValue, const std::string& strValue, bool boolValue)
+		{
+			std::stringstream ss;
+			ss.precision(std::numeric_limits<double>::max_digits10 - 1);
+			ss << "{" << std::endl;
+			ss << "    \"Section\": " << std::endl;
+			ss << "    {" << std::endl;
+			ss << "        \"IntSettingCache\": \"" << intValue << "\"," << std::endl;
+			ss << "        \"DblSettingCache\": \"" << dblValue << "\"," << std::endl;
+			ss << "        \"StrSettingCache\": \"" << strValue << "\"," << std::endl;
+			ss << "        \"BoolSettingCache\": \"" << (boolValue ? "true" : "false") << "\"" << std::endl;
+			ss << "    }" << std::endl;
+			ss << "}";
+
+			std::string fileContents = ss.str();
+			writeSettingsFile(EncryptedSettingsFile::FILENAME, fileContents, EncryptedSettingsFile::ENCRYPTION_KEY);
+		}
+
 		void writeSettingsFile(const SettingsFile& file, const std::string& contents, const boost::optional<SecurityKey>& encryptionKey = boost::none)
 		{
 			removeSettingsFile(file);
