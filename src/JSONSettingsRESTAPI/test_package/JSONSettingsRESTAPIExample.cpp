@@ -16,6 +16,7 @@
 
 #include "RapidJSONAdapter/JSONAdapter.h"
 #include "RESTAPICore/Endpoint/EndpointRequestData.h"
+#include "WebServerAdapterInterface/Model/Reply.h"
 
 
 int main(int argc, char *argv[])
