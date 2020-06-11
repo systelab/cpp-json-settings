@@ -19,7 +19,7 @@ namespace systelab {
 
 namespace systelab { namespace setting { namespace rest_api {
 
-	class SettingsGetAllEndpoint final : public systelab::rest_api_core::IEndpoint
+	class SettingsGetAllEndpoint : public systelab::rest_api_core::IEndpoint
 	{
 	public:
 		SettingsGetAllEndpoint(const SettingsFile& settingsFile,
