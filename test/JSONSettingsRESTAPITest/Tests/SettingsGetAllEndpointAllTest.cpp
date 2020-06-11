@@ -138,9 +138,7 @@ namespace systelab { namespace setting { namespace rest_api { namespace unit_tes
 		ASSERT_TRUE(reply != nullptr);
 		EXPECT_EQ(systelab::web_server::Reply::OK, reply->getStatus());
 		EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
-
-		auto expectedReplyContent = buildMySettingsFileExpectedContent("1234", "5.678", "ba", "false");
-		EXPECT_TRUE(compareJSONs(expectedReplyContent, reply->getContent(), m_jsonAdapter));
+		EXPECT_TRUE(compareJSONs(buildMySettingsFileExpectedContent("1234", "5.678", "ba", "false"), reply->getContent(), m_jsonAdapter));
 	}
 
 	TEST_F(SettingsGetAllEndpointTest, testExecuteForMySettingsFileWhenFileExistsReturnsExpectedReply)
@@ -153,9 +151,7 @@ namespace systelab { namespace setting { namespace rest_api { namespace unit_tes
 		ASSERT_TRUE(reply != nullptr);
 		EXPECT_EQ(systelab::web_server::Reply::OK, reply->getStatus());
 		EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
-
-		auto expectedReplyContent = buildMySettingsFileExpectedContent("54321", "9.87654", "XYZ", "true");
-		EXPECT_TRUE(compareJSONs(expectedReplyContent, reply->getContent(), m_jsonAdapter));
+		EXPECT_TRUE(compareJSONs(buildMySettingsFileExpectedContent("54321", "9.87654", "XYZ", "true"), reply->getContent(), m_jsonAdapter));
 	}
 
 
@@ -168,9 +164,7 @@ namespace systelab { namespace setting { namespace rest_api { namespace unit_tes
 		ASSERT_TRUE(reply != nullptr);
 		EXPECT_EQ(systelab::web_server::Reply::OK, reply->getStatus());
 		EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
-
-		auto expectedReplyContent = buildEncryptedSettingsFileExpectedContent("9999", "9.9", "99", "true");
-		EXPECT_TRUE(compareJSONs(expectedReplyContent, reply->getContent(), m_jsonAdapter));
+		EXPECT_TRUE(compareJSONs(buildEncryptedSettingsFileExpectedContent("9999", "9.9", "99", "true"), reply->getContent(), m_jsonAdapter));
 	}
 
 	TEST_F(SettingsGetAllEndpointTest, testExecuteForEncryptedSettingsFileWhenFileExistsReturnsExpectedReply)
@@ -183,13 +177,33 @@ namespace systelab { namespace setting { namespace rest_api { namespace unit_tes
 		ASSERT_TRUE(reply != nullptr);
 		EXPECT_EQ(systelab::web_server::Reply::OK, reply->getStatus());
 		EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
-
-		auto expectedReplyContent = buildEncryptedSettingsFileExpectedContent("6666", "6.6", "6G6", "false");
-		EXPECT_TRUE(compareJSONs(expectedReplyContent, reply->getContent(), m_jsonAdapter));
+		EXPECT_TRUE(compareJSONs(buildEncryptedSettingsFileExpectedContent("6666", "6.6", "6G6", "false"), reply->getContent(), m_jsonAdapter));
 	}
 
 
 	// Error cases
+	TEST_F(SettingsGetAllEndpointTest, testExecuteForNotDefinedSettingsFileReturnsNotFoundReply)
+	{
+		auto endpoint = buildEndpoint("NotExistingFile");
+		auto reply = endpoint->execute(rest_api_core::EndpointRequestData());
+
+		ASSERT_TRUE(reply != nullptr);
+		EXPECT_EQ(systelab::web_server::Reply::NOT_FOUND, reply->getStatus());
+		EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
+		EXPECT_TRUE(compareJSONs("{}", reply->getContent(), m_jsonAdapter));
+	}
+
+	TEST_F(SettingsGetAllEndpointTest, testExecuteForEncryptedFileWithoutEncryptionAdapterReturnsInternalServerErrorReply)
+	{
+		auto endpoint = buildEndpointWithoutEncryptionAdapter(EncryptedSettingsFile::FILENAME);
+		auto reply = endpoint->execute(rest_api_core::EndpointRequestData());
+
+		ASSERT_TRUE(reply != nullptr);
+		EXPECT_EQ(systelab::web_server::Reply::INTERNAL_SERVER_ERROR, reply->getStatus());
+		EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
+		EXPECT_TRUE(compareJSONs(buildExpectedMessageReplyContent("Unable to access encrypted settings file when no encryption adapter provided."),
+								 reply->getContent(), m_jsonAdapter));
+	}
 
 }}}}
 
