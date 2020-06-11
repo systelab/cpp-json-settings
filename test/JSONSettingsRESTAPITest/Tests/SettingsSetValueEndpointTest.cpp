@@ -175,9 +175,41 @@ namespace systelab { namespace setting { namespace rest_api { namespace unit_tes
 	}
 
 
-
-
 	// Boolean setting
+	TEST_F(SettingsSetValueEndpointTest, testExecuteForBoolSettingAndValidValueReturnsOKReply)
+	{
+		auto endpoint = buildEndpoint(MySettingsFile::FILENAME);
+		auto reply = endpoint->execute(buildHappyPathEndpointRequestData(4, "true")); // Boolean setting has id=4
+
+		ASSERT_TRUE(reply != nullptr);
+		EXPECT_EQ(systelab::web_server::Reply::OK, reply->getStatus());
+		EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
+		EXPECT_TRUE(compareJSONs(buildSettingExpectedContent(4, "Section.Subsection.BoolSettingNoCache", "boolean", false, "false", "true"),
+								 reply->getContent(), m_jsonAdapter));
+	}
+
+	TEST_F(SettingsSetValueEndpointTest, testExecuteForBoolSettingAndValidValueWritesValueInMySettingsFile)
+	{
+		auto endpoint = buildEndpoint(MySettingsFile::FILENAME);
+		endpoint->execute(buildHappyPathEndpointRequestData(4, "true")); // Boolean setting has id=4
+
+		std::string expectedSettingsFileContent = "{ \"Section\": { \"Subsection\": { \"BoolSettingNoCache\": \"true\" } } }";
+		EXPECT_TRUE(compareJSONs(expectedSettingsFileContent, *readSettingsFile(MySettingsFile::FILENAME), m_jsonAdapter));
+	}
+
+	TEST_F(SettingsSetValueEndpointTest, testExecuteForBoolSettingAndInvalidValueReturnsBadRequestReply)
+	{
+		auto endpoint = buildEndpoint(MySettingsFile::FILENAME);
+		auto reply = endpoint->execute(buildHappyPathEndpointRequestData(4, "NotABoolean")); // Boolean setting has id=4
+
+		ASSERT_TRUE(reply != nullptr);
+		EXPECT_EQ(systelab::web_server::Reply::BAD_REQUEST, reply->getStatus());
+		EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
+		EXPECT_TRUE(compareJSONs(buildExpectedMessageReplyContent("New setting value not valid."),
+								 reply->getContent(), m_jsonAdapter));
+
+		ASSERT_FALSE(readSettingsFile(MySettingsFile::FILENAME));
+	}
 
 
 	// Encrypted setting
