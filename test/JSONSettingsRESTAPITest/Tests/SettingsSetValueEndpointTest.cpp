@@ -153,6 +153,30 @@ namespace systelab { namespace setting { namespace rest_api { namespace unit_tes
 
 
 	// String setting
+	TEST_F(SettingsSetValueEndpointTest, testExecuteForStrSettingAndValidValueReturnsOKReply)
+	{
+		auto endpoint = buildEndpoint(MySettingsFile::FILENAME);
+		auto reply = endpoint->execute(buildHappyPathEndpointRequestData(3, "MySuperNewValue")); // String setting has id=3
+
+		ASSERT_TRUE(reply != nullptr);
+		EXPECT_EQ(systelab::web_server::Reply::OK, reply->getStatus());
+		EXPECT_EQ("application/json", reply->getHeader("Content-Type"));
+		EXPECT_TRUE(compareJSONs(buildSettingExpectedContent(3, "Section.StrSettingCache", "string", true, "ba", "MySuperNewValue"),
+								 reply->getContent(), m_jsonAdapter));
+	}
+
+	TEST_F(SettingsSetValueEndpointTest, testExecuteForStrSettingAndValidValueWritesValueInMySettingsFile)
+	{
+		auto endpoint = buildEndpoint(MySettingsFile::FILENAME);
+		endpoint->execute(buildHappyPathEndpointRequestData(3, "MySuperNewValue")); // String setting has id=3
+
+		std::string expectedSettingsFileContent = "{ \"Section\": { \"StrSettingCache\": \"MySuperNewValue\" } }";
+		EXPECT_TRUE(compareJSONs(expectedSettingsFileContent, *readSettingsFile(MySettingsFile::FILENAME), m_jsonAdapter));
+	}
+
+
+
+
 	// Boolean setting
 
 
