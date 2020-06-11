@@ -19,7 +19,7 @@ namespace systelab { namespace setting { namespace rest_api {
 		auto inputDocument = jsonAdapter.buildDocumentFromString(requestContent);
 		if (!inputDocument)
 		{
-			errorMessage = "Request content not in JSON format";
+			errorMessage = "Request content not in JSON format.";
 			return boost::none;
 		}
 
