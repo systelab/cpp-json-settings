@@ -6,6 +6,7 @@
 #include <map>
 #include <sstream>
 #include <stdexcept>
+#include <vector>
 
 #include "JSONSettingsRESTAPI/SettingsGetAllEndpoint.h"
 
