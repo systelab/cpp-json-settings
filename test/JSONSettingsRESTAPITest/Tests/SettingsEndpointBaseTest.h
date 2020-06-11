@@ -124,6 +124,16 @@ namespace systelab { namespace setting { namespace rest_api { namespace unit_tes
 			return fileContents;
 		}
 
+		std::string buildExpectedMessageReplyContent(const std::string& message)
+		{
+			std::stringstream ss;
+			ss << "{" << std::endl;
+			ss << "    \"message\": \"" << message << "\"" << std::endl;
+			ss << "}" << std::endl;
+
+			return ss.str();
+		}
+
 	protected:
 		boost::filesystem::path m_settingsFolderPath;
 		systelab::json::rapidjson::JSONAdapter m_jsonAdapter;
