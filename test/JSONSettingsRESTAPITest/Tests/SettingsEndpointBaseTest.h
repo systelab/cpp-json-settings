@@ -6,6 +6,7 @@
 #include "RapidJSONAdapter/JSONAdapter.h"
 
 #include <boost/filesystem.hpp>
+#include <boost/optional.hpp>
 
 
 using namespace testing;
@@ -43,18 +44,24 @@ namespace systelab { namespace setting { namespace rest_api { namespace unit_tes
 			}
 		}
 
-		void writeSettingsFile(const SettingsFile& file, const std::string& contents)
+		void writeSettingsFile(const SettingsFile& file, const std::string& contents, const boost::optional<SecurityKey>& encryptionKey = boost::none)
 		{
 			removeSettingsFile(file);
+
+			std::string fileContents = contents;
+			if (encryptionKey)
+			{
+				fileContents = m_encryptionAdapter.encryptString((*encryptionKey)(), contents);
+			}
 
 			std::ofstream fileStream;
 			auto settingsFilepath = boost::filesystem::absolute(m_settingsFolderPath) / file;
 			fileStream.open(settingsFilepath.string());
-			fileStream << contents;
+			fileStream << fileContents;
 			fileStream.close();
 		}
 
-		std::string readSettingsFile(const SettingsFile& file)
+		std::string readSettingsFile(const SettingsFile& file, const boost::optional<SecurityKey>& encryptionKey = boost::none)
 		{
 			std::string fileContents;
 			auto settingsFilepath = boost::filesystem::absolute(m_settingsFolderPath) / file;
@@ -65,6 +72,11 @@ namespace systelab { namespace setting { namespace rest_api { namespace unit_tes
 				ss << ifs.rdbuf();
 				fileContents = ss.str();
 				ifs.close();
+
+				if (encryptionKey)
+				{
+					fileContents = m_encryptionAdapter.decryptString((*encryptionKey)(), fileContents);
+				}
 			}
 
 			return fileContents;
