@@ -57,19 +57,10 @@ namespace systelab { namespace setting { namespace rest_api {
 		ss << "}";
 		std::string schemaDocumentStr = ss.str();
 
-		bool schemaSatisfied = false;
-		try
-		{
-			auto schemaDocument = jsonAdapter.buildDocumentFromString(schemaDocumentStr);
-			auto schemaValidator = jsonAdapter.buildSchemaValidator(*schemaDocument);
-			schemaSatisfied = schemaValidator->validate(inputDocument, schemaErrorMessage);
-		}
-		catch (std::exception& exc)
-		{
-			schemaErrorMessage = exc.what();
-		}
-
-		return schemaSatisfied;
+		auto schemaDocument = jsonAdapter.buildDocumentFromString(schemaDocumentStr);
+		auto schemaValidator = jsonAdapter.buildSchemaValidator(*schemaDocument);
+		
+		return schemaValidator->validate(inputDocument, schemaErrorMessage);
 	}
 
 	bool SettingValueParsingHelper::validateSettingValueType(const SettingValue& newValue)
