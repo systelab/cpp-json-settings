@@ -103,9 +103,10 @@ namespace systelab { namespace setting { namespace rest_api { namespace unit_tes
 			fileStream.close();
 		}
 
-		std::string readSettingsFile(const SettingsFile& file, const boost::optional<SecurityKey>& encryptionKey = boost::none)
+		boost::optional<std::string> readSettingsFile(const SettingsFile& file, const boost::optional<SecurityKey>& encryptionKey = boost::none)
 		{
-			std::string fileContents;
+			boost::optional<std::string> fileContents;
+
 			auto settingsFilepath = boost::filesystem::absolute(m_settingsFolderPath) / file;
 			std::ifstream ifs(settingsFilepath.string());
 			if (ifs)
@@ -117,7 +118,7 @@ namespace systelab { namespace setting { namespace rest_api { namespace unit_tes
 
 				if (encryptionKey)
 				{
-					fileContents = m_encryptionAdapter.decryptString((*encryptionKey)(), fileContents);
+					fileContents = m_encryptionAdapter.decryptString((*encryptionKey)(), *fileContents);
 				}
 			}
 

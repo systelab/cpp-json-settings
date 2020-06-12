@@ -15,6 +15,7 @@ namespace systelab { namespace setting { namespace rest_api {
 	{
 	public:
 		static SettingValue query(const ISettingsService&, const SettingsFile&, const SettingPath&, const SettingValueType&);
+		static void set(ISettingsService&, const SettingsFile&, const SettingPath&, const SettingValue& newValue);
 	};
 
 }}}
