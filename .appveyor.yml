@@ -22,7 +22,7 @@ environment:
     compiler_toolset: v142
     gtest: 1.10.0
     openssl: 1.1.1g
-    boost: 1.71.0
+    boost: 1.72.0
 
   - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     arch: x86

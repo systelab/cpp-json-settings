@@ -4,8 +4,8 @@ from conans import ConanFile, CMake
 class JSONSettingsRESTAPITestConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     generators = "cmake_find_package"
-    options = {"boost": ["1.66.0", "1.67.0", "1.71.0"], "openssl": ["1.0.2n", "1.0.2s", "1.1.1g"], "gtest": ["1.7.0", "1.8.1", "1.10.0"]}
-    default_options = {"boost":"1.71.0", "openssl": "1.1.1g", "gtest":"1.10.0"}
+    options = {"boost": ["1.66.0", "1.67.0", "1.72.0"], "openssl": ["1.0.2n", "1.0.2s", "1.1.1g"], "gtest": ["1.7.0", "1.8.1", "1.10.0"]}
+    default_options = {"boost":"1.72.0", "openssl": "1.1.1g", "gtest":"1.10.0"}
 
     def configure(self):
         self.options["JSONSettingsRESTAPI"].boost = self.options.boost
