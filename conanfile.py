@@ -32,9 +32,9 @@ class JSONSettingsConan(ConanFile):
 
     def build_requirements(self):
         self.build_requires("CaeserCypherEncryptionAdapter/1.0.2@systelab/stable")
-        self.build_requires("RapidJSONAdapter/1.0.9@systelab/stable")
+        self.build_requires("RapidJSONAdapter/1.1.0@systelab/stable")
         self.build_requires("EncryptionAdapterTestUtilities/1.0.3@systelab/stable")
-        self.build_requires("JSONAdapterTestUtilities/1.0.11@systelab/stable")
+        self.build_requires("JSONAdapterTestUtilities/1.1.0@systelab/stable")
         if self.options.gtest == "1.7.0":
             self.build_requires("gtest/1.7.0@systelab/stable")
         elif self.options.gtest == "1.8.1":
