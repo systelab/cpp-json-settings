@@ -34,9 +34,9 @@
 ### Enhancements
 
 - Added new *JSONSettingsRESTAPI* package that provides REST API endpoints for settings handling (based on [RESTAPICore](https://github.com/systelab/cpp-rest-api-core) framework). Provided endpoints are:
--- Query all the settings of a file
--- Query a single setting of a file
--- Set new value for a single setting of a file
+  - Query all the settings of a file
+  - Query a single setting of a file
+  - Set new value for a single setting of a file
 
 
 ## Changes for version 1.2.5 (11 Jun 2020)
