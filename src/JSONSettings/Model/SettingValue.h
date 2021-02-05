@@ -25,16 +25,16 @@ namespace systelab { namespace setting {
 			std::stringstream ss;
 			ss << intValue;
 			value = ss.str();
+
 		}
 
 		SettingValue(double doubleValue)
 			:type(SettingValueType::DoubleValue)
 		{
 			std::stringstream ss;
-			ss << std::setprecision(std::numeric_limits<double>::max_digits10 - 1) << doubleValue;
+			ss << std::setprecision(10) << doubleValue;
 			value = ss.str();
 		}
-
 		SettingValue(bool boolValue)
 			:type(SettingValueType::BooleanValue)
 			,value(boolValue ? "true" : "false")
