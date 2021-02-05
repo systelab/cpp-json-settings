@@ -1,5 +1,12 @@
 # Summary of changes
 
+## Changes for version 1.3.5 (5 Feb 2021)
+
+### Bug Fixes
+
+- Fixed precision problems when serializing values of double settings (moved to precision of 10 decimals)
+
+
 ## Changes for version 1.3.4 (7 Sep 2020)
 
 ### Bug Fixes
