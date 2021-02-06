@@ -1,5 +1,12 @@
 # Summary of changes
 
+## Changes for version 1.3.7 (6 Feb 2021)
+
+### Bug Fixes
+
+- Increased doubles precision to something close to maximum allowed by architecture.
+
+
 ## Changes for version 1.3.6 (6 Feb 2021)
 
 ### Bug Fixes
