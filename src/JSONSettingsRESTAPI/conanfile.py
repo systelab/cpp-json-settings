@@ -14,6 +14,7 @@ class JSONSettingsRESTAPIConan(ConanFile):
     options = {"boost": ["1.66.0", "1.67.0", "1.72.0"], "openssl": ["1.0.2n", "1.0.2s", "1.1.1g"], "gtest": ["1.7.0", "1.8.1","1.10.0"]}
     default_options = {"boost":"1.72.0", "openssl": "1.1.1g", "gtest":"1.10.0"}
     exports_sources = "*","!build","!test_package"
+    required_conan_version = ">=1.33.1"
 
     def configure(self):
         self.options["RESTAPICore"].openssl = self.options.openssl
