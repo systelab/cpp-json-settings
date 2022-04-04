@@ -27,7 +27,7 @@ class JSONSettingsRESTAPIConan(ConanFile):
         self.options["JSONAdapterTestUtilities"].gtest = self.options.gtest
 
     def requirements(self):
-        self.requires("RESTAPICore/1.1.5@systelab/stable")
+        self.requires("RESTAPICore/1.1.9@systelab/stable")
         self.requires("zlib/1.2.11")
 
         if ("%s" % self.version) == "None":
@@ -37,8 +37,8 @@ class JSONSettingsRESTAPIConan(ConanFile):
 
     def build_requirements(self):
         self.build_requires("CaeserCypherEncryptionAdapter/1.0.2@systelab/stable")
-        self.build_requires("RapidJSONAdapter/1.1.0@systelab/stable")
-        self.build_requires("JSONAdapterTestUtilities/1.1.0@systelab/stable")
+        self.build_requires("RapidJSONAdapter/1.1.6@systelab/stable")
+        self.build_requires("JSONAdapterTestUtilities/1.1.5@systelab/stable")
         if self.options.gtest == "1.7.0":
             self.build_requires("gtest/1.7.0@systelab/stable")
         elif self.options.gtest == "1.8.1":

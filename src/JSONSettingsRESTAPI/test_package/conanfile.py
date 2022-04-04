@@ -12,9 +12,10 @@ class JSONSettingsRESTAPITestConan(ConanFile):
         self.options["JSONSettingsRESTAPI"].boost = self.options.boost
         self.options["JSONSettingsRESTAPI"].openssl = self.options.openssl
         self.options["JSONSettingsRESTAPI"].gtest = self.options.gtest
+        self.options["RapidJSONAdapter"].gtest = self.options.gtest
 
     def requirements(self):
-        self.requires("RapidJSONAdapter/1.0.8@systelab/stable")
+        self.requires("RapidJSONAdapter/1.1.6@systelab/stable")
 
     def build(self):
         cmake = CMake(self)
