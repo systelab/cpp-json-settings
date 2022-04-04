@@ -1,5 +1,16 @@
 # Summary of changes
 
+## Changes for version 1.3.8 (4 Apr 2022)
+
+### Bug Fixes
+
+- Moved RESTAPICore dependency to v1.1.9
+- Moved RapidJSONAdapter dependency to v1.1.6
+- Moved JSONAdapterTestUtilities dependency to v1.1.5
+- Make the JSONSettingsRESTAPI Conan recipe channel-wise
+- Make the JSONSettingsTestUtilities Conan recipe channel-wise
+
+
 ## Changes for version 1.3.7 (6 Feb 2021)
 
 ### Bug Fixes
