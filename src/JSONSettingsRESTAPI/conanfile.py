@@ -31,9 +31,10 @@ class JSONSettingsRESTAPIConan(ConanFile):
         self.requires("zlib/1.2.11")
 
         if ("%s" % self.version) == "None":
-            self.requires("JSONSettings/%s@systelab/stable" % os.environ['VERSION'])
+            channel = os.environ['CHANNEL'] if "CHANNEL" in os.environ else "stable"
+            self.requires(f"JSONSettings/{os.environ['VERSION']}@systelab/{channel}")
         else:
-            self.requires("JSONSettings/%s@systelab/stable" % self.version)
+            self.requires(f"JSONSettings/{self.version}@systelab/{self.channel}")
 
     def build_requirements(self):
         self.build_requires("CaeserCypherEncryptionAdapter/1.0.2@systelab/stable")
