@@ -1,5 +1,12 @@
 # Summary of changes
 
+## Changes for version 1.3.10 (5 Apr 2022)
+
+### Bug Fixes
+
+- Blank encryption key in memory after use
+
+
 ## Changes for version 1.3.9 (4 Apr 2022)
 
 ### Bug Fixes
