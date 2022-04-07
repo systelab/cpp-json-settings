@@ -1,5 +1,16 @@
 # Summary of changes
 
+## Changes for version 1.3.11 (7 Apr 2022)
+
+### Bug Fixes
+
+- Moved EncryptionAdapterInterface dependency to v1.0.5
+- Moved EncryptionAdapterTestUtilities dependency to v1.0.5
+- Moved CaeserCypherEncryptionAdapter to v1.0.4
+- Moved JSONAdapterTestUtilities to v1.1.5
+- Adjusted Conan recipe to exclude build folders of the package to export
+
+
 ## Changes for version 1.3.10 (5 Apr 2022)
 
 ### Bug Fixes
