@@ -12,7 +12,7 @@ class JSONSettingsConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     options = {"boost": ["1.66.0", "1.67.0", "1.72.0"], "gtest": ["1.7.0", "1.8.1", "1.10.0"]}
     default_options = {"boost":"1.72.0", "gtest":"1.10.0"}
-    exports_sources = "*"
+    exports_sources = "*", "!build*"
     required_conan_version = ">=1.33.1"
 
     def configure(self):
@@ -23,7 +23,9 @@ class JSONSettingsConan(ConanFile):
         self.options["CaeserCypherEncryptionAdapter"].gtest = self.options.gtest
 
     def requirements(self):
-        self.requires("EncryptionAdapterInterface/1.0.3@systelab/stable")
+        self.requires("EncryptionAdapterInterface/1.0.5@systelab/stable")
+        self.requires("CaeserCypherEncryptionAdapter/1.0.4@systelab/stable")
+        self.requires("RapidJSONAdapter/1.1.6@systelab/stable")
         if self.options.boost == "1.66.0":
             self.requires("boost/1.66.0@conan/stable")
         elif self.options.boost == "1.67.0":
@@ -32,10 +34,8 @@ class JSONSettingsConan(ConanFile):
             self.requires(("boost/%s") % self.options.boost)
 
     def build_requirements(self):
-        self.build_requires("CaeserCypherEncryptionAdapter/1.0.2@systelab/stable")
-        self.build_requires("RapidJSONAdapter/1.1.0@systelab/stable")
-        self.build_requires("EncryptionAdapterTestUtilities/1.0.3@systelab/stable")
-        self.build_requires("JSONAdapterTestUtilities/1.1.0@systelab/stable")
+        self.build_requires("EncryptionAdapterTestUtilities/1.0.5@systelab/stable#12f1bbb3ba384dc2e6c06c9d4072e7ff")
+        self.build_requires("JSONAdapterTestUtilities/1.1.5@systelab/stable")
         if self.options.gtest == "1.7.0":
             self.build_requires("gtest/1.7.0@systelab/stable")
         elif self.options.gtest == "1.8.1":
