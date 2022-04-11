@@ -93,7 +93,7 @@ namespace systelab { namespace setting { namespace rest_api { namespace unit_tes
 			std::string fileContents = contents;
 			if (encryptionKey)
 			{
-				fileContents = m_encryptionAdapter.encryptString((*encryptionKey)(), contents);
+				fileContents = m_encryptionAdapter.encryptString(*encryptionKey, contents);
 			}
 
 			std::ofstream fileStream;
@@ -118,7 +118,7 @@ namespace systelab { namespace setting { namespace rest_api { namespace unit_tes
 
 				if (encryptionKey)
 				{
-					fileContents = m_encryptionAdapter.decryptString((*encryptionKey)(), *fileContents);
+					fileContents = m_encryptionAdapter.decryptString(*encryptionKey, *fileContents);
 				}
 			}
 

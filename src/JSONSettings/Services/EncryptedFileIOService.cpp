@@ -27,11 +27,7 @@ namespace systelab { namespace setting {
 
 		try
 		{
-			std::string key = encryptionKey();
-			std::string encryptedFileContents = encryptedFileStream.str();
-			std::stringstream decryptedFileStream = std::stringstream(m_encryptionAdapter.decryptString(key, encryptedFileContents));
-			std::memset(&key[0], '0', strlen(&key[0]));
-			return decryptedFileStream;
+			return std::stringstream(m_encryptionAdapter.decryptString(encryptionKey, encryptedFileStream.str()));
 		}
 		catch (systelab::encryption::IEncryptionAdapter::Exception&)
 		{
@@ -43,7 +39,7 @@ namespace systelab { namespace setting {
 	{
 		std::stringstream ss;
 		ss << &buffer;
-		std::stringstream out(m_encryptionAdapter.encryptString(encryptionKey(), ss.str()));
+		std::stringstream out(m_encryptionAdapter.encryptString(encryptionKey, ss.str()));
 		std::string outputStr = out.str();
 
 		std::ofstream outputFileStream(filepath, std::ofstream::binary);

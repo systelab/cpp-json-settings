@@ -1,5 +1,14 @@
 # Summary of changes
 
+## Changes for version 1.3.12 (11 Apr 2022)
+
+### Bug Fixes
+
+- Moved EncryptionAdapterInterface dependency to v1.1.0
+- Moved EncryptionAdapterTestUtilities dependency to v1.1.0
+- Moved CaeserCypherEncryptionAdapter to v1.1.0
+
+
 ## Changes for version 1.3.11 (7 Apr 2022)
 
 ### Bug Fixes

@@ -68,7 +68,7 @@ namespace systelab { namespace setting { namespace unit_test {
 
 			std::ofstream fileStream;
 			fileStream.open(m_settingsFilepath.string(), std::ofstream::binary);
-			fileStream << m_encryptionAdapter.encryptString(m_encryptionKey, fileContents);
+			fileStream << m_encryptionAdapter.encryptString([this]() { return m_encryptionKey; }, fileContents);
 			fileStream.close();
 		}
 
@@ -80,7 +80,7 @@ namespace systelab { namespace setting { namespace unit_test {
 			{
 				std::stringstream ss;
 				ss << ifs.rdbuf();
-				fileContents = m_encryptionAdapter.decryptString(m_encryptionKey, ss.str());
+				fileContents = m_encryptionAdapter.decryptString([this]() { return m_encryptionKey; }, ss.str());
 				ifs.close();
 			}
 
