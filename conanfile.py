@@ -18,6 +18,7 @@ class JSONSettingsConan(ConanFile):
         self.requires("CaeserCypherEncryptionAdapter/1.2.0@systelab/stable")
         self.requires("RapidJSONAdapter/1.1.7@systelab/stable")
         self.requires("boost/1.85.0#0734cd0dd8fe650aa3ae64bb51bca54d")
+        self.requires("bzip2/1.0.8#9c8b632000a52af5af3f045d3a6db12f")
 
     def build_requirements(self):
         self.build_requires("EncryptionAdapterTestUtilities/1.2.0@systelab/stable")
