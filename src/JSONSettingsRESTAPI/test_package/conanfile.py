@@ -7,7 +7,7 @@ class JSONSettingsRESTAPITestConan(ConanFile):
     required_conan_version = ">=1.33.1"
 
     def requirements(self):
-        self.requires("RapidJSONAdapter/1.1.6@systelab/stable")
+        self.requires("RapidJSONAdapter/1.1.7@systelab/stable")
 
     def build(self):
         cmake = CMake(self)
