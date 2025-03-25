@@ -16,23 +16,9 @@ class JSONSettingsTestUtilitiesConan(ConanFile):
     exports_sources = "*"
     required_conan_version = ">=1.33.1"
 
-    def configure(self):
-        self.options["JSONSettings"].boost = self.options.boost
-        self.options["JSONSettings"].gtest = self.options.gtest
-
     def requirements(self):
-        if self.options.gtest == "1.7.0":
-            self.requires("gtest/1.7.0@systelab/stable")
-        elif self.options.gtest == "1.8.1":
-            self.requires("gtest/1.8.1")
-        else:
-            self.requires("gtest/1.10.0")
-
-        if ("%s" % self.version) == "None":
-            channel = os.environ['CHANNEL'] if "CHANNEL" in os.environ else "stable"
-            self.requires(f"JSONSettings/{os.environ['VERSION']}@systelab/{channel}")
-        else:
-            self.requires(f"JSONSettings/{self.version}@systelab/{self.channel}")
+        self.requires("gtest/1.14.0#4372c5aed2b4018ed9f9da3e218d18b3")
+        self.requires(f"JSONSettings/{os.environ['VERSION']}@systelab/{os.environ['CHANNEL']}")
 
     def build(self):
         cmake = CMake(self)

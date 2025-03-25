@@ -10,39 +10,20 @@ class JSONSettingsConan(ConanFile):
     license = "MIT"
     generators = "cmake_find_package"
     settings = "os", "compiler", "build_type", "arch"
-    options = {"boost": ["1.66.0", "1.67.0", "1.72.0"], "gtest": ["1.7.0", "1.8.1", "1.10.0"]}
-    default_options = {"boost":"1.72.0", "gtest":"1.10.0"}
     exports_sources = "*", "!build*"
     required_conan_version = ">=1.33.1"
 
-    def configure(self):
-        self.options["boost"].shared = True
-        self.options["RapidJSONAdapter"].gtest = self.options.gtest
-        self.options["JSONAdapterTestUtilities"].gtest = self.options.gtest
-        self.options["EncryptionAdapterTestUtilities"].gtest = self.options.gtest
-        self.options["CaeserCypherEncryptionAdapter"].gtest = self.options.gtest
-
     def requirements(self):
-        self.requires("EncryptionAdapterInterface/1.1.0@systelab/stable")
-        self.requires("CaeserCypherEncryptionAdapter/1.1.0@systelab/stable")
-        self.requires("RapidJSONAdapter/1.1.6@systelab/stable")
-        if self.options.boost == "1.66.0":
-            self.requires("boost/1.66.0@conan/stable")
-        elif self.options.boost == "1.67.0":
-            self.requires("boost/1.67.0@conan/stable")
-        else:
-            self.requires(("boost/%s") % self.options.boost)
+        self.requires("EncryptionAdapterInterface/1.2.0@systelab/stable")
+        self.requires("CaeserCypherEncryptionAdapter/1.2.0@systelab/stable")
+        self.requires("RapidJSONAdapter/1.1.7@systelab/stable")
+        self.requires("boost/1.85.0#0734cd0dd8fe650aa3ae64bb51bca54d")
 
     def build_requirements(self):
-        self.build_requires("EncryptionAdapterTestUtilities/1.1.0@systelab/stable")
-        self.build_requires("JSONAdapterTestUtilities/1.1.5@systelab/stable")
-        if self.options.gtest == "1.7.0":
-            self.build_requires("gtest/1.7.0@systelab/stable")
-        elif self.options.gtest == "1.8.1":
-            self.build_requires("gtest/1.8.1")
-        else:
-            self.build_requires("gtest/1.10.0")
-
+        self.build_requires("EncryptionAdapterTestUtilities/1.2.0@systelab/stable")
+        self.build_requires("JSONAdapterTestUtilities/1.1.6@systelab/stable")
+        self.build_requires("gtest/1.14.0#4372c5aed2b4018ed9f9da3e218d18b3")
+        
     def build(self):
         cmake = CMake(self)
         cmake.configure(source_folder=".")
