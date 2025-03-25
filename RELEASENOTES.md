@@ -1,5 +1,18 @@
 # Summary of changes
 
+## Changes for version 1.4.0 (25 Mar 2025)
+
+### Breaking changes
+
+- Updated to vs2022
+
+### Changes
+- Moved EncryptionAdapterInterface dependency to v1.2.0
+- Moved EncryptionAdapterTestUtilities dependency to v1.2.0
+- Moved CaeserCypherEncryptionAdapter to v1.2.0
+- Moved RapidJSONAdapter to v1.1.7
+
+
 ## Changes for version 1.3.12 (11 Apr 2022)
 
 ### Bug Fixes
