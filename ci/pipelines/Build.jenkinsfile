@@ -80,9 +80,9 @@ pipeline
 							stage("Build ${packageNameInterface} ${config}|${arch}")
 							{
 								def buildFolder = "build/${packageNameInterface}-${config}-${arch}"
-								bat script: "conan install . --install-folder ${buildFolder} --profile=${profile} -s arch=${arch} -s build_type=${config}", label: 'Installing dependencies'
+								bat script: "conan install . ${packageNameInterface}/${version}@systelab/${channel} --install-folder ${buildFolder} --profile=${profile} -s arch=${arch} -s build_type=${config}", label: 'Installing dependencies'
 								bat script: "conan build . --build-folder ${buildFolder}", label: 'Building'		
-								bat script: "conan export-pkg . ${packageNameInterface}/${version}@systelab/${channel} --build-folder ${buildFolder} --force", label: "Exporting package ${packageNameInterface}/${version}@systelab/${channel}"
+								bat script: "conan export-pkg . --build-folder ${buildFolder} --force", label: "Exporting package ${packageNameInterface}/${version}@systelab/${channel}"
 								dir("${buildFolder}/bin/${config}")
 								{
 									bat "JSONSettingsTest.exe --gtest_output=xml:JSONSettingsTest.xml"
@@ -92,17 +92,17 @@ pipeline
 							stage("Build ${packageNameTestUtilities} ${config}|${arch}")
 							{
 								def buildFolder = "build/${packageNameTestUtilities}-${config}-${arch}"
-								bat script: "conan install test/${packageNameTestUtilities}/conanfile.py --install-folder ${buildFolder} --profile=${profile} -s arch=${arch} -s build_type=${config} -e VERSION=${version} -e CHANNEL=${channel}", label: 'Installing dependencies'
+								bat script: "conan install test/${packageNameTestUtilities}/conanfile.py ${packageNameTestUtilities}/${version}@systelab/${channel} --install-folder ${buildFolder} --profile=${profile} -s arch=${arch} -s build_type=${config} -e VERSION=${version} -e CHANNEL=${channel}", label: 'Installing dependencies'
 								bat script: "conan build test/${packageNameTestUtilities}/conanfile.py --build-folder ${buildFolder}", label: 'Building'		
-								bat script: "conan export-pkg test/${packageNameTestUtilities}/conanfile.py ${packageNameTestUtilities}/${version}@systelab/${channel} --build-folder ${buildFolder} --force", label: "Exporting package ${packageNameTestUtilities}/${version}@systelab/${channel}"
+								bat script: "conan export-pkg test/${packageNameTestUtilities}/conanfile.py  --build-folder ${buildFolder} --force", label: "Exporting package ${packageNameTestUtilities}/${version}@systelab/${channel}"
 							}
 							
 							stage("Build ${packageNameRESTAPI} ${config}|${arch}")
 							{
 								def buildFolder = "build/${packageNameRESTAPI}-${config}-${arch}"
-								bat script: "conan install src/${packageNameRESTAPI}/conanfile.py --install-folder ${buildFolder} --profile=${profile} -s arch=${arch} -s build_type=${config} -e VERSION=${version} -e CHANNEL=${channel}", label: 'Installing dependencies'
+								bat script: "conan install src/${packageNameRESTAPI}/conanfile.py ${packageNameRESTAPI}/${version}@systelab/${channel} --install-folder ${buildFolder} --profile=${profile} -s arch=${arch} -s build_type=${config} -e VERSION=${version} -e CHANNEL=${channel}", label: 'Installing dependencies'
 								bat script: "conan build src/${packageNameRESTAPI}/conanfile.py --build-folder ${buildFolder}", label: 'Building'		
-								bat script: "conan export-pkg src/${packageNameRESTAPI}/conanfile.py ${packageNameRESTAPI}/${version}@systelab/${channel} --build-folder ${buildFolder} --force", label: "Exporting package ${packageNameRESTAPI}/${version}@systelab/${channel}"
+								bat script: "conan export-pkg src/${packageNameRESTAPI}/conanfile.py  --build-folder ${buildFolder} --force", label: "Exporting package ${packageNameRESTAPI}/${version}@systelab/${channel}"
 								dir("${buildFolder}/bin/${config}")
 								{
 									bat "JSONSettingsRESTAPITest.exe --gtest_output=xml:JSONSettingsRESTAPITest.xml"
