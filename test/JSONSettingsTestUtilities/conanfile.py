@@ -11,14 +11,16 @@ class JSONSettingsTestUtilitiesConan(ConanFile):
     license = "MIT"
     generators = "cmake_find_package"
     settings = "os", "compiler", "build_type", "arch"
-    options = {"boost": ["1.66.0", "1.67.0", "1.72.0"], "gtest": ["1.7.0", "1.8.1","1.10.0"]}
-    default_options = {"boost":"1.72.0", "gtest":"1.10.0"}
     exports_sources = "*"
     required_conan_version = ">=1.33.1"
 
     def requirements(self):
         self.requires("gtest/1.14.0#4372c5aed2b4018ed9f9da3e218d18b3")
-        self.requires(f"JSONSettings/{os.environ['VERSION']}@systelab/{os.environ['CHANNEL']}")
+
+        if ("%s" % self.version) == "None":
+            self.requires(f"JSONSettings/{os.environ['VERSION']}@systelab/{os.environ['CHANNEL']}")
+        else:
+            self.requires(f"JSONSettings/{self.version}@systelab/{self.channel}")
 
     def build(self):
         cmake = CMake(self)
