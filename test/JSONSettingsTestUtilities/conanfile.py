@@ -16,11 +16,7 @@ class JSONSettingsTestUtilitiesConan(ConanFile):
 
     def requirements(self):
         self.requires("gtest/1.14.0#4372c5aed2b4018ed9f9da3e218d18b3")
-
-        if ("%s" % self.version) == "None":
-            self.requires(f"JSONSettings/{os.environ['VERSION']}@systelab/{os.environ['CHANNEL']}")
-        else:
-            self.requires(f"JSONSettings/{self.version}@systelab/{self.channel}")
+        self.requires(f"JSONSettings/{self.version}@systelab/{self.channel}")
 
     def build(self):
         cmake = CMake(self)

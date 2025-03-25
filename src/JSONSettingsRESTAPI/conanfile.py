@@ -15,13 +15,11 @@ class JSONSettingsRESTAPIConan(ConanFile):
     required_conan_version = ">=1.33.1"
 
     def requirements(self):
-        self.requires("RESTAPICore/1.1.9@systelab/stable")
-        self.requires("zlib/1.3.1")
-        self.requires(f"JSONSettings/{os.version}@systelab/{os.channel}")
+        self.requires("RESTAPICore/1.1.12@systelab/stable")
+        self.requires(f"JSONSettings/{self.version}@systelab/{self.channel}")
 
     def build_requirements(self):
         self.build_requires("CaeserCypherEncryptionAdapter/1.2.0@systelab/stable")
-        self.build_requires("RapidJSONAdapter/1.1.7@systelab/stable", override=True)
         self.build_requires("JSONAdapterTestUtilities/1.1.6@systelab/stable")
         self.build_requires("gtest/1.14.0#4372c5aed2b4018ed9f9da3e218d18b3")
 
