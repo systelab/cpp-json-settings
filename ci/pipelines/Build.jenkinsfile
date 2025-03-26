@@ -155,8 +155,8 @@ pipeline
 	{
 		always
 		{
-			junit allowEmptyResults: true, testResults: "build*/JSONSettingsTest.xml"
-			junit allowEmptyResults: true, testResults: "build*/JSONSettingsRESTAPITest.xml"
+			junit allowEmptyResults: true, testResults: "build*/**/JSONSettingsTest.xml"
+			junit allowEmptyResults: true, testResults: "build*/**/JSONSettingsRESTAPITest.xml"
 			script
  			{
  				currentBuild.description = "${version}/${channel}"
