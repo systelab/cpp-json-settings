@@ -143,9 +143,9 @@ pipeline
 			{
 				script
 				{
-					sh "conan upload JSONSettings/${version}@systelab/${channel} --all -r systelab-conan-local --force"
-					sh "conan upload JSONSettingsRESTAPI/${version}@systelab/${channel} --all -r systelab-conan-local --force"
-					sh "conan upload JSONSettingsTestUtilities/${version}@systelab/${channel} --all -r systelab-conan-local --force"
+					bat script: "conan upload ${packageNameInterface}/${version}@systelab/${channel} --all -r systelab-conan-local --force", label: "Uploading ${packageNameInterface} package to artifactory"
+					bat script: "conan upload ${packageNameRESTAPI}/${version}@systelab/${channel} --all -r systelab-conan-local --force", label: "Uploading ${packageNameRESTAPI} package to artifactory"
+					bat script: "conan upload ${packageNameTestUtilities}/${version}@systelab/${channel} --all -r systelab-conan-local --force", label: "Uploading ${packageNameTestUtilities} package to artifactory"
 				}
 			}
 		}
