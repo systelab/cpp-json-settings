@@ -24,7 +24,7 @@ In order to build the application on Windows for the `Release` configuration, ru
 > git clone https://github.com/systelab/cpp-json-settings
 > md build && cd build
 > conan remote add systelab-bintray https://api.bintray.com/conan/systelab/conan
-> conan install .. -s build_type=Release -s compiler.toolset=v143 -s arch=x86_64
+> conan install .. --profile:all=../vs2022.conanprofile -s:a build_type=Release -s:a arch=x86_64 --output-folder .
 > cmake .. -G "Visual Studio 17 2022" -A x64
 > "$VSINSTALLPATH/devenv.com" JSONSettings.sln /build "Release" /PROJECT "JSONSettings"
 ```
@@ -35,7 +35,7 @@ However, if you want to `Debug` the source code, you will need these commands:
 > git clone https://github.com/systelab/cpp-json-settings
 > md build && cd build
 > conan remote add systelab-bintray https://api.bintray.com/conan/systelab/conan
-> conan install .. -s build_type=Debug -s compiler.toolset=v143 -s arch=x86_64
+> conan install .. --profile:all=../vs2022.conanprofile -s:a build_type=Debug -s:a arch=x86_64 --output-folder .
 > cmake .. -G "Visual Studio 17 2022" -A x64
 > "$VSINSTALLPATH/devenv.com" JSONSettings.sln /build "Debug" /PROJECT "JSONSettings"
 ```

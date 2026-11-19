@@ -1,55 +1,60 @@
-from conans import ConanFile, CMake, tools
+import os
+from conan import ConanFile
+from conan.tools.cmake import CMake, CMakeDeps, CMakeToolchain
+from conan.tools.files import copy
 
 class JSONSettingsConan(ConanFile):
-    name = "JSONSettings"
+    name = "json-settings"
     description = "C++ JSON Configuration library"
     url = "https://github.com/systelab/cpp-json-settings"
     homepage = "https://github.com/systelab/cpp-json-settings"
     author = "CSW <csw@werfen.com>"
     topics = ("conan", "json", "configuration", "settings")
     license = "MIT"
-    generators = "cmake_find_package"
     settings = "os", "compiler", "build_type", "arch"
-    exports_sources = "*", "!build*"
-    required_conan_version = ">=1.33.1"
+    exports_sources = "CMakeLists.txt", "cmake/CodeCoverage.cmake", "src/JSONSettings/*", "test/JSONSettingsTest/*"
+    required_conan_version = ">=2.0.0"
 
     def requirements(self):
-        self.requires("EncryptionAdapterInterface/1.2.0@systelab/stable")
-        self.requires("CaeserCypherEncryptionAdapter/1.2.0@systelab/stable")
-        self.requires("RapidJSONAdapter/1.1.7@systelab/stable")
-        self.requires("boost/1.85.0#0734cd0dd8fe650aa3ae64bb51bca54d")
-        self.requires("bzip2/1.0.8#9c8b632000a52af5af3f045d3a6db12f")
+        self.requires("encryption-adapter-interface/1.2.1")
+        self.requires("caeser-cypher-encryption-adapter/1.2.1")
+        self.requires("rapidjson-adapter/1.2.1")
+        self.requires("boost/1.85.0")
 
     def build_requirements(self):
-        self.build_requires("EncryptionAdapterTestUtilities/1.2.0@systelab/stable")
-        self.build_requires("JSONAdapterTestUtilities/1.1.6@systelab/stable")
-        self.build_requires("gtest/1.14.0#4372c5aed2b4018ed9f9da3e218d18b3")
-        
+        self.test_requires("encryption-adapter-test-utilities/1.2.1")
+        self.test_requires("json-adapter-test-utilities/1.2.1")
+        self.test_requires("gtest/1.14.0")
+
+    def generate(self):
+        CMakeToolchain(self).generate()
+        CMakeDeps(self).generate()
+        bin_dst = os.path.join(self.build_folder, "bin", str(self.settings.build_type))
+        for dep in self.dependencies.values():
+            for src in dep.cpp_info.bindirs + dep.cpp_info.libdirs:
+                copy(self, "*.dll", src=src, dst=bin_dst)
+                copy(self, "*.dylib*", src=src, dst=os.path.join(self.build_folder, "bin"))
+                copy(self, "*.so*", src=src, dst=os.path.join(self.build_folder, "bin"))
+
     def build(self):
         cmake = CMake(self)
-        cmake.configure(source_folder=".")
+        cmake.configure(build_script_folder=self.source_folder)
         cmake.build()
 
-    def imports(self):
-        self.copy("*.dll", dst=("bin/%s" % self.settings.build_type), src="bin")
-        self.copy("*.dll", dst=("bin/%s" % self.settings.build_type), src="lib")
-        self.copy("*.dylib*", dst="bin", src="lib")
-        self.copy("*.so*", dst="bin", src="lib")
-
     def package(self):
-        self.copy("SettingsFile.h", dst="include/JSONSettings", src="src/JSONSettings/Model")
-        self.copy("SettingPath.h", dst="include/JSONSettings", src="src/JSONSettings/Model")
-        self.copy("SettingValue.h", dst="include/JSONSettings", src="src/JSONSettings/Model")
-        self.copy("SettingDefinition.h", dst="include/JSONSettings", src="src/JSONSettings/Model")
-        self.copy("SettingDefinitionMgr.h", dst="include/JSONSettings", src="src/JSONSettings/Model")
-        self.copy("SettingDefinitionMacros.h", dst="include/JSONSettings", src="src/JSONSettings/Model")
-        self.copy("SecurityKey.h", dst="include/JSONSettings", src="src/JSONSettings/Model")
-        self.copy("ISettingsService.h", dst="include/JSONSettings", src="src/JSONSettings/Services")
-        self.copy("SettingsService.h", dst="include/JSONSettings", src="src/JSONSettings/Services")
-        self.copy("SettingsMacros.h", dst="include/JSONSettings", src="src/JSONSettings/Services")
-        self.copy("*JSONSettings.lib", dst="lib", keep_path=False)
-        self.copy("*JSONSettings.pdb", dst="lib", keep_path=False)
-        self.copy("*JSONSettings.a", dst="lib", keep_path=False)
+        model = os.path.join(self.source_folder, "src", "JSONSettings", "Model")
+        services = os.path.join(self.source_folder, "src", "JSONSettings", "Services")
+        include = os.path.join(self.package_folder, "include", "JSONSettings")
+        for header in ("SettingsFile.h", "SettingPath.h", "SettingValue.h", "SettingDefinition.h",
+                       "SettingDefinitionMgr.h", "SettingDefinitionMacros.h", "SecurityKey.h"):
+            copy(self, header, src=model, dst=include)
+        for header in ("ISettingsService.h", "SettingsService.h", "SettingsMacros.h"):
+            copy(self, header, src=services, dst=include)
+        lib = os.path.join(self.package_folder, "lib")
+        for pattern in ("*JSONSettings.lib", "*JSONSettings.pdb", "*JSONSettings.a"):
+            copy(self, pattern, src=self.build_folder, dst=lib, keep_path=False)
 
     def package_info(self):
-        self.cpp_info.libs = tools.collect_libs(self)
+        self.cpp_info.libs = ["JSONSettings"]
+        self.cpp_info.set_property("cmake_file_name", "JSONSettings")
+        self.cpp_info.set_property("cmake_target_name", "JSONSettings::JSONSettings")

@@ -26,7 +26,7 @@ This library is designed to be installed by making use of [Conan](https://conan.
 
 ```python
 def requirements(self):
-   self.requires("JSONSettings/1.0.0@systelab/stable")
+   self.requires("json-settings/1.0.0")
 ```
 
 > Version number of this code snipped is set just as an example. Replace it for the desired package to retrieve.
