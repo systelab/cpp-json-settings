@@ -15,7 +15,7 @@ if (NOT TARGET ${GTEST_PACKAGE_NAME}::${GTEST_PACKAGE_NAME})
     find_package(${GTEST_PACKAGE_NAME})
 endif()
 
-find_package(RapidJSONAdapter)
+find_package(rapidjson-adapter)
 find_package(CaeserCypherEncryptionAdapter)
 find_package(JSONAdapterTestUtilities)
 
@@ -27,7 +27,7 @@ add_executable(${JSON_SETTINGS_REST_API_TEST_PROJECT} ${JSON_SETTINGS_REST_API_T
 target_link_libraries(${JSON_SETTINGS_REST_API_TEST_PROJECT}
 					  JSONSettingsRESTAPI 
 					  ${GTEST_PACKAGE_NAME}::${GTEST_PACKAGE_NAME}
-					  RapidJSONAdapter::RapidJSONAdapter
+					  rapidjson-adapter::rapidjson-adapter
 					  CaeserCypherEncryptionAdapter::CaeserCypherEncryptionAdapter
 					  JSONAdapterTestUtilities::JSONAdapterTestUtilities)
 

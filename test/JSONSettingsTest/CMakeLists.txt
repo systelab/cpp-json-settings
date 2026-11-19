@@ -16,7 +16,7 @@ endif()
 
 find_package(EncryptionAdapterTestUtilities)
 find_package(CaeserCypherEncryptionAdapter)
-find_package(RapidJSONAdapter)
+find_package(rapidjson-adapter)
 find_package(JSONAdapterTestUtilities)
 
 # Configure test project
@@ -29,7 +29,7 @@ target_link_libraries(${JSON_SETTINGS_TEST_PROJECT}
 					  ${GTEST_PACKAGE_NAME}::${GTEST_PACKAGE_NAME}
 					  EncryptionAdapterTestUtilities::EncryptionAdapterTestUtilities
 					  CaeserCypherEncryptionAdapter::CaeserCypherEncryptionAdapter
-					  RapidJSONAdapter::RapidJSONAdapter
+					  rapidjson-adapter::rapidjson-adapter
 					  JSONAdapterTestUtilities::JSONAdapterTestUtilities)
 
 # Ignored missing PDBs link warning on Visual Studio
